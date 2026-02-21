@@ -1,0 +1,142 @@
+<?php include 'includes/header.php'; ?>
+
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="hero-gradient-bg"></div>
+    
+    <div class="container">
+        <div class="hero-content" data-aos="fade-up">
+            <p class="subtitle">Empowering a Brighter Tomorrow</p>
+            <h1>We Create Your Youth Memorable</h1>
+            <a href="contact.php" class="btn btn-primary btn-lg">Get In Touch</a>
+        </div>
+    </div>
+</section>
+
+<!-- Mission Section -->
+<section class="mission-vision-section section-padding">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 mb-4 mb-lg-0" data-aos="fade-right">
+                <div class="mission-box">
+                    <h3>Our Mission</h3>
+                    <p>Nexorah is about creating event experiences that inspire, engage and empower communities. We are committed to transform ideas into impactful realities. Whether it's a sports tournament, tech or science fest or any kinds of educational activities. We believe every event is an opportunity for innovation, celebration and bringing people together, with passion, creativity and purpose. We aim for meaningful collaboration and bold commitment to excellence.</p>
+                </div>
+            </div>
+            <div class="col-lg-6" data-aos="fade-left">
+                <div class="vision-box">
+                    <h3>Our Vision</h3>
+                    <p>Our vision is to become a leading force in the event industry. Where creativity can gain purpose, a gathering becomes a story of success and stays remembered. Through bold ideas and strategic planning, we envision building a legacy and igniting positive changes across the generations.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Highlights Section -->
+<section class="highlights-section section-padding">
+    <div class="container">
+        <div class="section-title" data-aos="fade-up">
+            <h2>Highlights</h2>
+            <p>Take a look at our recent successful events</p>
+        </div>
+        
+        <div class="row">
+            <?php
+            $highlights = getHighlights($pdo);
+            foreach ($highlights as $highlight) :
+            ?>
+            <div class="col-lg-4 col-md-6" data-aos="fade-up">
+                <div class="highlight-card">
+                    <div class="highlight-img">
+                        <?php if ($highlight['media_type'] == 'image') : ?>
+                            <img src="<?php echo $highlight['media_path']; ?>" alt="<?php echo $highlight['title']; ?>">
+                        <?php else : ?>
+                            <video width="100%" controls>
+                                <source src="<?php echo $highlight['media_path']; ?>" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        <?php endif; ?>
+                    </div>
+                    <div class="highlight-content">
+                        <h3><?php echo $highlight['title']; ?></h3>
+                        <p><?php echo $highlight['description']; ?></p>
+                    </div>
+                </div>
+            </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</section>
+
+<!-- Partners Section -->
+<section class="partners-section section-padding">
+    <div class="container">
+        <div class="section-title" data-aos="fade-up">
+            <h2>Our Partners</h2>
+            <p>We collaborate with the best in the industry</p>
+        </div>
+        
+        <div class="row">
+            <?php
+            $partners = getPartners($pdo);
+            foreach ($partners as $partner) :
+            ?>
+            <div class="col-lg-4 col-md-6" data-aos="fade-up">
+                <div class="partner-card">
+                    <div class="partner-img">
+                        <img src="<?php echo $partner['image_path']; ?>" alt="<?php echo $partner['name']; ?>">
+                    </div>
+                    <h3><?php echo $partner['name']; ?></h3>
+                    <p><?php echo $partner['description']; ?></p>
+                </div>
+            </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</section>
+
+<!-- Upcoming Events Section -->
+<section class="upcoming-events-section section-padding">
+    <div class="container">
+        <div class="section-title" data-aos="fade-up">
+            <h2>Upcoming Events</h2>
+            <p>Join us for these exciting upcoming events</p>
+        </div>
+        
+        <div class="row">
+            <?php
+            $upcomingEvents = getUpcomingEvents($pdo);
+            
+            foreach ($upcomingEvents as $event) :
+                $eventDate = new DateTime($event['event_date']);
+            ?>
+            <div class="col-lg-4 col-md-6" data-aos="fade-up">
+                <div class="event-card">
+                    <div class="event-img">
+                        <img src="<?php echo !empty($event['image_path']) ? '9173182/' . $event['image_path'] : 'assets/images/default-event.jpg'; ?>" alt="<?php echo $event['title']; ?>">
+                    </div>
+                    <div class="event-content">
+                        <div class="event-meta">
+                            <span><i class="far fa-calendar-alt"></i> <?php echo $eventDate->format('M d, Y'); ?></span>
+                            <span><i class="far fa-clock"></i> <?php echo date('h:i A', strtotime($event['event_time'])); ?></span>
+                        </div>
+                        <h3><?php echo $event['title']; ?></h3>
+                        <p><?php echo substr($event['description'], 0, 100) . '...'; ?></p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-map-marker-alt"></i> <?php echo $event['location']; ?></span>
+                            <a href="events.php?id=<?php echo $event['id']; ?>" class="btn btn-primary">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <?php endforeach; ?>
+        </div>
+        
+        <div class="text-center mt-4" data-aos="fade-up">
+            <a href="events.php" class="btn btn-primary">View All Events</a>
+        </div>
+    </div>
+</section>
+
+<?php include 'includes/footer.php'; ?>

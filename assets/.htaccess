@@ -1,0 +1,24 @@
+# Allow static assets
+<FilesMatch "\.(css|js|jpg|jpeg|png|gif|mp4|mov|avi)$">
+    Order Allow,Deny
+    Allow from all
+</FilesMatch>
+
+# Define correct MIME types
+<IfModule mod_mime.c>
+    # CSS
+    AddType text/css .css
+    
+    # JavaScript
+    AddType application/javascript .js
+    
+    # Images
+    AddType image/jpeg .jpg .jpeg
+    AddType image/png .png
+    AddType image/gif .gif
+    
+    # Videos
+    AddType video/mp4 .mp4
+    AddType video/quicktime .mov
+    AddType video/x-msvideo .avi
+</IfModule>

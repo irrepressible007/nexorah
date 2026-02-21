@@ -1,0 +1,80 @@
+# Safe, production-ready .htaccess for Apache
+
+# 1) Defaults
+DirectoryIndex index.php index.html
+Options -Indexes
+ServerSignature Off
+AddDefaultCharset UTF-8
+
+# 2) URL rewriting and access rules
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    # If deploying in a subfolder (e.g., /site), uncomment and set correctly:
+    # RewriteBase /site
+
+    # Clean URL mappings (optional)
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^about/?$ about.php [L,NC]
+    RewriteRule ^services/?$ services.php [L,NC]
+    RewriteRule ^events/?$ events.php [L,NC]
+    RewriteRule ^blog/?$ blog.php [L,NC]
+    RewriteRule ^contact/?$ contact.php [L,NC]
+
+    # Block hidden files (.env, .htaccess, etc.)
+    RewriteRule ^\..* - [F,L]
+
+    # Block direct access to sensitive folders
+    RewriteRule ^includes/ - [F,L]
+    RewriteRule ^database/ - [F,L]
+
+    # Block PHP execution inside uploads (allow only static files)
+    RewriteRule ^uploads/(.*)\.(php|phtml|php[3-9])$ - [F,L]
+
+    # Block download of sensitive file types anywhere
+    RewriteRule ^(.*)\.(sql|ini|log|bak|config|swp)$ - [F,L]
+</IfModule>
+
+# 3) Security headers (safe defaults)
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+</IfModule>
+
+# 4) Caching for static assets
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType text/css "access plus 7 days"
+    ExpiresByType application/javascript "access plus 7 days"
+    ExpiresByType image/avif "access plus 30 days"
+    ExpiresByType image/webp "access plus 30 days"
+    ExpiresByType image/png "access plus 30 days"
+    ExpiresByType image/jpeg "access plus 30 days"
+    ExpiresByType image/gif "access plus 30 days"
+    ExpiresByType image/svg+xml "access plus 30 days"
+    ExpiresByType font/woff2 "access plus 30 days"
+    ExpiresDefault "access plus 1 day"
+</IfModule>
+
+# 5) Optional HTTPS redirect — enable only when SSL is configured
+# <IfModule mod_rewrite.c>
+#     RewriteCond %{HTTPS} !=on
+#     RewriteCond %{HTTP:X-Forwarded-Proto} !https
+#     RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+# </IfModule>
+
+# 6) PHP limits when using mod_php (ignored on PHP-FPM)
+<IfModule mod_php7.c>
+    php_value upload_max_filesize 64M
+    php_value post_max_size 64M
+    php_value max_execution_time 300
+    php_value max_input_time 300
+</IfModule>
+<IfModule mod_php8.c>
+    php_value upload_max_filesize 64M
+    php_value post_max_size 64M
+    php_value max_execution_time 300
+    php_value max_input_time 300
+</IfModule>
