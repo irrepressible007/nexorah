@@ -57,7 +57,7 @@ if ($singleEvent) :
                     </div>
                     <h2><?php echo htmlspecialchars($event['title']); ?></h2>
                     <div class="event-description">
-                        <?php echo nl2br(htmlspecialchars($event['description'])); ?>
+                        <?php echo $event['description']; ?>
                     </div>
                 </div>
             </div>
@@ -112,10 +112,10 @@ if ($singleEvent) :
                                 <span><i class="far fa-clock"></i> <?php echo date('h:i A', strtotime($event['event_time'])); ?></span>
                             </div>
                             <h3><?php echo htmlspecialchars($event['title']); ?></h3>
-                            <p><?php echo htmlspecialchars(substr($event['description'], 0, 100)) . '...'; ?></p>
+                            <p><?php echo htmlspecialchars(substr(strip_tags($event['description']), 0, 100)) . '...'; ?></p>
                             <div class="d-flex justify-content-between align-items-center">
                                 <span><i class="fas fa-map-marker-alt"></i> <?php echo htmlspecialchars($event['location']); ?></span>
-                                <a href="events.php?id=<?php echo $event['id']; ?>" class="btn btn-primary learn-more-btn" data-event-id="<?php echo $event['id']; ?>">Learn More</a>
+                                <a href="events.php?id=<?php echo $event['id']; ?>" class="btn btn-primary learn-more-btn">Learn More</a>
                             </div>
                         </div>
                     </div>
@@ -160,9 +160,9 @@ if ($singleEvent) :
                                 <span><i class="far fa-clock"></i> <?php echo date('h:i A', strtotime($event['event_time'])); ?></span>
                             </div>
                             <h3><?php echo htmlspecialchars($event['title']); ?></h3>
-                            <p><?php echo htmlspecialchars(substr($event['description'], 0, 100)) . '...'; ?></p>
+                            <p><?php echo htmlspecialchars(substr(strip_tags($event['description']), 0, 100)) . '...'; ?></p>
                             <div class="d-flex justify-content-end align-items-center">
-                                <a href="events.php?id=<?php echo $event['id']; ?>" class="btn btn-primary learn-more-btn" data-event-id="<?php echo $event['id']; ?>">Learn More</a>
+                                <a href="events.php?id=<?php echo $event['id']; ?>" class="btn btn-primary learn-more-btn">Learn More</a>
                             </div>
                         </div>
                     </div>

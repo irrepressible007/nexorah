@@ -48,6 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $event_time = !empty($_POST['event_time']) ? $_POST['event_time'] : null;
                     $location = sanitize($_POST['location']);
                     $is_upcoming = isset($_POST['is_upcoming']) ? 1 : 0;
+                    $is_registration_open = isset($_POST['is_registration_open']) ? 1 : 0;
                     
                     // Handle image upload
                     $image_path = '';
@@ -61,8 +62,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     }
                     
                     // Insert into database
-                    $stmt = $pdo->prepare("INSERT INTO events (title, description, image_path, event_date, event_time, location, is_upcoming) VALUES (?, ?, ?, ?, ?, ?, ?)");
-                    $stmt->execute([$title, $description, $image_path, $event_date, $event_time, $location, $is_upcoming]);
+                    $stmt = $pdo->prepare("INSERT INTO events (title, description, image_path, event_date, event_time, location, is_upcoming, is_registration_open) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+                    $stmt->execute([$title, $description, $image_path, $event_date, $event_time, $location, $is_upcoming, $is_registration_open]);
                     
                     // Redirect to prevent form resubmission
                     header('Location: events.php?success=added');
@@ -81,6 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $event_time = !empty($_POST['event_time']) ? $_POST['event_time'] : null;
                     $location = sanitize($_POST['location']);
                     $is_upcoming = isset($_POST['is_upcoming']) ? 1 : 0;
+                    $is_registration_open = isset($_POST['is_registration_open']) ? 1 : 0;
                     
                     // Handle image upload
                     $image_update = '';
@@ -96,8 +98,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     }
                     
                     // Update database
-                    $sql = "UPDATE events SET title = ?, description = ?, event_date = ?, event_time = ?, location = ?, is_upcoming = ?" . $image_update . " WHERE id = ?";
-                    $params = array_merge([$title, $description, $event_date, $event_time, $location, $is_upcoming], $image_params, [$event_id]);
+                    $sql = "UPDATE events SET title = ?, description = ?, event_date = ?, event_time = ?, location = ?, is_upcoming = ?, is_registration_open = ?" . $image_update . " WHERE id = ?";
+                    $params = array_merge([$title, $description, $event_date, $event_time, $location, $is_upcoming, $is_registration_open], $image_params, [$event_id]);
                     $stmt = $pdo->prepare($sql);
                     $stmt->execute($params);
                     
@@ -245,8 +247,11 @@ try {
                                 <td><?php echo htmlspecialchars($event['title']); ?></td>
                                 <td><?php echo $event['event_date'] ? date('M j, Y', strtotime($event['event_date'])) : 'N/A'; ?></td>
                                 <td>
-                                    <span class="badge <?php echo $event['is_upcoming'] ? 'bg-success' : 'bg-secondary'; ?>">
+                                    <span class="badge <?php echo $event['is_upcoming'] ? 'bg-success' : 'bg-secondary'; ?> mb-1">
                                         <?php echo $event['is_upcoming'] ? 'Upcoming' : 'Past'; ?>
+                                    </span><br>
+                                    <span class="badge <?php echo $event['is_registration_open'] ? 'bg-primary' : 'bg-dark'; ?>">
+                                        <?php echo $event['is_registration_open'] ? 'Registration Open' : 'Registration Closed'; ?>
                                     </span>
                                 </td>
                                 <td><?php echo number_format($event['total_views']); ?></td>
@@ -317,6 +322,10 @@ try {
                             <input type="checkbox" class="form-check-input" id="is_upcoming" name="is_upcoming" checked>
                             <label class="form-check-label" for="is_upcoming">This is an upcoming event</label>
                         </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="is_registration_open" name="is_registration_open" checked>
+                            <label class="form-check-label" for="is_registration_open">Registration is Open</label>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -373,6 +382,10 @@ try {
                             <input type="checkbox" class="form-check-input" id="edit_is_upcoming" name="is_upcoming">
                             <label class="form-check-label" for="edit_is_upcoming">This is an upcoming event</label>
                         </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="edit_is_registration_open" name="is_registration_open">
+                            <label class="form-check-label" for="edit_is_registration_open">Registration is Open</label>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -427,6 +440,7 @@ try {
             document.getElementById('edit_event_time').value = event.event_time;
             document.getElementById('edit_location').value = event.location || '';
             document.getElementById('edit_is_upcoming').checked = event.is_upcoming == 1;
+            document.getElementById('edit_is_registration_open').checked = event.is_registration_open == 1;
             
             new bootstrap.Modal(document.getElementById('editEventModal')).show();
         }
