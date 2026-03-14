@@ -72,7 +72,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
                         </li>
                     </ul>
                     <div class="d-flex align-items-center ms-lg-3 mt-3 mt-lg-0">
-                        <a href="nexopay.com.bd/register.php" class="btn btn-light text-primary fw-bold text-uppercase px-4 py-2 rounded-pill shadow-sm" style="background-color: #fff;">
+                        <a href="https://nexopay.com.bd/register.php" target="_blank" class="btn btn-light text-primary fw-bold text-uppercase px-4 py-2 rounded-pill shadow-sm" style="background-color: #fff;">
                             Register
                         </a>
                     </div>
