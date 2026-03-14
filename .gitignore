@@ -1,0 +1,20 @@
+# ── Database configuration files ─────────────────────────────────────────
+# These files contain live server credentials and must NEVER be committed.
+# Copy the corresponding .example file and fill in your credentials.
+includes/db.php
+nexopay.com.bd/config/database.php
+nexopay.com.bd/register.php
+
+# ── OS / Editor junk ─────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# ── Uploads (large binary files) ─────────────────────────────────────────
+nexopay.com.bd/uploads/
+9173182/uploads/
+
+# ── Zip archives ─────────────────────────────────────────────────────────
+*.zip
+site.zip
