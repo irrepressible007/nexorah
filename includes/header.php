@@ -71,6 +71,11 @@ $current_page = basename($_SERVER['PHP_SELF']);
                             <a class="nav-link <?php echo ($current_page == 'contact.php') ? 'active' : ''; ?>" href="contact.php">Contact Us</a>
                         </li>
                     </ul>
+                    <div class="d-flex align-items-center ms-lg-3 mt-3 mt-lg-0">
+                        <a href="nexopay/register.php" class="btn btn-light text-primary fw-bold text-uppercase px-4 py-2 rounded-pill shadow-sm" style="background-color: #fff;">
+                            Register
+                        </a>
+                    </div>
                 </div>
             </div>
         </nav>
