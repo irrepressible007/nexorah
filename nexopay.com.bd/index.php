@@ -55,6 +55,7 @@ $past_events = $past_stmt->fetchAll(PDO::FETCH_ASSOC);
                 <li><a href="about.php">About Us</a></li>
                 <li><a href="https://nexorah.com.bd/" target="_blank" rel="noopener">Nexorah</a></li>
                 <li><a href="contact.php">Contact</a></li>
+                <li><a href="register.php" class="nav-register-pill">Register</a></li>
             </ul>
         </div>
     </nav>

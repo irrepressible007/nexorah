@@ -99,6 +99,7 @@ if ($_POST && $event['status'] == 'upcoming') {
                 <li><a href="https://nexorah.com.bd/" target="_blank" rel="noopener">Nexorah</a></li>
                 <li><a href="contact.php">Contact</a></li>
                 <li><a href="user-panel.php">My Registrations</a></li>
+                <li><a href="register.php" class="nav-register-pill">Register</a></li>
             </ul>
         </div>
     </nav>
