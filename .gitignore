@@ -3,7 +3,7 @@
 # Copy the corresponding .example file and fill in your credentials.
 includes/db.php
 nexopay.com.bd/config/database.php
-nexopay.com.bd/register.php
+nexopay.com.bd/config/nexorah_db.php
 
 # ── OS / Editor junk ─────────────────────────────────────────────────────
 .DS_Store
