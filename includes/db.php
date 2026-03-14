@@ -1,9 +1,9 @@
 <?php
 // Database configuration
 $host = 'localhost';
-$dbname = 'nexorahc_nexorah';
-$username = 'nexorahc_nexorah';
-$password = 'Nexorah.com.bd';
+$dbname = 'nexorah';
+$username = 'root';
+$password = '';
 
 // Create database connection
 try {

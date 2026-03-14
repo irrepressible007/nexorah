@@ -1,9 +1,9 @@
 <?php
 class Database {
     private $host = 'localhost';
-    private $db_name = 'nexorahc_nexopay';
-    private $username = 'nexorahc_nexopay';
-    private $password = 'Nexorah.com.bd';
+    private $db_name = 'nexopay';
+    private $username = 'root';
+    private $password = '';
     private $conn;
 
     public function getConnection() {
