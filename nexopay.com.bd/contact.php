@@ -58,6 +58,9 @@ if ($_POST) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact Us - Nexopay</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/jpeg" href="assets/images/public/Nexopay logo.jpeg">
+    <link rel="shortcut icon" href="assets/images/public/Nexopay logo.jpeg">
     <link rel="stylesheet" href="assets/css/style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script defer src="assets/js/main.js"></script>
@@ -67,7 +70,9 @@ if ($_POST) {
     <nav class="navbar">
         <div class="container">
             <div class="nav-brand">
-                <h2>Nexopay</h2>
+                <a href="index.php" style="display: flex; align-items: center; text-decoration: none;">
+                    <img src="assets/images/public/Nexopay logo.jpeg" alt="Nexopay Logo" style="height: 45px; width: auto;">
+                </a>
             </div>
             <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
                 <i class="fas fa-ellipsis-v"></i>

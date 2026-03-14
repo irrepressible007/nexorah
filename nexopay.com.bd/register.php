@@ -46,6 +46,9 @@ if (!$show_form) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $show_form ? htmlspecialchars($event['title']) . ' — Register' : 'Register for an Event'; ?> | Nexopay</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/jpeg" href="assets/images/public/Nexopay logo.jpeg">
+    <link rel="shortcut icon" href="assets/images/public/Nexopay logo.jpeg">
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
@@ -239,7 +242,7 @@ if (!$show_form) {
         <div class="container">
             <div class="nav-brand">
                 <a href="index.php" style="display: flex; align-items: center; text-decoration: none;">
-                    <img src="assets/images/public/Nexorah LOGO gif.gif" alt="Nexorah Logo" style="height: 45px; width: auto;">
+                    <img src="assets/images/public/Nexopay logo.jpeg" alt="Nexopay Logo" style="height: 45px; width: auto;">
                 </a>
             </div>
             <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">

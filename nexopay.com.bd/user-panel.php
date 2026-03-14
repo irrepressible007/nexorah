@@ -27,6 +27,9 @@ if (!empty($user_email)) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Registrations - Nexopay</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/jpeg" href="assets/images/public/Nexopay logo.jpeg">
+    <link rel="shortcut icon" href="assets/images/public/Nexopay logo.jpeg">
     <link rel="stylesheet" href="assets/css/style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -36,7 +39,9 @@ if (!empty($user_email)) {
     <nav class="navbar">
         <div class="container">
             <div class="nav-brand">
-                <h2><i class="fas fa-ticket-alt"></i> Nexopay</h2>
+                <a href="index.php" style="display: flex; align-items: center; text-decoration: none;">
+                    <img src="assets/images/public/Nexopay logo.jpeg" alt="Nexopay logo" style="height: 45px; width: auto;">
+                </a>
             </div>
             <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
                 <i class="fas fa-bars"></i>
