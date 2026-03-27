@@ -18,5 +18,6 @@ copy /Y "about.php" "%DEST%\about.php"
 copy /Y "contact.php" "%DEST%\contact.php"
 copy /Y "user-panel.php" "%DEST%\user-panel.php"
 copy /Y "event-details.php" "%DEST%\event-details.php"
+copy /Y "config\nexorah_db.php" "%DEST%\config\nexorah_db.php"
 
 echo Copied successfully.
