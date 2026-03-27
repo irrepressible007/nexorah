@@ -41,8 +41,8 @@ if (!$show_form) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $show_form ? htmlspecialchars($event['title']) . ' — Register' : 'Register for an Event'; ?> | Nexopay</title>
     <!-- Favicon -->
-    <link rel="icon" type="image/jpeg" href="assets/images/public/Nexopay logo.jpeg">
-    <link rel="shortcut icon" href="assets/images/public/Nexopay logo.jpeg">
+    <link rel="icon" type="image/jpeg" href="assets/images/public/Nexopay logo horizontal.jpeg">
+    <link rel="shortcut icon" href="assets/images/public/Nexopay logo horizontal.jpeg">
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
@@ -120,6 +120,7 @@ if (!$show_form) {
         .registration-form .form-control:focus {
             outline: none; border-color: #3498db;
             box-shadow: 0 0 0 3px rgba(52,152,219,.15);
+            transform: translateY(-1px);
         }
 
         /* Reg-type toggle */
@@ -224,10 +225,17 @@ if (!$show_form) {
             text-decoration: none; display: inline-block; box-shadow: 0 2px 4px rgba(0,0,0,.075);
         }
 
+        .action-buttons-container { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem; }
+        .action-buttons-right { display: flex; gap: 10px; flex-wrap: wrap; }
+
         @media(max-width:600px){
+            .registration-form { padding: 1.5rem; }
             .segment-card-header { flex-wrap: wrap; gap: 6px; }
             .segment-card-footer { text-align: left; }
             #totalPriceDisplay   { font-size: 1.1rem; }
+            .action-buttons-container { flex-direction: column; align-items: stretch; gap: 1.5rem; }
+            .action-buttons-right { flex-direction: column; align-items: stretch; }
+            .action-buttons-right a { text-align: center; }
         }
     </style>
 </head>
@@ -236,7 +244,7 @@ if (!$show_form) {
         <div class="container">
             <div class="nav-brand">
                 <a href="index.php" style="display: flex; align-items: center; text-decoration: none;">
-                    <img src="assets/images/public/Nexopay logo.jpeg" alt="Nexopay Logo" style="height: 45px; width: auto;">
+                    <img src="assets/images/public/Nexopay logo horizontal.jpeg" alt="Nexopay Logo" style="height: 45px; width: auto;">
                 </a>
             </div>
             <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
@@ -248,6 +256,7 @@ if (!$show_form) {
                 <li><a href="about.php">About Us</a></li>
                 <li><a href="https://nexorah.com.bd/" target="_blank" rel="noopener">Nexorah</a></li>
                 <li><a href="contact.php">Contact</a></li>
+                <li><a href="user-panel.php">My Registrations</a></li>
                 <li><a href="register.php" class="active nav-register-pill">Register</a></li>
             </ul>
         </div>
@@ -272,7 +281,13 @@ if (!$show_form) {
     <!-- ── STEAM CARNIVAL FORM ────────────────────────────────────────── -->
     <section class="form-section">
         <div class="container">
-            <a href="register.php" class="back-link"><i class="fas fa-arrow-left"></i> Back to all events</a>
+            <div class="action-buttons-container">
+                <a href="register.php" class="back-link"><i class="fas fa-arrow-left"></i> Back to all events</a>
+                <div class="action-buttons-right">
+                    <a href="register-ca.php?event_id=<?php echo $event['id']; ?>" class="btn-register-hub" style="background: linear-gradient(135deg, #8e44ad, #9b59b6); padding: 10px 20px; font-size: 0.9rem;"><i class="fas fa-user-tie"></i> Register as CA</a>
+                    <a href="register-volunteer.php?event_id=<?php echo $event['id']; ?>" class="btn-register-hub" style="background: linear-gradient(135deg, #e67e22, #f39c12); padding: 10px 20px; font-size: 0.9rem;"><i class="fas fa-hands-helping"></i> Register as Volunteer</a>
+                </div>
+            </div>
             <form id="steamRegistrationForm" action="#" method="POST" class="registration-form">
                 <h3>National STEAM Carnival Registration</h3>
                 <p class="form-desc">The event will span 3 days of exciting science, technology, and art competitions, with the Final Round being held at BUET.</p>

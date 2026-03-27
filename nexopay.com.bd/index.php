@@ -28,8 +28,8 @@ $past_events = $past_stmt->fetchAll(PDO::FETCH_ASSOC);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nexopay - Smart Secure Seamless</title>
     <!-- Favicon -->
-    <link rel="icon" type="image/jpeg" href="assets/images/public/Nexopay logo.jpeg">
-    <link rel="shortcut icon" href="assets/images/public/Nexopay logo.jpeg">
+    <link rel="icon" type="image/jpeg" href="assets/images/public/Nexopay logo horizontal.jpeg">
+    <link rel="shortcut icon" href="assets/images/public/Nexopay logo horizontal.jpeg">
     <link rel="stylesheet" href="assets/css/style.css">
     <!-- Premium font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -43,7 +43,7 @@ $past_events = $past_stmt->fetchAll(PDO::FETCH_ASSOC);
         <div class="container">
             <div class="nav-brand">
                 <a href="index.php" style="display: flex; align-items: center; text-decoration: none;">
-                    <img src="assets/images/public/Nexopay logo.jpeg" alt="Nexopay Logo" style="height: 45px; width: auto;">
+                    <img src="assets/images/public/Nexopay logo horizontal.jpeg" alt="Nexopay Logo" style="height: 45px; width: auto;">
                 </a>
             </div>
             <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
@@ -55,6 +55,7 @@ $past_events = $past_stmt->fetchAll(PDO::FETCH_ASSOC);
                 <li><a href="about.php">About Us</a></li>
                 <li><a href="https://nexorah.com.bd/" target="_blank" rel="noopener">Nexorah</a></li>
                 <li><a href="contact.php">Contact</a></li>
+                <li><a href="user-panel.php">My Registrations</a></li>
                 <li><a href="register.php" class="nav-register-pill">Register</a></li>
             </ul>
         </div>
@@ -158,7 +159,6 @@ $past_events = $past_stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
     </footer>
 
-    <script src="assets/js/script.js"></script>
     <!-- Scroll to top -->
     <button id="scrollToTop" class="scroll-to-top"><i class="fas fa-arrow-up"></i></button>
 </body>

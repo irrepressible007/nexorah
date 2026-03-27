@@ -91,9 +91,9 @@ try {
             }
         }
     } else {
-        if ($existing_admin && $force_setup) {
-            echo "<div class='info'>Force setup enabled. Recreating admin user...</div>";
-            $db->exec("DELETE FROM admin_users WHERE username = 'admin'");
+        if ($force_setup) {
+            echo "<div class='info'>Force setup enabled. Deleting ALL existing admin accounts...</div>";
+            $db->exec("DELETE FROM admin_users");
         }
         
         echo "<div class='info'>Creating new admin user...</div>";

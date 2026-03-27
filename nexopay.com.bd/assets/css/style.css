@@ -1404,12 +1404,12 @@ body {
         padding: 100px 0 160px; /* ensures glow extends under headline */
     }
     .main-heading {
-        font-size: 2.2rem;
+        font-size: 1.8rem;
         line-height: 1.25;
     }
     
     .subtitle {
-        font-size: 1.1rem;
+        font-size: 0.95rem;
     }
     .hero::before,
     .hero::after {
@@ -1522,6 +1522,14 @@ body {
     .card-content {
         padding: 20px;
     }
+    
+    /* Make registration tables horizontally scrollable */
+    table {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
 }
 
 /* Loading Animation */
@@ -1601,6 +1609,13 @@ body {
     grid-template-columns: 1fr 1fr;
     gap: 30px;
     margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+    .qr-payment-section {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
 }
 
 .qr-code-container {
@@ -2273,4 +2288,28 @@ body {
         align-items: flex-start;
         gap: 10px;
     }
-}
+}  
+/* ÄÄ Register pill override ÄÄ */  
+.nav-register-pill {  
+    background-color: #fff;  
+    color: #002147 !important;  
+    font-weight: bold;  
+    text-transform: uppercase;  
+    padding: 8px 24px !important;  
+    border-radius: 50rem;  
+    text-decoration: none;  
+    display: inline-block;  
+    box-shadow: 0 2px 4px rgba(0,0,0,.075);  
+    transition: transform 0.2s, box-shadow 0.2s;  
+}  
+.nav-register-pill:hover {  
+    transform: translateY(-2px);  
+    box-shadow: 0 4px 8px rgba(0,0,0,.15);  
+}  
+@media (max-width: 768px) {  
+    .nav-register-pill {  
+        display: inline-block;  
+        margin-top: 10px;  
+        padding: 10px 24px !important;  
+    }  
+} 

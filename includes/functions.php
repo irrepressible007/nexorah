@@ -101,4 +101,14 @@ function sendEmail($to, $subject, $message) {
         return mail($to, $subject, $message, $headers);
     }
 }
+
+// Function to get the correct NexoPay URL based on environment
+function getNexopayUrl() {
+    $host = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '';
+    if (strpos($host, 'localhost') !== false || strpos($host, '127.0.0.1') !== false) {
+        return 'http://localhost/nexorah/nexopay';
+    } else {
+        return 'https://nexopay.com.bd';
+    }
+}
 ?>

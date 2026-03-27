@@ -28,8 +28,8 @@ if (!empty($user_email)) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Registrations - Nexopay</title>
     <!-- Favicon -->
-    <link rel="icon" type="image/jpeg" href="assets/images/public/Nexopay logo.jpeg">
-    <link rel="shortcut icon" href="assets/images/public/Nexopay logo.jpeg">
+    <link rel="icon" type="image/jpeg" href="assets/images/public/Nexopay logo horizontal.jpeg">
+    <link rel="shortcut icon" href="assets/images/public/Nexopay logo horizontal.jpeg">
     <link rel="stylesheet" href="assets/css/style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -40,19 +40,20 @@ if (!empty($user_email)) {
         <div class="container">
             <div class="nav-brand">
                 <a href="index.php" style="display: flex; align-items: center; text-decoration: none;">
-                    <img src="assets/images/public/Nexopay logo.jpeg" alt="Nexopay logo" style="height: 45px; width: auto;">
+                    <img src="assets/images/public/Nexopay logo horizontal.jpeg" alt="Nexopay logo" style="height: 45px; width: auto;">
                 </a>
             </div>
             <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
                 <i class="fas fa-bars"></i>
             </button>
             <ul class="nav-menu">
-                <li><a href="index.php"><i class="fas fa-home"></i> Home</a></li>
-                <li><a href="events.php"><i class="fas fa-calendar-alt"></i> Events</a></li>
-                <li><a href="about.php"><i class="fas fa-info-circle"></i> About Us</a></li>
+                <li><a href="index.php">Home</a></li>
+                <li><a href="events.php">Events</a></li>
+                <li><a href="about.php">About Us</a></li>
                 <li><a href="https://nexorah.com.bd/" target="_blank" rel="noopener">Nexorah</a></li>
-                <li><a href="contact.php"><i class="fas fa-envelope"></i> Contact</a></li>
-                <li><a href="user-panel.php" class="active"><i class="fas fa-user-circle"></i> My Registrations</a></li>
+                <li><a href="contact.php">Contact</a></li>
+                <li><a href="user-panel.php" class="active">My Registrations</a></li>
+                <li><a href="register.php" class="nav-register-pill">Register</a></li>
             </ul>
         </div>
     </nav>

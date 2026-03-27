@@ -30,8 +30,8 @@ $ongoing_events = $ongoing_stmt->fetchAll(PDO::FETCH_ASSOC);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About Us - Nexopay</title>
     <!-- Favicon -->
-    <link rel="icon" type="image/jpeg" href="assets/images/public/Nexopay logo.jpeg">
-    <link rel="shortcut icon" href="assets/images/public/Nexopay logo.jpeg">
+    <link rel="icon" type="image/jpeg" href="assets/images/public/Nexopay logo horizontal.jpeg">
+    <link rel="shortcut icon" href="assets/images/public/Nexopay logo horizontal.jpeg">
     <link rel="stylesheet" href="assets/css/style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script defer src="assets/js/main.js"></script>
@@ -42,11 +42,11 @@ $ongoing_events = $ongoing_stmt->fetchAll(PDO::FETCH_ASSOC);
         <div class="container">
             <div class="nav-brand">
                 <a href="index.php" style="display: flex; align-items: center; text-decoration: none;">
-                    <img src="assets/images/public/Nexopay logo.jpeg" alt="Nexopay Logo" style="height: 45px; width: auto;">
+                    <img src="assets/images/public/Nexopay logo horizontal.jpeg" alt="Nexopay Logo" style="height: 45px; width: auto;">
                 </a>
             </div>
             <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
-                <i class="fas fa-ellipsis-v"></i>
+                <i class="fas fa-bars"></i>
             </button>
             <ul class="nav-menu">
                 <li><a href="index.php">Home</a></li>
@@ -54,6 +54,7 @@ $ongoing_events = $ongoing_stmt->fetchAll(PDO::FETCH_ASSOC);
                 <li><a href="about.php" class="active">About Us</a></li>
                 <li><a href="https://nexorah.com.bd/" target="_blank" rel="noopener">Nexorah</a></li>
                 <li><a href="contact.php">Contact</a></li>
+                <li><a href="user-panel.php">My Registrations</a></li>
                 <li><a href="register.php" class="nav-register-pill">Register</a></li>
             </ul>
         </div>

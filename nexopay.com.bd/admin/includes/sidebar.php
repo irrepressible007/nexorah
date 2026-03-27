@@ -9,6 +9,12 @@
         <li><a href="registrations.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'registrations.php' ? 'active' : ''; ?>">
             <i class="fas fa-users"></i> Registrations
         </a></li>
+        <li><a href="ca_applications.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'ca_applications.php' ? 'active' : ''; ?>">
+            <i class="fas fa-graduation-cap"></i> CA Applications
+        </a></li>
+        <li><a href="volunteer_applications.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'volunteer_applications.php' ? 'active' : ''; ?>">
+            <i class="fas fa-hands-helping"></i> Volunteers
+        </a></li>
         <li><a href="highlights.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'highlights.php' ? 'active' : ''; ?>">
             <i class="fas fa-star"></i> Highlights
         </a></li>
