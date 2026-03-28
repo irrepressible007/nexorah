@@ -1,0 +1,119 @@
+/* --- admin-mobile.css: Global Admin Mobile Optimizations & UI Enhancements --- */
+
+/* Sidebar Toggle and Backdrop */
+.sidebar-toggle {
+    display: none;
+    font-size: 1.6rem;
+    color: white;
+    cursor: pointer;
+}
+
+/* Mobile backdrop */
+.admin-mobile-backdrop {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.5);
+    z-index: 1040;
+    backdrop-filter: blur(2px);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.admin-mobile-backdrop.show {
+    opacity: 1;
+}
+
+@media (max-width: 991px) {
+    .sidebar-toggle {
+        display: block !important;
+    }
+
+    .admin-sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.35s cubic-bezier(0.4, 0.0, 0.2, 1);
+        z-index: 1050 !important;
+        position: fixed !important;
+        top: 0; left: 0;
+        height: 100vh;
+        width: 250px;
+        box-shadow: 4px 0 15px rgba(0,0,0,0.1);
+    }
+
+    .admin-sidebar.open {
+        transform: translateX(0);
+    }
+
+    .admin-mobile-backdrop {
+        display: block; /* present in DOM, hidden via visibility/opacity by default */
+        pointer-events: none; /* till opened */
+    }
+
+    .admin-mobile-backdrop.open {
+        pointer-events: auto;
+        opacity: 1;
+    }
+}
+
+/* Table Enhancements */
+.table-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    box-shadow: inset -5px 0 10px -5px rgba(0,0,0,0.05); /* shadow hint right */
+}
+
+/* Sticky first column (optional layout specific tweak) */
+.table-scroll th:first-child,
+.table-scroll td:first-child {
+    position: sticky;
+    left: 0;
+    background-color: inherit; /* adopts row color */
+    z-index: 10;
+}
+.table-scroll th:first-child {
+    background-color: #f8fafc;
+    z-index: 11;
+}
+
+/* Make KPIs stack cleanly into 2 or 1 column based on exact width */
+.kpi-strip, .kpi-grid {
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)) !important;
+    gap: 12px !important;
+}
+.kpi, .kpi-card {
+    min-width: 0 !important; /* resets older flex width constraints */
+    padding: 16px !important;
+}
+
+/* Filters bar stacking */
+@media (max-width: 768px) {
+    .filter-bar div:not(:last-child) {
+        width: 100%;
+        margin-bottom: 8px;
+    }
+    .filter-bar div:last-child {
+        width: 100%;
+        justify-content: space-between;
+    }
+    .btn-filter, .btn-reset {
+        flex: 1;
+        text-align: center;
+        padding: 12px;
+        min-height: 48px;
+    }
+}
+
+/* Modals */
+.modal-box {
+    width: 95% !important;
+    padding: 20px !important;
+    margin: 10px !important;
+}
+.modal-footer {
+    flex-direction: column-reverse;
+}
+.modal-footer button {
+    width: 100%;
+    min-height: 48px;
+}

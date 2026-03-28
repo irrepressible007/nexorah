@@ -42,14 +42,21 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 5000);
     });
 
-    // Mobile sidebar toggle
+    // Mobile sidebar toggle with backdrop
     const sidebarToggle = document.getElementById('sidebar-toggle');
     const sidebar = document.querySelector('.admin-sidebar');
+    const backdrop = document.getElementById('adminBackdrop');
     
-    if (sidebarToggle && sidebar) {
-        sidebarToggle.addEventListener('click', function() {
-            sidebar.classList.toggle('active');
-        });
+    function toggleSidebar() {
+        if(sidebar) sidebar.classList.toggle('open');
+        if(backdrop) backdrop.classList.toggle('open');
+    }
+
+    if (sidebarToggle) {
+        sidebarToggle.addEventListener('click', toggleSidebar);
+    }
+    if (backdrop) {
+        backdrop.addEventListener('click', toggleSidebar);
     }
 
     // Form validation
