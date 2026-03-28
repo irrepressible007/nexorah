@@ -18,7 +18,7 @@ $sql[] = "ALTER TABLE registrations
           ADD COLUMN IF NOT EXISTS registration_type ENUM('general','campus_ambassador','volunteer') DEFAULT 'general' AFTER payment_method";
 
 $sql[] = "ALTER TABLE registrations 
-          ADD COLUMN IF NOT EXISTS extra_data TEXT NULL AFTER registration_type COMMENT 'JSON – extra fields for CA/volunteer forms'";
+          ADD COLUMN IF NOT EXISTS extra_data TEXT NULL COMMENT 'JSON – extra fields for CA/volunteer forms' AFTER registration_type";
 
 // ── Create ca_applications table ─────────────────────────────────────────────
 $sql[] = "CREATE TABLE IF NOT EXISTS ca_applications (
