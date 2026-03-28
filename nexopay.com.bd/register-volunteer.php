@@ -24,6 +24,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $db_obj = new Database();
         $db     = $db_obj->getConnection();
 
+        // Resolve nexopay event_id by title match (nexorah and nexopay use different IDs)
+        $nexopay_event_id = $event_id ?: null;
+        if ($event_id) {
+            try {
+                $evStmt = $db->prepare("SELECT id FROM events WHERE title LIKE :t LIMIT 1");
+                $evStmt->execute([':t' => '%' . ($event['title'] ?? '') . '%']);
+                $evRow = $evStmt->fetch(PDO::FETCH_ASSOC);
+                if ($evRow) $nexopay_event_id = (int)$evRow['id'];
+            } catch (Exception $ev_e) { /* keep original */ }
+        }
+
         // Handle photo upload
         $picture_path = null;
         if (isset($_FILES['picture']) && $_FILES['picture']['error'] === UPLOAD_ERR_OK) {
@@ -49,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                  :experience, :facebook_link, :picture_path, :terms_agreed)
         ");
         $stmt->execute([
-            ':event_id'       => $event_id ?: null,
+            ':event_id'       => $nexopay_event_id,
             ':full_name'      => trim($_POST['full_name'] ?? ''),
             ':email'          => trim($_POST['email'] ?? ''),
             ':institution'    => trim($_POST['institution'] ?? ''),
@@ -69,7 +80,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':picture_path'   => $picture_path,
             ':terms_agreed'   => ($_POST['terms'] ?? '') === 'Yes' ? 1 : 0,
         ]);
-        $success_message = '🎉 Your Volunteer application has been submitted successfully! We will review it and contact you.';
+
+        // Insert summary tracker into main registrations table
+        $stmtTracker = $db->prepare("
+            INSERT INTO registrations (
+                event_id, full_name, email, phone, guardian_number,
+                ticket_quantity, total_amount, payment_method,
+                registration_type
+            ) VALUES (
+                :event_id, :full_name, :email, :phone, :guardian_number,
+                :ticket_quantity, :total_amount, :payment_method,
+                :registration_type
+            )
+        ");
+        $stmtTracker->execute([
+            ':event_id'          => $nexopay_event_id,
+            ':full_name'         => trim($_POST['full_name'] ?? ''),
+            ':email'             => trim($_POST['email'] ?? ''),
+            ':phone'             => trim($_POST['phone_number'] ?? ''),
+            ':guardian_number'   => trim($_POST['guardian_number'] ?? ''),
+            ':ticket_quantity'   => 1,
+            ':total_amount'      => 0,
+            ':payment_method'    => 'n/a',
+            ':registration_type' => 'volunteer'
+        ]);
+
+        header("Location: success.php?status=success&type=volunteer");
+        exit;
     } catch (Exception $e) {
         $error_message = '⚠️ Something went wrong. Please try again. (' . $e->getMessage() . ')';
     }
@@ -187,19 +224,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="container">
             <a href="register.php<?php echo $event_id ? '?event_id='.$event_id : ''; ?>" class="back-link"><i class="fas fa-arrow-left"></i> Back to Event Registration</a>
 
-            <?php if ($success_message): ?>
-            <div style="background:#dcfce7;border:1.5px solid #86efac;border-radius:14px;padding:22px 24px;margin-bottom:24px;text-align:center">
-                <div style="font-size:2rem;margin-bottom:8px">🎉</div>
-                <div style="font-size:1.1rem;font-weight:700;color:#166534;margin-bottom:4px"><?= htmlspecialchars($success_message) ?></div>
-                <a href="index.php" style="display:inline-block;margin-top:12px;padding:10px 24px;background:#16a34a;color:#fff;border-radius:10px;text-decoration:none;font-weight:600">← Go to Homepage</a>
-            </div>
-            <?php elseif ($error_message): ?>
+            <?php if ($error_message): ?>
             <div style="background:#fee2e2;border:1.5px solid #fca5a5;border-radius:14px;padding:18px 22px;margin-bottom:20px;color:#991b1b;font-weight:600">
                 <?= htmlspecialchars($error_message) ?>
             </div>
             <?php endif; ?>
 
-            <?php if (!$success_message): ?>
             <form action="" method="POST" enctype="multipart/form-data" class="registration-form">
                 <h3>Volunteer Application</h3>
                 <p class="form-desc">Hello enthusiasts! Please fill out the sections below. All fields marked with (*) are required.</p>
@@ -344,7 +374,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 
                 <button type="submit" class="btn-submit">Submit Volunteer Application</button>
             </form>
-            <?php endif; ?>
         </div>
     </section>
 

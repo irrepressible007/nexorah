@@ -1,11 +1,13 @@
 <?php
-// Load database connection from external config (excluded from Git for security)
+// Load database connections (excluded from Git for security)
 require_once __DIR__ . '/config/nexorah_db.php';
+require_once __DIR__ . '/config/database.php';
 
 // ── Routing: determine which view to show ──────────────────────────────────
 $event_id  = isset($_GET['event_id']) ? (int)$_GET['event_id'] : 0;
 $show_form = false;
 $event     = null;
+$error_message = '';
 
 // Map of event IDs → which form template to use
 // Add new event forms here as they are created
@@ -20,6 +22,138 @@ if ($event_id && array_key_exists($event_id, $supported_forms)) {
         if ($event) $show_form = $supported_forms[$event_id];
     } catch (Exception $e) {
         // fall through to hub view
+    }
+}
+
+// ── POST Handling ────────────────────────────────────────────────────────
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $event) {
+    try {
+        $db_obj = new Database();
+        $db = $db_obj->getConnection();
+
+        // Resolve nexopay event_id by matching the nexorah event title.
+        // This ensures registrations.event_id correctly joins with nexopay's events table.
+        $nexopay_event_id = null;
+        try {
+            $evStmt = $db->prepare("SELECT id FROM events WHERE title LIKE :t LIMIT 1");
+            $evStmt->execute([':t' => '%' . $event['title'] . '%']);
+            $evRow = $evStmt->fetch(PDO::FETCH_ASSOC);
+            if ($evRow) $nexopay_event_id = (int)$evRow['id'];
+        } catch (Exception $ev_e) {
+            // If lookup fails, fall back to nexorah event id (FK already dropped)
+            $nexopay_event_id = $event['id'];
+        }
+        // If no match found in nexopay events, store the nexorah event_id anyway (FK dropped)
+        if (!$nexopay_event_id) $nexopay_event_id = $event['id'];
+
+        $reg_type = $_POST['reg_type'] ?? '';
+        $full_name = '';
+        $email = ''; // STEAM form doesn't explicitly ask for email
+        $phone = '';
+        $guardian_number = '';
+        $ticket_quantity = 1;
+        
+        $extra_data = [
+            'reg_type'        => $reg_type,
+            'segments'        => $_POST['segments'] ?? [],
+            'nexorah_event_id'=> $event['id'],  // store original nexorah ID for traceability
+        ];
+
+        if ($reg_type === 'solo') {
+            $full_name = trim($_POST['full_name'] ?? '');
+            $phone = trim($_POST['contact'] ?? '');
+            $guardian_number = trim($_POST['emergency_contact'] ?? '');
+            
+            $extra_data['category'] = $_POST['category'] ?? '';
+            $extra_data['institution'] = trim($_POST['institution'] ?? '');
+            $extra_data['class_grade'] = trim($_POST['class_grade'] ?? '');
+            $extra_data['guardian_name'] = trim($_POST['guardian_name'] ?? '');
+            $extra_data['ca_reference'] = trim($_POST['ca_reference'] ?? '');
+            $ticket_quantity = 1;
+
+            if (empty($full_name) || empty($phone)) {
+                throw new Exception("Full Name and Contact Number are required.");
+            }
+        } elseif ($reg_type === 'group') {
+            $full_name = trim($_POST['grp_p1_name'] ?? 'Group Leader');
+            $phone = trim($_POST['grp_p1_contact'] ?? '');
+            $guardian_number = trim($_POST['grp_emergency_contact'] ?? '');
+            
+            $extra_data['group_category'] = $_POST['group_category'] ?? '';
+            $extra_data['p1'] = [
+                'name'        => trim($_POST['grp_p1_name'] ?? ''),
+                'institution' => trim($_POST['grp_p1_institution'] ?? ''),
+                'class'       => trim($_POST['grp_p1_class'] ?? ''),
+                'contact'     => trim($_POST['grp_p1_contact'] ?? '')
+            ];
+            $extra_data['p2'] = [
+                'name'        => trim($_POST['grp_p2_name'] ?? ''),
+                'institution' => trim($_POST['grp_p2_institution'] ?? ''),
+                'class'       => trim($_POST['grp_p2_class'] ?? ''),
+                'contact'     => trim($_POST['grp_p2_contact'] ?? '')
+            ];
+            $ticket_quantity = 2;
+            
+            if (!empty($_POST['grp_p3_name'])) {
+                $extra_data['p3'] = [
+                    'name'        => trim($_POST['grp_p3_name'] ?? ''),
+                    'institution' => trim($_POST['grp_p3_institution'] ?? ''),
+                    'class'       => trim($_POST['grp_p3_class'] ?? ''),
+                    'contact'     => trim($_POST['grp_p3_contact'] ?? '')
+                ];
+                $ticket_quantity = 3;
+            }
+            $extra_data['guardian_name'] = trim($_POST['grp_guardian_name'] ?? '');
+            $extra_data['ca_reference'] = trim($_POST['grp_ca_reference'] ?? '');
+
+            if (empty($_POST['grp_p1_name']) || empty($_POST['grp_p2_name'])) {
+                throw new Exception("Group requires at least 2 participant names.");
+            }
+        } else {
+            throw new Exception("Invalid registration type selected.");
+        }
+
+        $total_amount = floatval($_POST['total_amount'] ?? 0);
+        $payment_method = $_POST['payment_method'] ?? '';
+        $transaction_id = trim($_POST['transaction_id'] ?? '');
+        $extra_data['sender_number'] = trim($_POST['sender_number'] ?? '');
+
+        // Validation for payment (if amount > 0, txn ID is required)
+        if ($total_amount > 0 && empty($transaction_id)) {
+            throw new Exception("Transaction ID is required for paid registrations.");
+        }
+
+        $stmt = $db->prepare("
+            INSERT INTO registrations (
+                event_id, full_name, email, phone, guardian_number, 
+                ticket_quantity, total_amount, payment_method, transaction_id, 
+                registration_type, extra_data
+            ) VALUES (
+                :event_id, :full_name, :email, :phone, :guardian_number, 
+                :ticket_quantity, :total_amount, :payment_method, :transaction_id, 
+                :registration_type, :extra_data
+            )
+        ");
+
+        $stmt->execute([
+            ':event_id'          => $nexopay_event_id,
+            ':full_name'         => $full_name,
+            ':email'             => $email,
+            ':phone'             => $phone,
+            ':guardian_number'   => $guardian_number,
+            ':ticket_quantity'   => $ticket_quantity,
+            ':total_amount'      => $total_amount,
+            ':payment_method'    => strtolower($payment_method),
+            ':transaction_id'    => $transaction_id,
+            ':registration_type' => 'general',
+            ':extra_data'        => json_encode($extra_data)
+        ]);
+
+        header("Location: success.php?status=success&type=general&txn=" . urlencode($transaction_id));
+        exit;
+
+    } catch (Exception $e) {
+        $error_message = $e->getMessage();
     }
 }
 
@@ -288,8 +422,13 @@ if (!$show_form) {
                     <a href="register-volunteer.php?event_id=<?php echo $event['id']; ?>" class="btn-register-hub" style="background: linear-gradient(135deg, #e67e22, #f39c12); padding: 10px 20px; font-size: 0.9rem;"><i class="fas fa-hands-helping"></i> Register as Volunteer</a>
                 </div>
             </div>
-            <form id="steamRegistrationForm" action="#" method="POST" class="registration-form">
+            <form id="steamRegistrationForm" action="?event_id=<?php echo $event['id']; ?>" method="POST" class="registration-form">
                 <h3>National STEAM Carnival Registration</h3>
+                <?php if ($error_message): ?>
+                <div style="background:#fee2e2;border:1.5px solid #fca5a5;border-radius:10px;padding:15px;margin-bottom:20px;color:#991b1b;font-weight:600">
+                    <i class="fas fa-exclamation-circle" style="margin-right:8px;"></i> <?= htmlspecialchars($error_message) ?>
+                </div>
+                <?php endif; ?>
                 <p class="form-desc">The event will span 3 days of exciting science, technology, and art competitions, with the Final Round being held at BUET.</p>
 
                 <!-- ── STEP 1: Registration Type ──────────────────────── -->
