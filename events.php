@@ -63,13 +63,18 @@ if ($singleEvent) :
             </div>
             <div class="col-lg-4">
                 <div class="event-sidebar" data-aos="fade-up">
-                    <div class="widget">
+                    <div class="widget mb-4">
                         <h3>Event Details</h3>
                         <ul class="event-info">
                             <li><i class="far fa-calendar-alt"></i> <strong>Date:</strong> <?php echo $eventDate->format('F d, Y'); ?></li>
                             <li><i class="far fa-clock"></i> <strong>Time:</strong> <?php echo date('h:i A', strtotime($event['event_time'])); ?></li>
                         </ul>
                     </div>
+                    <?php if (isset($event['is_registration_open']) && $event['is_registration_open']) : ?>
+                    <div class="widget p-0 bg-transparent border-0 text-center shadow-none">
+                        <a href="<?php echo getNexopayUrl(); ?>/register.php?event_id=<?php echo $event['id']; ?>" class="btn btn-primary btn-lg w-100 register-btn" data-event-id="<?php echo $event['id']; ?>">Register Now</a>
+                    </div>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -102,7 +107,7 @@ if ($singleEvent) :
                         $imagePath = !empty($event['image_path']) ? '9173182/' . $event['image_path'] : 'assets/images/default-event.jpg';
                 ?>
                 <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up">
-                    <div class="event-card" data-event-id="<?php echo $event['id']; ?>">
+                    <div class="event-card" data-event-id="<?php echo $event['id']; ?>" onclick="window.location.href='events.php?id=<?php echo $event['id']; ?>'" style="cursor: pointer;">
                         <div class="event-img">
                             <img src="<?php echo $imagePath; ?>" alt="<?php echo htmlspecialchars($event['title']); ?>">
                         </div>
@@ -113,9 +118,13 @@ if ($singleEvent) :
                             </div>
                             <h3><?php echo htmlspecialchars($event['title']); ?></h3>
                             <p><?php echo htmlspecialchars(substr(strip_tags($event['description']), 0, 100)) . '...'; ?></p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span><i class="fas fa-map-marker-alt"></i> <?php echo htmlspecialchars($event['location']); ?></span>
-                                <a href="events.php?id=<?php echo $event['id']; ?>" class="btn btn-primary learn-more-btn">Learn More</a>
+                            <div class="d-flex justify-content-between align-items-end mt-3" style="column-gap: 15px;">
+                                <span style="flex: 1; padding-right: 10px;"><i class="fas fa-map-marker-alt"></i> <?php echo htmlspecialchars($event['location']); ?></span>
+                                <?php if (isset($event['is_registration_open']) && $event['is_registration_open']) : ?>
+                                    <div style="flex-shrink: 0;">
+                                        <a href="<?php echo getNexopayUrl(); ?>/register.php?event_id=<?php echo $event['id']; ?>" class="btn btn-primary register-btn" data-event-id="<?php echo $event['id']; ?>" onclick="event.stopPropagation();">Register</a>
+                                    </div>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
@@ -147,7 +156,7 @@ if ($singleEvent) :
                         $imagePath = !empty($event['image_path']) ? '9173182/' . $event['image_path'] : 'assets/images/default-event.jpg';
                 ?>
                 <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up">
-                    <div class="event-card past-event" data-event-id="<?php echo $event['id']; ?>">
+                    <div class="event-card past-event" data-event-id="<?php echo $event['id']; ?>" onclick="window.location.href='events.php?id=<?php echo $event['id']; ?>'" style="cursor: pointer;">
                         <div class="event-img">
                             <img src="<?php echo $imagePath; ?>" alt="<?php echo htmlspecialchars($event['title']); ?>">
                             <div class="past-event-overlay">
@@ -161,8 +170,13 @@ if ($singleEvent) :
                             </div>
                             <h3><?php echo htmlspecialchars($event['title']); ?></h3>
                             <p><?php echo htmlspecialchars(substr(strip_tags($event['description']), 0, 100)) . '...'; ?></p>
-                            <div class="d-flex justify-content-end align-items-center">
-                                <a href="events.php?id=<?php echo $event['id']; ?>" class="btn btn-primary learn-more-btn">Learn More</a>
+                            <div class="d-flex justify-content-between align-items-end mt-3" style="column-gap: 15px;">
+                                <span style="flex: 1; padding-right: 10px;"><i class="fas fa-map-marker-alt"></i> <?php echo htmlspecialchars($event['location']); ?></span>
+                                <?php if (isset($event['is_registration_open']) && $event['is_registration_open']) : ?>
+                                    <div style="flex-shrink: 0;">
+                                        <a href="<?php echo getNexopayUrl(); ?>/register.php?event_id=<?php echo $event['id']; ?>" class="btn btn-primary register-btn" data-event-id="<?php echo $event['id']; ?>" onclick="event.stopPropagation();">Register</a>
+                                    </div>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
@@ -184,11 +198,11 @@ if ($singleEvent) :
 
 <!-- Analytics Tracking Script -->
 <script>
-// Track Learn More button clicks
+// Track Register button clicks
 document.addEventListener('DOMContentLoaded', function() {
-    const learnMoreButtons = document.querySelectorAll('.learn-more-btn');
+    const registerButtons = document.querySelectorAll('.register-btn');
     
-    learnMoreButtons.forEach(button => {
+    registerButtons.forEach(button => {
         button.addEventListener('click', function(e) {
             const eventId = this.getAttribute('data-event-id');
             
