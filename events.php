@@ -118,12 +118,10 @@ if ($singleEvent) :
                             </div>
                             <h3><?php echo htmlspecialchars($event['title']); ?></h3>
                             <p><?php echo htmlspecialchars(substr(strip_tags($event['description']), 0, 100)) . '...'; ?></p>
-                            <div class="d-flex justify-content-between align-items-end mt-3" style="column-gap: 15px;">
-                                <span style="flex: 1; padding-right: 10px;"><i class="fas fa-map-marker-alt"></i> <?php echo htmlspecialchars($event['location']); ?></span>
+                            <div class="d-flex justify-content-between align-items-center mt-3 gap-2">
+                                <span class="text-muted" style="font-size: 0.95rem; line-height: 1.4;"><i class="fas fa-map-marker-alt" style="color: var(--primary-color); margin-right: 5px;"></i> <?php echo htmlspecialchars($event['location']); ?></span>
                                 <?php if (isset($event['is_registration_open']) && $event['is_registration_open']) : ?>
-                                    <div style="flex-shrink: 0;">
-                                        <a href="<?php echo getNexopayUrl(); ?>/register.php?event_id=<?php echo $event['id']; ?>" class="btn btn-primary register-btn" data-event-id="<?php echo $event['id']; ?>" onclick="event.stopPropagation();">Register</a>
-                                    </div>
+                                    <a href="<?php echo getNexopayUrl(); ?>/register.php?event_id=<?php echo $event['id']; ?>" class="btn btn-primary register-btn flex-shrink-0" data-event-id="<?php echo $event['id']; ?>" onclick="event.stopPropagation();">Register</a>
                                 <?php endif; ?>
                             </div>
                         </div>
@@ -170,12 +168,10 @@ if ($singleEvent) :
                             </div>
                             <h3><?php echo htmlspecialchars($event['title']); ?></h3>
                             <p><?php echo htmlspecialchars(substr(strip_tags($event['description']), 0, 100)) . '...'; ?></p>
-                            <div class="d-flex justify-content-between align-items-end mt-3" style="column-gap: 15px;">
-                                <span style="flex: 1; padding-right: 10px;"><i class="fas fa-map-marker-alt"></i> <?php echo htmlspecialchars($event['location']); ?></span>
+                            <div class="d-flex justify-content-between align-items-center mt-3 gap-2">
+                                <span class="text-muted" style="font-size: 0.95rem; line-height: 1.4;"><i class="fas fa-map-marker-alt" style="color: var(--primary-color); margin-right: 5px;"></i> <?php echo htmlspecialchars($event['location']); ?></span>
                                 <?php if (isset($event['is_registration_open']) && $event['is_registration_open']) : ?>
-                                    <div style="flex-shrink: 0;">
-                                        <a href="<?php echo getNexopayUrl(); ?>/register.php?event_id=<?php echo $event['id']; ?>" class="btn btn-primary register-btn" data-event-id="<?php echo $event['id']; ?>" onclick="event.stopPropagation();">Register</a>
-                                    </div>
+                                    <a href="<?php echo getNexopayUrl(); ?>/register.php?event_id=<?php echo $event['id']; ?>" class="btn btn-primary register-btn flex-shrink-0" data-event-id="<?php echo $event['id']; ?>" onclick="event.stopPropagation();">Register</a>
                                 <?php endif; ?>
                             </div>
                         </div>
