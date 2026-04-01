@@ -72,8 +72,9 @@ function getEventById($pdo, $id) {
 
 // Function to get recent blog posts
 function getRecentBlogPosts($pdo, $limit = 3) {
-    $stmt = $pdo->prepare("SELECT * FROM blog_posts ORDER BY created_at DESC LIMIT ?");
-    $stmt->execute([$limit]);
+    $stmt = $pdo->prepare("SELECT * FROM blog_posts ORDER BY created_at DESC LIMIT :limit");
+    $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+    $stmt->execute();
     return $stmt->fetchAll();
 }
 
