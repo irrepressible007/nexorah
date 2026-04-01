@@ -1,4 +1,4 @@
-﻿<?php
+?<?php
 // Load database connection from external config (excluded from Git for security)
 require_once __DIR__ . '/config/nexorah_db.php';
 require_once __DIR__ . '/config/database.php'; // nexopay DB for admin tables
@@ -18,7 +18,7 @@ if ($event_id) {
     }
 }
 
-// â”€â”€ Handle form POST â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Handle form POST ──────────────────────────────────────────────────────────
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $db_obj = new Database();
@@ -96,7 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header("Location: success.php?status=success&type=ca");
         exit;
     } catch (Exception $e) {
-        $error_message = 'âš ï¸ Something went wrong. Please try again. (' . $e->getMessage() . ')';
+        $error_message = '⚠️ Something went wrong. Please try again. (' . $e->getMessage() . ')';
     }
 }
 ?>

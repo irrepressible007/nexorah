@@ -3,13 +3,13 @@
 require_once __DIR__ . '/config/nexorah_db.php';
 require_once __DIR__ . '/config/database.php';
 
-// â”€â”€ Routing: determine which view to show â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Routing: determine which view to show ──────────────────────────────────
 $event_id  = isset($_GET['event_id']) ? (int)$_GET['event_id'] : 0;
 $show_form = false;
 $event     = null;
 $error_message = '';
 
-// Map of event IDs â†’ which form template to use
+// Map of event IDs → which form template to use
 // Add new event forms here as they are created
 $supported_forms = [4 => 'steam_carnival', 6 => 'steam_olympiad'];
 
@@ -25,7 +25,7 @@ if ($event_id && array_key_exists($event_id, $supported_forms)) {
     }
 }
 
-// â”€â”€ POST Handling â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── POST Handling ────────────────────────────────────────────────────────
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $event) {
     try {
         $db_obj = new Database();
@@ -157,7 +157,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $event) {
     }
 }
 
-// â”€â”€ Hub view: fetch all events with open registration â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Hub view: fetch all events with open registration ──────────────────────
 $open_events = [];
 if (!$show_form) {
     try {
@@ -173,7 +173,7 @@ if (!$show_form) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $show_form ? htmlspecialchars($event['title']) . ' â€” Register' : 'Register for an Event'; ?> | Nexopay</title>
+    <title><?php echo $show_form ? htmlspecialchars($event['title']) . ' — Register' : 'Register for an Event'; ?> | Nexopay</title>
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="assets/images/public/Nex Pay new logo.png">
     <link rel="shortcut icon" href="assets/images/public/Nex Pay new logo.png">
@@ -184,7 +184,7 @@ if (!$show_form) {
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script defer src="assets/js/main.js"></script>
     <style>
-        /* â”€â”€ Hero â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+        /* ── Hero ──────────────────────────────────────────────────── */
         .register-hero {
             padding: 120px 0 60px;
             min-height: 45vh;
@@ -196,7 +196,7 @@ if (!$show_form) {
         .register-hero h1 { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; margin-bottom: .6rem; text-shadow: 0 2px 8px rgba(0,0,0,.4); }
         .register-hero p  { font-size: 1.05rem; opacity: .88; max-width: 560px; margin: 0 auto; }
 
-        /* â”€â”€ Hub: event grid â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+        /* ── Hub: event grid ───────────────────────────────────────── */
         .hub-section { padding: 60px 0 80px; background: #f4f7fb; }
         .hub-section .section-label { font-size: .85rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #3498db; margin-bottom: .4rem; }
         .hub-section h2 { font-size: 1.9rem; font-weight: 800; color: #1a2a4a; margin-bottom: 2.5rem; }
@@ -234,7 +234,7 @@ if (!$show_form) {
         .no-events-box i { font-size: 3rem; margin-bottom: 1rem; opacity:.4; }
         .no-events-box p { font-size: 1rem; }
 
-        /* â”€â”€ Form view â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+        /* ── Form view ──────────────────────────────────────────────── */
         .form-section { padding: 60px 0 80px; background: #f4f7fb; }
         .back-link { display: inline-flex; align-items: center; gap: 7px; color: #3498db; font-weight: 600; text-decoration: none; margin-bottom: 1.5rem; font-size: .95rem; }
         .back-link:hover { text-decoration: underline; }
@@ -397,7 +397,7 @@ if (!$show_form) {
         </div>
     </nav>
 
-    <!-- â”€â”€ HERO â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+    <!-- ── HERO ────────────────────────────────────────────────────────── -->
     <section class="register-hero">
         <div class="container">
             <div class="hero-content">
@@ -413,7 +413,7 @@ if (!$show_form) {
     </section>
 
     <?php if ($show_form === 'steam_carnival' && $event): ?>
-    <!-- â”€â”€ STEAM CARNIVAL FORM â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+    <!-- ── STEAM CARNIVAL FORM ────────────────────────────────────────── -->
     <section class="form-section">
         <div class="container">
             <div class="action-buttons-container">
@@ -432,25 +432,25 @@ if (!$show_form) {
                 <?php endif; ?>
                 <p class="form-desc">The event will span 3 days of exciting science, technology, and art competitions, with the Final Round being held at BUET.</p>
 
-                <!-- â”€â”€ STEP 1: Registration Type â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+                <!-- ── STEP 1: Registration Type ──────────────────────── -->
                 <div class="form-group mb-3">
                     <label class="segments-main-label">Registration Type *</label>
                     <div class="reg-type-toggle">
                         <button type="button" class="reg-type-btn" id="btnSolo" onclick="setRegType('solo')">
-                            <span class="btn-icon">ðŸ§‘</span>
+                            <span class="btn-icon">🧑</span>
                             Solo
                             <span class="btn-sub">Individual participant</span>
                         </button>
                         <button type="button" class="reg-type-btn" id="btnGroup" onclick="setRegType('group')">
-                            <span class="btn-icon">ðŸ‘¥</span>
+                            <span class="btn-icon">👥</span>
                             Group
-                            <span class="btn-sub">2â€“3 participants</span>
+                            <span class="btn-sub">2–3 participants</span>
                         </button>
                     </div>
                     <input type="hidden" name="reg_type" id="regTypeInput" value="">
                 </div>
 
-                <!-- â”€â”€ SOLO FORM â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+                <!-- ── SOLO FORM ───────────────────────────────────────── -->
                 <div id="soloForm" style="display:none;">
 
                     <!-- Segments (solo) -->
@@ -460,58 +460,58 @@ if (!$show_form) {
 
                             <div class="segment-card seg-olympiad">
                                 <div class="segment-card-header">
-                                    <span>ðŸ”¬ Olympiad &amp; STEM</span>
+                                    <span>🔬 Olympiad &amp; STEM</span>
                                     <span class="seg-rate-badge">200 BDT per segment</span>
                                 </div>
                                 <div class="segment-card-body">
-                                    <p class="seg-fee-note">Select any segment(s) â€” each costs 200 BDT.</p>
+                                    <p class="seg-fee-note">Select any segment(s) — each costs 200 BDT.</p>
                                     <label class="option-label"><input type="checkbox" name="segments[]" value="Olympiads"           data-section="olympiad" onchange="calculateTotal()"> Olympiads (Physics, Chemistry, Bio, Math, etc.)</label>
                                     <label class="option-label"><input type="checkbox" name="segments[]" value="Instant Story Writing" data-section="olympiad" onchange="calculateTotal()"> Instant Story Writing</label>
                                     <label class="option-label"><input type="checkbox" name="segments[]" value="Craftwork"           data-section="olympiad" onchange="calculateTotal()"> Craftwork</label>
                                     <label class="option-label"><input type="checkbox" name="segments[]" value="Web Design"          data-section="olympiad" onchange="calculateTotal()"> Web Design &amp; Development</label>
                                 </div>
-                                <div class="segment-card-footer">Section Fee: <span class="segment-subtotal" id="subtotal-olympiad">â€”</span></div>
+                                <div class="segment-card-footer">Section Fee: <span class="segment-subtotal" id="subtotal-olympiad">—</span></div>
                             </div>
 
                             <div class="segment-card seg-art">
                                 <div class="segment-card-header">
-                                    <span>ðŸŽ¨ Art Exhibition &amp; Competition</span>
+                                    <span>🎨 Art Exhibition &amp; Competition</span>
                                     <span class="seg-rate-badge">200 BDT per segment</span>
                                 </div>
                                 <div class="segment-card-body">
-                                    <p class="seg-fee-note">Select any segment(s) â€” each costs 200 BDT.</p>
+                                    <p class="seg-fee-note">Select any segment(s) — each costs 200 BDT.</p>
                                     <label class="option-label"><input type="checkbox" name="segments[]" value="Art Competition" data-section="art" onchange="calculateTotal()"> Art Competition</label>
                                     <label class="option-label"><input type="checkbox" name="segments[]" value="Art Exhibition"  data-section="art" onchange="calculateTotal()"> Art Exhibition</label>
                                 </div>
-                                <div class="segment-card-footer">Section Fee: <span class="segment-subtotal" id="subtotal-art">â€”</span></div>
+                                <div class="segment-card-footer">Section Fee: <span class="segment-subtotal" id="subtotal-art">—</span></div>
                             </div>
 
                             <div class="segment-card seg-photo">
                                 <div class="segment-card-header">
-                                    <span>ðŸ“¸ Photography</span>
+                                    <span>📸 Photography</span>
                                     <span class="seg-rate-badge">300 BDT per segment</span>
                                 </div>
                                 <div class="segment-card-body">
-                                    <p class="seg-fee-note">Select any photography type â€” each costs 300 BDT.</p>
+                                    <p class="seg-fee-note">Select any photography type — each costs 300 BDT.</p>
                                     <label class="option-label"><input type="checkbox" name="segments[]" value="Mobile Photography" data-section="photo" onchange="calculateTotal()"> Mobile Photography</label>
                                     <label class="option-label"><input type="checkbox" name="segments[]" value="DSLR Photography"   data-section="photo" onchange="calculateTotal()"> DSLR Photography</label>
                                     <hr style="border:none;border-top:1px dashed #e5e7eb;margin:8px 0;">
-                                    <label class="option-label"><input type="checkbox" name="segments[]" value="Workshop" data-section="workshop" onchange="calculateTotal()"> Workshop â€” <strong style="color:#16a34a;">Free</strong></label>
+                                    <label class="option-label"><input type="checkbox" name="segments[]" value="Workshop" data-section="workshop" onchange="calculateTotal()"> Workshop — <strong style="color:#16a34a;">Free</strong></label>
                                 </div>
-                                <div class="segment-card-footer">Photography Fee: <span class="segment-subtotal" id="subtotal-photo">â€”</span></div>
+                                <div class="segment-card-footer">Photography Fee: <span class="segment-subtotal" id="subtotal-photo">—</span></div>
                             </div>
 
                         </div>
                     </div>
 
-                    <!-- Category â€” all 5 -->
+                    <!-- Category — all 5 -->
                     <div class="form-group mb-3 radio-group" style="display:flex;flex-direction:column;gap:6px;">
                         <label>Choose Category *</label>
-                        <label class="option-label"><input type="radio" name="category" value="Pre-Primary" required> Pre-Primary (Play â€“ Class 1)</label>
-                        <label class="option-label"><input type="radio" name="category" value="Primary"> Primary (Class 2 â€“ Class 5)</label>
-                        <label class="option-label"><input type="radio" name="category" value="Junior"> Junior (Class 6 â€“ Class 8)</label>
-                        <label class="option-label"><input type="radio" name="category" value="Secondary"> Secondary (Class 9 â€“ Class 10)</label>
-                        <label class="option-label"><input type="radio" name="category" value="Senior"> Senior (Class 11 â€“ Class 12 + Undergraduate)</label>
+                        <label class="option-label"><input type="radio" name="category" value="Pre-Primary" required> Pre-Primary (Play – Class 1)</label>
+                        <label class="option-label"><input type="radio" name="category" value="Primary"> Primary (Class 2 – Class 5)</label>
+                        <label class="option-label"><input type="radio" name="category" value="Junior"> Junior (Class 6 – Class 8)</label>
+                        <label class="option-label"><input type="radio" name="category" value="Secondary"> Secondary (Class 9 – Class 10)</label>
+                        <label class="option-label"><input type="radio" name="category" value="Senior"> Senior (Class 11 – Class 12 + Undergraduate)</label>
                     </div>
 
                     <div class="participant-card">
@@ -554,7 +554,7 @@ if (!$show_form) {
                     </div>
                 </div><!-- /#soloForm -->
 
-                <!-- â”€â”€ GROUP FORM â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+                <!-- ── GROUP FORM ──────────────────────────────────────── -->
                 <div id="groupForm" style="display:none;">
 
                     <!-- 1. Segments -->
@@ -562,31 +562,31 @@ if (!$show_form) {
                         <label class="segments-main-label">Segments * <span>(Can choose multiple)</span></label>
                         <div class="group-notice">
                             <i class="fas fa-info-circle"></i>
-                            <span>Select the collaborative display events your group will participate in â€” the fee is charged per segment, covering the entire group.</span>
+                            <span>Select the collaborative display events your group will participate in — the fee is charged per segment, covering the entire group.</span>
                         </div>
                         <div class="segment-groups">
                             <div class="segment-card seg-group">
                                 <div class="segment-card-header">
-                                    <span>ðŸ‘¥ Group Display Events</span>
+                                    <span>👥 Group Display Events</span>
                                     <span class="seg-rate-badge">200 BDT per segment</span>
                                 </div>
                                 <div class="segment-card-body">
-                                    <p class="seg-fee-note">Select any segment(s) â€” each costs 200 BDT for the whole group.</p>
+                                    <p class="seg-fee-note">Select any segment(s) — each costs 200 BDT for the whole group.</p>
                                     <label class="option-label"><input type="checkbox" name="segments[]" value="Project Display"   data-section="group" onchange="calculateTotal()"> Project Display</label>
                                     <label class="option-label"><input type="checkbox" name="segments[]" value="Wall Magazine"     data-section="group" onchange="calculateTotal()"> Wall Magazine</label>
                                     <label class="option-label"><input type="checkbox" name="segments[]" value="Scrapbook Display" data-section="group" onchange="calculateTotal()"> Scrapbook Display</label>
                                 </div>
-                                <div class="segment-card-footer">Section Fee: <span class="segment-subtotal" id="subtotal-group">â€”</span></div>
+                                <div class="segment-card-footer">Section Fee: <span class="segment-subtotal" id="subtotal-group">—</span></div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- 2. Category â€” Junior / Secondary / Senior only -->
+                    <!-- 2. Category — Junior / Secondary / Senior only -->
                     <div class="form-group mb-3 radio-group" style="display:flex;flex-direction:column;gap:6px;">
                         <label>Choose Category *</label>
-                        <label class="option-label"><input type="radio" name="group_category" value="Junior">    Junior (Class 6 â€“ Class 8)</label>
-                        <label class="option-label"><input type="radio" name="group_category" value="Secondary"> Secondary (Class 9 â€“ Class 10)</label>
-                        <label class="option-label"><input type="radio" name="group_category" value="Senior">    Senior (Class 11 â€“ Class 12 + Undergraduate)</label>
+                        <label class="option-label"><input type="radio" name="group_category" value="Junior">    Junior (Class 6 – Class 8)</label>
+                        <label class="option-label"><input type="radio" name="group_category" value="Secondary"> Secondary (Class 9 – Class 10)</label>
+                        <label class="option-label"><input type="radio" name="group_category" value="Senior">    Senior (Class 11 – Class 12 + Undergraduate)</label>
                     </div>
 
                     <!-- 3. Participants -->
@@ -646,16 +646,16 @@ if (!$show_form) {
 
                 </div><!-- /#groupForm -->
 
-                <!-- â”€â”€ SHARED: Grand Total + Payment â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+                <!-- ── SHARED: Grand Total + Payment ─────────────────── -->
                 <div id="sharedPayment" style="display:none;">
 
                     <div id="totalPriceDisplay">
                         Grand Total: <span id="grandTotalAmt">0</span> BDT
                         <div class="grand-total-breakdown" id="grandTotalBreakdown" style="display:none;">
-                            <span id="breakOlympiad" style="display:none;">ðŸ”¬ Olympiad &amp; STEM: <span id="brkOlympiadAmt">0</span> BDT</span>
-                            <span id="breakArt"      style="display:none;">ðŸŽ¨ Art: <span id="brkArtAmt">0</span> BDT</span>
-                            <span id="breakPhoto"    style="display:none;">ðŸ“¸ Photography: <span id="brkPhotoAmt">0</span> BDT</span>
-                            <span id="breakGroup"    style="display:none;">ðŸ‘¥ Group Display: <span id="brkGroupAmt">0</span> BDT</span>
+                            <span id="breakOlympiad" style="display:none;">🔬 Olympiad &amp; STEM: <span id="brkOlympiadAmt">0</span> BDT</span>
+                            <span id="breakArt"      style="display:none;">🎨 Art: <span id="brkArtAmt">0</span> BDT</span>
+                            <span id="breakPhoto"    style="display:none;">📸 Photography: <span id="brkPhotoAmt">0</span> BDT</span>
+                            <span id="breakGroup"    style="display:none;">👥 Group Display: <span id="brkGroupAmt">0</span> BDT</span>
                         </div>
                     </div>
                     <input type="hidden" name="total_amount" id="totalAmountInput" value="0">
@@ -701,7 +701,7 @@ if (!$show_form) {
     </section>
 
     <?php elseif ($show_form === 'steam_olympiad' && $event): ?>
-    <!-- â”€â”€ STEAM OLYMPIAD FORM â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+    <!-- ── STEAM OLYMPIAD FORM ────────────────────────────────────────── -->
     <section class="form-section">
         <div class="container">
             <div class="action-buttons-container">
@@ -720,7 +720,7 @@ if (!$show_form) {
                 <?php endif; ?>
                 <p class="form-desc">Join the National STEAM Olympiad! All registrations are Individual (Solo).</p>
 
-                <!-- â”€â”€ REQUIRED FIELDS â”€â”€ -->
+                <!-- ── REQUIRED FIELDS ── -->
                 <input type="hidden" name="reg_type" value="solo">
                 
                 <h4 class="form-heading"><i class="fas fa-user"></i> Participant Information</h4>
@@ -821,7 +821,7 @@ if (!$show_form) {
     </section>
 
     <?php else: ?>
-    <!-- â”€â”€ EVENT HUB â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+    <!-- ── EVENT HUB ───────────────────────────────────────────────────── -->
     <section class="hub-section">
         <div class="container">
             <div class="section-label">Open for Registration</div>
@@ -844,7 +844,7 @@ if (!$show_form) {
                     <div class="event-hub-card">
                         <div class="event-hub-card-img">
                             <img src="<?php echo $imgSrc; ?>" alt="<?php echo htmlspecialchars($ev['title']); ?>">
-                            <span class="hub-reg-badge">âœ“ Registration Open</span>
+                            <span class="hub-reg-badge">✓ Registration Open</span>
                         </div>
                         <div class="event-hub-card-body">
                             <h3><?php echo htmlspecialchars($ev['title']); ?></h3>
@@ -856,7 +856,7 @@ if (!$show_form) {
                                 <span><i class="fas fa-map-marker-alt"></i> <?php echo htmlspecialchars($ev['location']); ?></span>
                                 <?php endif; ?>
                             </div>
-                            <p><?php echo htmlspecialchars(substr(strip_tags($ev['description']), 0, 120)) . 'â€¦'; ?></p>
+                            <p><?php echo htmlspecialchars(substr(strip_tags($ev['description']), 0, 120)) . '…'; ?></p>
                             <?php if ($formSupported): ?>
                                 <a href="register.php?event_id=<?php echo (int)$ev['id']; ?>" class="btn-register-hub">Register Now &rarr;</a>
                             <?php else: ?>
@@ -883,7 +883,7 @@ if (!$show_form) {
     <script>
         const SECTION_FEES = { olympiad: 200, art: 200, photo: 300, group: 200 };
 
-        /* â”€â”€ Registration Type Toggle â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+        /* ── Registration Type Toggle ─────────────────────────────── */
         function setRegType(type) {
             document.getElementById('btnSolo').classList.toggle('active',  type === 'solo');
             document.getElementById('btnGroup').classList.toggle('active', type === 'group');
@@ -916,7 +916,7 @@ if (!$show_form) {
             calculateTotal();
         }
 
-        /* â”€â”€ Calculate Total â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+        /* ── Calculate Total ──────────────────────────────────────── */
         function calculateTotal() {
             const regType = document.getElementById('regTypeInput').value;
             const counts  = { olympiad: 0, art: 0, photo: 0, group: 0 };
@@ -934,7 +934,7 @@ if (!$show_form) {
 
             ['olympiad','art','photo','group'].forEach(sec => {
                 const el = document.getElementById('subtotal-' + sec);
-                if (el) el.innerText = totals[sec] > 0 ? totals[sec] + ' BDT' : 'â€”';
+                if (el) el.innerText = totals[sec] > 0 ? totals[sec] + ' BDT' : '—';
             });
 
             const grand = Object.values(totals).reduce((a,b) => a + b, 0);
@@ -955,7 +955,7 @@ if (!$show_form) {
             sh('breakGroup',   'brkGroupAmt',    totals.group,    regType === 'group' ? counts.group    : 0);
         }
 
-        /* â”€â”€ Payment Section Toggle â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+        /* ── Payment Section Toggle ───────────────────────────────── */
         function showPaymentSection() {
             const method  = document.getElementById('paymentMethod').value;
             const section = document.getElementById('paymentSection');
@@ -975,7 +975,7 @@ if (!$show_form) {
             }
         }
 
-        /* â”€â”€ Form Validation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+        /* ── Form Validation ──────────────────────────────────────── */
         document.getElementById('steamRegistrationForm').addEventListener('submit', function(e) {
             const regType = document.getElementById('regTypeInput').value;
 

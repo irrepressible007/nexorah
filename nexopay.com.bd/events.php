@@ -1,10 +1,10 @@
-﻿<?php
+?<?php
 require_once 'config/database.php';
 
 $database = new Database();
 $db = $database->getConnection();
 
-// â”€â”€ Single event detail view (triggered by ?id=N) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Single event detail view (triggered by ?id=N) ─────────────────────────
 $singleEvent = false;
 $event = null;
 
@@ -17,7 +17,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
     if ($event) $singleEvent = true;
 }
 
-// â”€â”€ Card grid: fetch all events â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Card grid: fetch all events ───────────────────────────────────────────
 $events = [];
 if (!$singleEvent) {
     $query = "SELECT * FROM events ORDER BY
@@ -35,7 +35,7 @@ if (!$singleEvent) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $singleEvent ? htmlspecialchars($event['title']).' â€” ' : ''; ?>Events | Nexopay</title>
+    <title><?php echo $singleEvent ? htmlspecialchars($event['title']).' — ' : ''; ?>Events | Nexopay</title>
     <link rel="icon"         type="image/png" href="assets/images/public/Nex Pay new logo.png">
     <link rel="shortcut icon"                  href="assets/images/public/Nex Pay new logo.png">
     <link rel="stylesheet" href="assets/css/style.css">
@@ -44,7 +44,7 @@ if (!$singleEvent) {
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script defer src="assets/js/main.js"></script>
     <style>
-        /* â”€â”€ Override: make cards clickable with no visual weirdness â”€â”€â”€ */
+        /* ── Override: make cards clickable with no visual weirdness ─── */
         .event-card-link {
             display: block;
             text-decoration: none;
@@ -60,7 +60,7 @@ if (!$singleEvent) {
         /* Stop hover style from applying doubly */
         .event-card:hover { transform: none; box-shadow: none; border-color: rgba(255,255,255,.1); }
 
-        /* â”€â”€ Card footer: price left, buttons right â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+        /* ── Card footer: price left, buttons right ──────────────────── */
         .card-footer-row {
             display: flex;
             align-items: center;
@@ -92,7 +92,7 @@ if (!$singleEvent) {
         .btn-card-blue  { background: linear-gradient(135deg,#3498db,#2980b9); color:#fff; }
         .btn-card-green { background: linear-gradient(135deg,#27ae60,#2ecc71); color:#fff; }
 
-        /* â”€â”€ Single Event Detail â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+        /* ── Single Event Detail ─────────────────────────────────────── */
         .detail-wrap {
             display: flex;
             flex-wrap: wrap;
@@ -165,7 +165,7 @@ if (!$singleEvent) {
         .detail-body strong { color: #e2e8f0; }
         .detail-body a { color: #3498db; }
 
-        /* â”€â”€ Sidebar widgets â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+        /* ── Sidebar widgets ─────────────────────────────────────────── */
         .side-widget {
             background: rgba(255,255,255,.05);
             border: 1px solid rgba(255,255,255,.1);
@@ -225,7 +225,7 @@ if (!$singleEvent) {
         .notice-ongoing { background: rgba(241,196,15,.15); color: #f1c40f; border: 1px solid rgba(241,196,15,.3); }
         .notice-past    { background: rgba(149,165,166,.15); color: #95a5a6; border: 1px solid rgba(149,165,166,.3); }
 
-        /* â”€â”€ Back link â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+        /* ── Back link ───────────────────────────────────────────────── */
         .back-link {
             display: inline-flex;
             align-items: center;
@@ -238,14 +238,14 @@ if (!$singleEvent) {
         }
         .back-link:hover { text-decoration: underline; }
 
-        /* â”€â”€ Register pill override â”€â”€ */
+        /* ── Register pill override ── */
         .nav-register-pill {
             background-color: #fff; color: #002147 !important; font-weight: bold;
             text-transform: uppercase; padding: 8px 24px !important; border-radius: 50rem;
             text-decoration: none; display: inline-block; box-shadow: 0 2px 4px rgba(0,0,0,.075);
         }
 
-        /* â”€â”€ Mobile â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+        /* ── Mobile ──────────────────────────────────────────────────── */
         @media(max-width: 768px) {
             .detail-wrap  { flex-direction: column; }
             .detail-side  { flex: 1 1 auto; width: 100%; }
@@ -283,7 +283,7 @@ if (!$singleEvent) {
 
 <?php if ($singleEvent): ?>
 
-    <!-- â”€â”€ SINGLE EVENT DETAIL â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+    <!-- ── SINGLE EVENT DETAIL ─────────────────────────────────────────── -->
     <a href="events.php" class="back-link"><i class="fas fa-arrow-left"></i> Back to All Events</a>
 
     <?php
@@ -307,7 +307,7 @@ if (!$singleEvent) {
                 <?php if (!empty($event['location'])): ?>
                 <span><i class="fas fa-map-marker-alt"></i> <?php echo htmlspecialchars($event['location']); ?></span>
                 <?php endif; ?>
-                <span><i class="fas fa-ticket-alt"></i> à§³<?php echo number_format($event['fee'], 2); ?> BDT</span>
+                <span><i class="fas fa-ticket-alt"></i> ৳<?php echo number_format($event['fee'], 2); ?> BDT</span>
             </div>
 
             <span class="status-pill <?php echo $pillClass; ?>"><?php echo strtoupper($status); ?></span>
@@ -330,7 +330,7 @@ if (!$singleEvent) {
                     </li>
                     <li>
                         <i class="fas fa-ticket-alt"></i>
-                        <div><strong>Base Ticket Fee</strong>à§³<?php echo number_format($event['fee'], 2); ?> BDT</div>
+                        <div><strong>Base Ticket Fee</strong>৳<?php echo number_format($event['fee'], 2); ?> BDT</div>
                     </li>
                     <?php if (!empty($event['location'])): ?>
                     <li>
@@ -380,7 +380,7 @@ if (!$singleEvent) {
 
 <?php else: ?>
 
-    <!-- â”€â”€ EVENT CARD GRID â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+    <!-- ── EVENT CARD GRID ─────────────────────────────────────────────── -->
     <div class="page-header reveal">
         <h1>All Events</h1>
         <p>Discover our upcoming, ongoing, and past events</p>
@@ -412,10 +412,10 @@ if (!$singleEvent) {
                             <?php endif; ?>
                         </div>
                         <h3><?php echo htmlspecialchars($ev['title']); ?></h3>
-                        <p><?php echo htmlspecialchars(substr(strip_tags($ev['description']), 0, 110)); ?>â€¦</p>
+                        <p><?php echo htmlspecialchars(substr(strip_tags($ev['description']), 0, 110)); ?>…</p>
 
                         <div class="card-footer-row">
-                            <span class="card-price"><i class="fas fa-ticket-alt"></i> à§³<?php echo number_format($ev['fee'], 2); ?></span>
+                            <span class="card-price"><i class="fas fa-ticket-alt"></i> ৳<?php echo number_format($ev['fee'], 2); ?></span>
                             <div class="card-btn-group">
                                 <!-- Stop click bubbling to the card link so button goes to its own url -->
                                 <a href="events.php?id=<?php echo $ev['id']; ?>"
