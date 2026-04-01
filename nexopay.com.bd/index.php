@@ -85,7 +85,12 @@ $past_events = $past_stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <img src="<?php echo htmlspecialchars($event['image']); ?>" alt="<?php echo htmlspecialchars($event['title']); ?>">
                                 <div class="event-info">
                                     <h3><?php echo htmlspecialchars($event['title']); ?></h3>
-                                    <p><?php echo htmlspecialchars(substr($event['description'], 0, 100)) . '...'; ?></p>
+                                    <?php 
+                                        $cleanDesc = preg_replace('/<style\b[^>]*>(.*?)<\/style>/is', '', $event['description']);
+                                        $cleanDesc = strip_tags(str_replace('<', ' <', $cleanDesc));
+                                        $cleanDesc = trim(preg_replace('/\s+/', ' ', $cleanDesc));
+                                    ?>
+                                    <p><?php echo htmlspecialchars(mb_substr($cleanDesc, 0, 100)) . '...'; ?></p>
                                     <div class="event-meta">
                                         <span class="fee">৳<?php echo number_format($event['fee'], 2); ?></span>
                                         <span class="date"><?php echo date('M d, Y', strtotime($event['event_date'])); ?></span>
@@ -114,7 +119,12 @@ $past_events = $past_stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <img src="<?php echo htmlspecialchars($event['image']); ?>" alt="<?php echo htmlspecialchars($event['title']); ?>">
                                 <div class="event-info">
                                     <h3><?php echo htmlspecialchars($event['title']); ?></h3>
-                                    <p><?php echo htmlspecialchars(substr($event['description'], 0, 100)) . '...'; ?></p>
+                                    <?php 
+                                        $cleanDesc = preg_replace('/<style\b[^>]*>(.*?)<\/style>/is', '', $event['description']);
+                                        $cleanDesc = strip_tags(str_replace('<', ' <', $cleanDesc));
+                                        $cleanDesc = trim(preg_replace('/\s+/', ' ', $cleanDesc));
+                                    ?>
+                                    <p><?php echo htmlspecialchars(mb_substr($cleanDesc, 0, 100)) . '...'; ?></p>
                                     <div class="event-meta">
                                         <span class="status status-past">Past Event</span>
                                         <span class="date"><?php echo date('M d, Y', strtotime($event['event_date'])); ?></span>
