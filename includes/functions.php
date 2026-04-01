@@ -38,29 +38,45 @@ function uploadFile($file, $targetDir) {
 
 // Function to get all highlights
 function getHighlights($pdo) {
-    $stmt = $pdo->query("SELECT * FROM highlights ORDER BY created_at DESC");
-    return $stmt->fetchAll();
+    try {
+        $stmt = $pdo->query("SELECT * FROM highlights ORDER BY created_at DESC");
+        return $stmt->fetchAll();
+    } catch (PDOException $e) {
+        // Table probably doesn't exist yet on live
+        return [];
+    }
 }
 
 // Function to get all partners
 function getPartners($pdo) {
-    $stmt = $pdo->query("SELECT * FROM partners ORDER BY name ASC");
-    return $stmt->fetchAll();
+    try {
+        $stmt = $pdo->query("SELECT * FROM partners ORDER BY name ASC");
+        return $stmt->fetchAll();
+    } catch (PDOException $e) {
+        return [];
+    }
 }
 
 // Function to get upcoming events
 function getUpcomingEvents($pdo, $limit = 3) {
-    // Modified to include events happening today or in the future
-    $stmt = $pdo->prepare("SELECT * FROM events WHERE is_upcoming = TRUE ORDER BY event_date ASC LIMIT :limit");
-    $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
-    $stmt->execute();
-    return $stmt->fetchAll();
+    try {
+        $stmt = $pdo->prepare("SELECT * FROM events WHERE is_upcoming = TRUE ORDER BY event_date ASC LIMIT :limit");
+        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    } catch (PDOException $e) {
+        return [];
+    }
 }
 
 // Function to get all events
 function getAllEvents($pdo) {
-    $stmt = $pdo->query("SELECT * FROM events ORDER BY event_date DESC");
-    return $stmt->fetchAll();
+    try {
+        $stmt = $pdo->query("SELECT * FROM events ORDER BY event_date DESC");
+        return $stmt->fetchAll();
+    } catch (PDOException $e) {
+        return [];
+    }
 }
 
 // Function to get event by ID
@@ -72,17 +88,25 @@ function getEventById($pdo, $id) {
 
 // Function to get recent blog posts
 function getRecentBlogPosts($pdo, $limit = 3) {
-    $stmt = $pdo->prepare("SELECT * FROM blog_posts ORDER BY created_at DESC LIMIT :limit");
-    $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
-    $stmt->execute();
-    return $stmt->fetchAll();
+    try {
+        $stmt = $pdo->prepare("SELECT * FROM blog_posts ORDER BY created_at DESC LIMIT :limit");
+        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    } catch (PDOException $e) {
+        return [];
+    }
 }
 
 // Function to get blog post by ID
 function getBlogPostById($pdo, $id) {
-    $stmt = $pdo->prepare("SELECT * FROM blog_posts WHERE id = ?");
-    $stmt->execute([$id]);
-    return $stmt->fetch();
+    try {
+        $stmt = $pdo->prepare("SELECT * FROM blog_posts WHERE id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch();
+    } catch (PDOException $e) {
+        return false;
+    }
 }
 
 // Function to send email
