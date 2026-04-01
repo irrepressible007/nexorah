@@ -1,4 +1,4 @@
-﻿<?php 
+<?php 
 // Include database connection at the top
 require_once 'includes/db.php';
 

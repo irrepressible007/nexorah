@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 session_start();
 
 // Simple admin authentication (in a real-world scenario, use proper authentication)
