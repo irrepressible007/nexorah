@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'], $_POST['app
     try {
         if ($_POST['action'] === 'approve') {
             $db->prepare("UPDATE volunteer_applications SET approval_status='approved', approved_date=NOW() WHERE id=:id")->execute([':id'=>$id]);
-            $flash = ['type'=>'success','msg'=>'âœ… Volunteer Application #'.$id.' approved!'];
+            $flash = ['type'=>'success','msg'=>'<i class="fas fa-check-circle"></i> Volunteer Application #'.$id.' approved!'];
         } elseif ($_POST['action'] === 'reject') {
             $reason = trim($_POST['rejection_reason'] ?? 'No reason provided');
             $db->prepare("UPDATE volunteer_applications SET approval_status='rejected', rejection_reason=:r, approved_date=NOW() WHERE id=:id")->execute([':r'=>$reason,':id'=>$id]);
@@ -89,7 +89,7 @@ tbody td{padding:11px 14px;vertical-align:middle}
     <?php if ($flash): ?>
     <div class="flash flash-<?= htmlspecialchars($flash['type']) ?>" id="flashMsg">
         <?= htmlspecialchars($flash['msg']) ?>
-        <button onclick="this.parentElement.remove()" style="margin-left:auto;background:none;border:none;cursor:pointer">âœ•</button>
+        <button onclick="this.parentElement.remove()" style="margin-left:auto;background:none;border:none;cursor:pointer">&times;</button>
     </div>
     <?php endif; ?>
 
@@ -102,13 +102,13 @@ tbody td{padding:11px 14px;vertical-align:middle}
 
     <form method="GET" class="filter-bar">
         <div><label>ðŸ” Search</label><input type="text" name="search" placeholder="Name, email, districtâ€¦" value="<?= htmlspecialchars($search) ?>"></div>
-        <div><label>ðŸ“‹ Status</label><select name="status">
+        <div><label><i class="fas fa-clipboard-list"></i> Status</label><select name="status">
             <option value="">All</option>
             <option value="pending"  <?= $filter_status=='pending'  ?'selected':'' ?>>â³ Pending</option>
-            <option value="approved" <?= $filter_status=='approved' ?'selected':'' ?>>âœ… Approved</option>
+            <option value="approved" <?= $filter_status=='approved' ?'selected':'' ?>><i class="fas fa-check-circle"></i> Approved</option>
             <option value="rejected" <?= $filter_status=='rejected' ?'selected':'' ?>>âŒ Rejected</option>
         </select></div>
-        <div><label>ðŸ“… Event</label><select name="event_id"><option value="">All Events</option>
+        <div><label><i class="fas fa-calendar"></i> Event</label><select name="event_id"><option value="">All Events</option>
             <?php foreach ($events as $ev): ?><option value="<?= $ev['id'] ?>" <?= $filter_event==$ev['id']?'selected':'' ?>><?= htmlspecialchars($ev['title']) ?></option><?php endforeach; ?>
         </select></div>
         <div style="align-self:flex-end;display:flex;gap:8px">
@@ -129,12 +129,12 @@ tbody td{padding:11px 14px;vertical-align:middle}
             <tr>
                 <td><strong>#<?= $v['id'] ?></strong></td>
                 <td><div style="font-weight:600;color:#1e293b"><?= htmlspecialchars($v['full_name']) ?></div><div style="font-size:.8rem;color:#94a3b8"><?= htmlspecialchars($v['email']) ?></div></td>
-                <td><?= htmlspecialchars($v['institution'] ?? 'â€”') ?></td>
-                <td><?= htmlspecialchars(($v['class'] ?? 'â€”') . ' / ' . ($v['group'] ?? 'â€”')) ?></td>
-                <td><?= htmlspecialchars(($v['district'] ?? 'â€”') . ', ' . ($v['division'] ?? 'â€”')) ?></td>
+                <td><?= htmlspecialchars($v['institution'] ?? '&mdash;') ?></td>
+                <td><?= htmlspecialchars(($v['class'] ?? '&mdash;') . ' / ' . ($v['group'] ?? '&mdash;')) ?></td>
+                <td><?= htmlspecialchars(($v['district'] ?? '&mdash;') . ', ' . ($v['division'] ?? '&mdash;')) ?></td>
                 <td><div style="font-size:.85rem"><?= htmlspecialchars($v['phone_number']) ?></div></td>
-                <td><?= htmlspecialchars($v['event_title'] ?? 'â€”') ?></td>
-                <td><span class="badge badge-<?= $v['approval_status'] ?>"><?= ['pending'=>'â³ Pending','approved'=>'âœ… Approved','rejected'=>'âŒ Rejected'][$v['approval_status']] ?></span></td>
+                <td><?= htmlspecialchars($v['event_title'] ?? '&mdash;') ?></td>
+                <td><span class="badge badge-<?= $v['approval_status'] ?>"><?= ['pending'=>'â³ Pending','approved'=>'<i class="fas fa-check-circle"></i> Approved','rejected'=>'âŒ Rejected'][$v['approval_status']] ?></span></td>
                 <td style="font-size:.82rem;white-space:nowrap"><?= date('d M Y', strtotime($v['submission_date'])) ?><br><span style="color:#94a3b8"><?= date('h:i A', strtotime($v['submission_date'])) ?></span></td>
                 <td>
                     <div class="action-group">
@@ -165,11 +165,11 @@ tbody td{padding:11px 14px;vertical-align:middle}
 </div>
 <!-- Approve Modal -->
 <div class="modal-overlay" id="approveModal"><div class="modal-box" style="max-width:380px">
-    <div style="font-size:1.1rem;font-weight:700;margin-bottom:12px">âœ… Approve Application</div>
+    <div style="font-size:1.1rem;font-weight:700;margin-bottom:12px"><i class="fas fa-check-circle"></i> Approve Application</div>
     <form method="POST"><input type="hidden" name="app_id" id="approveId"><input type="hidden" name="action" value="approve">
         <div style="display:flex;gap:10px;justify-content:flex-end">
             <button type="button" onclick="closeModals()" style="padding:8px 18px;background:#f3f4f6;border:none;border-radius:10px;font-weight:600;cursor:pointer">Cancel</button>
-            <button type="submit" style="padding:8px 20px;background:#16a34a;color:#fff;border:none;border-radius:10px;font-weight:700;cursor:pointer">âœ… Approve</button>
+            <button type="submit" style="padding:8px 20px;background:#16a34a;color:#fff;border:none;border-radius:10px;font-weight:700;cursor:pointer"><i class="fas fa-check-circle"></i> Approve</button>
         </div>
     </form>
 </div></div>
@@ -188,7 +188,7 @@ tbody td{padding:11px 14px;vertical-align:middle}
 
 <script>
 function viewApp(v) {
-    const fields=[['#','#'+v.id],['Full Name',v.full_name],['Email',v.email],['Institution',v.institution||'â€”'],['Class',v.class||'â€”'],['Group',v.group||'â€”'],['Phone',v.phone_number],['WhatsApp',v.whatsapp_number||'â€”'],['DOB',v.dob||'â€”'],['Age',v.age||'â€”'],['Division',v.division||'â€”'],['District',v.district||'â€”'],['Guardian',v.guardian_name||'â€”'],['Guardian #',v.guardian_number||'â€”'],['NID/BC',v.nid_bc||'â€”'],['Facebook',v.facebook_link||'â€”'],['Experience',v.experience||'â€”'],['Terms',v.terms_agreed==1?'Agreed':'â€”'],['Event',v.event_title||'â€”'],['Status',v.approval_status],['Submitted',v.submission_date]];
+    const fields=[['#','#'+v.id],['Full Name',v.full_name],['Email',v.email],['Institution',v.institution||'&mdash;'],['Class',v.class||'&mdash;'],['Group',v.group||'&mdash;'],['Phone',v.phone_number],['WhatsApp',v.whatsapp_number||'&mdash;'],['DOB',v.dob||'&mdash;'],['Age',v.age||'&mdash;'],['Division',v.division||'&mdash;'],['District',v.district||'&mdash;'],['Guardian',v.guardian_name||'&mdash;'],['Guardian #',v.guardian_number||'&mdash;'],['NID/BC',v.nid_bc||'&mdash;'],['Facebook',v.facebook_link||'&mdash;'],['Experience',v.experience||'&mdash;'],['Terms',v.terms_agreed==1?'Agreed':'&mdash;'],['Event',v.event_title||'&mdash;'],['Status',v.approval_status],['Submitted',v.submission_date]];
     document.getElementById('appGrid').innerHTML=fields.map(([l,v])=>`<div class="detail-item"><label>${l}</label><span>${v}</span></div>`).join('');
     const ph=document.getElementById('appPhoto');
     ph.innerHTML=v.picture_path?`<img src="../${v.picture_path}" alt="Photo">`:'';

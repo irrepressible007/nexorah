@@ -10,7 +10,7 @@ $db = $database->getConnection();
 
 $sql = [];
 
-// â”€â”€ Add columns to registrations if not present â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Add columns to registrations if not present ──────────────────────────────
 $sql[] = "ALTER TABLE registrations 
           ADD COLUMN IF NOT EXISTS payment_method VARCHAR(50) DEFAULT 'bkash' AFTER transaction_id";
 
@@ -20,7 +20,7 @@ $sql[] = "ALTER TABLE registrations
 $sql[] = "ALTER TABLE registrations 
           ADD COLUMN IF NOT EXISTS extra_data TEXT NULL COMMENT 'JSON â€“ extra fields for CA/volunteer forms' AFTER registration_type";
 
-// â”€â”€ Create ca_applications table â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Create ca_applications table ────────────────────────────────────────────â”€
 $sql[] = "CREATE TABLE IF NOT EXISTS ca_applications (
     id INT AUTO_INCREMENT PRIMARY KEY,
     event_id INT DEFAULT NULL,
@@ -44,7 +44,7 @@ $sql[] = "CREATE TABLE IF NOT EXISTS ca_applications (
     INDEX idx_status (approval_status)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
 
-// â”€â”€ Create volunteer_applications table â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Create volunteer_applications table ────────────────────────────────────â”€
 $sql[] = "CREATE TABLE IF NOT EXISTS volunteer_applications (
     id INT AUTO_INCREMENT PRIMARY KEY,
     event_id INT DEFAULT NULL,
@@ -117,8 +117,8 @@ foreach ($sql as $query) {
         </tbody>
     </table>
     <div class="done">
-        âœ… Migration complete. <strong>Delete or rename this file after running.</strong>
-        <br><a href="dashboard.php" style="color:#00d4aa;">â†’ Go to Admin Dashboard</a>
+        <i class="fas fa-check-circle"></i> Migration complete. <strong>Delete or rename this file after running.</strong>
+        <br><a href="dashboard.php" style="color:#00d4aa;">&rarr; Go to Admin Dashboard</a>
     </div>
 </body>
 </html>

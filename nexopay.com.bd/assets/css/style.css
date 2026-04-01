@@ -1,4 +1,4 @@
-/* Modern Reset and Base Styles */
+ï»¿/* Modern Reset and Base Styles */
 * {
     margin: 0;
     padding: 0;
@@ -38,8 +38,7 @@ body {
 }
 
 /* Enhanced Navigation */
-.navbar {
-    background: rgba(10, 14, 24, 0.75);
+.navbar { background: #000000;
     backdrop-filter: blur(12px);
     padding: 1rem 0;
     position: sticky;
@@ -2289,7 +2288,7 @@ body {
         gap: 10px;
     }
 }  
-/* ÄÄ Register pill override ÄÄ */  
+/* Ã„Ã„ Register pill override Ã„Ã„ */  
 .nav-register-pill {  
     background-color: #fff;  
     color: #002147 !important;  
@@ -2313,3 +2312,4 @@ body {
         padding: 10px 24px !important;  
     }  
 } 
+

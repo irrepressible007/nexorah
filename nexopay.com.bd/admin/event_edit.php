@@ -116,7 +116,7 @@ if (!$event) {
                 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="fee">Fee (à§³)</label>
+                        <label for="fee">Fee (&#2547;)</label>
                         <input type="number" id="fee" name="fee" step="0.01" value="<?php echo $event['fee']; ?>" required>
                     </div>
                     

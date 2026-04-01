@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 session_start();
 require_once '../config/database.php';
 require_once 'includes/auth_check.php';
@@ -6,7 +6,7 @@ require_once 'includes/auth_check.php';
 $database = new Database();
 $db = $database->getConnection();
 
-// â”€â”€ Global stats â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Global stats ────────────────────────────────────────────────────────────â”€
 $stats = $db->query("
     SELECT
         COUNT(*) AS total_reg,
@@ -22,7 +22,7 @@ $stats = $db->query("
 $total_events = $db->query("SELECT COUNT(*) FROM events")->fetchColumn();
 $total_msg    = $db->query("SELECT COUNT(*) FROM contact_messages")->fetchColumn();
 
-// â”€â”€ Per-event breakdown â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Per-event breakdown ──────────────────────────────────────────────────────â”€
 $event_stats = $db->query("
     SELECT e.id, e.title, e.event_date, e.status AS event_status,
            COUNT(r.id)                                 AS total_reg,
@@ -38,7 +38,7 @@ $event_stats = $db->query("
     ORDER BY e.event_date DESC
 ")->fetchAll(PDO::FETCH_ASSOC);
 
-// â”€â”€ Recent 12 registrations for activity feed â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Recent 12 registrations for activity feed ────────────────────────────────â”€
 $recent = $db->query("
     SELECT r.id, r.full_name, r.email, r.registration_type, r.approval_status,
            r.total_amount, r.registration_date, e.title AS event_title
@@ -47,7 +47,7 @@ $recent = $db->query("
     ORDER BY r.registration_date DESC LIMIT 12
 ")->fetchAll(PDO::FETCH_ASSOC);
 
-// â”€â”€ Payment method breakdown â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Payment method breakdown ──────────────────────────────────────────────────
 $methods = $db->query("
     SELECT COALESCE(payment_method,'bkash') AS method, COUNT(*) AS cnt
     FROM registrations GROUP BY method ORDER BY cnt DESC
@@ -63,12 +63,12 @@ $methods = $db->query("
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
-/* â”€â”€â”€ LAYOUT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ──â”€ LAYOUT ────────────────────────────────────── */
 .dash-wrap { padding: 28px 24px; }
 .two-col   { display:grid; grid-template-columns:1fr 380px; gap:24px; margin-top:24px; }
 @media(max-width:1100px){ .two-col { grid-template-columns:1fr; } }
 
-/* â”€â”€â”€ KPI CARDS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ──â”€ KPI CARDS ──────────────────────────────────â”€ */
 .kpi-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:16px; margin-bottom:26px; }
 .kpi-card { background:#fff; border-radius:14px; padding:22px; box-shadow:0 2px 14px rgba(0,0,0,.06);
             display:flex; align-items:center; gap:14px; transition:transform .2s; position:relative; overflow:hidden; }
@@ -90,12 +90,12 @@ $methods = $db->query("
 .c-orange { background:#fff7ed; color:#ea580c; }
 .c-teal   { background:#f0fdfa; color:#0d9488; }
 
-/* â”€â”€â”€ SECTION HEADERS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ──â”€ SECTION HEADERS ────────────────────────────â”€ */
 .section-h { font-size:1.1rem; font-weight:700; color:#111; margin:0 0 16px; display:flex;
              align-items:center; gap:8px; }
 .section-h i { color:#6366f1; }
 
-/* â”€â”€â”€ EVENT STAT CARDS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ──â”€ EVENT STAT CARDS ──────────────────────────── */
 .event-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:16px; }
 .ev-card { background:#fff; border-radius:14px; box-shadow:0 2px 12px rgba(0,0,0,.06);
            overflow:hidden; transition:transform .2s; }
@@ -122,7 +122,7 @@ $methods = $db->query("
 .dot-ongoing  { background:#10b981; }
 .dot-past     { background:#94a3b8; }
 
-/* â”€â”€â”€ ACTIVITY FEED â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ──â”€ ACTIVITY FEED ──────────────────────────────â”€ */
 .activity-card { background:#fff; border-radius:14px; box-shadow:0 2px 14px rgba(0,0,0,.06);
                  padding:20px; height:fit-content; position:sticky; top:20px; }
 .activity-list { list-style:none; padding:0; margin:0; }
@@ -138,10 +138,10 @@ $methods = $db->query("
 .ab-approved { background:#dcfce7; color:#166534; }
 .ab-rejected { background:#fee2e2; color:#991b1b; }
 
-/* â”€â”€â”€ CHART CARD â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ──â”€ CHART CARD ────────────────────────────────── */
 .chart-card { background:#fff; border-radius:14px; box-shadow:0 2px 14px rgba(0,0,0,.06); padding:20px; margin-bottom:24px; }
 
-/* â”€â”€â”€ PAYMENT METHOD BARS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ──â”€ PAYMENT METHOD BARS ────────────────────────â”€ */
 .method-row { display:flex; align-items:center; gap:12px; margin-bottom:12px; }
 .method-label { width:110px; font-size:.85rem; font-weight:600; color:#374151; }
 .method-bar-wrap { flex:1; height:10px; background:#f1f5f9; border-radius:50rem; overflow:hidden; }
@@ -161,14 +161,14 @@ $methods = $db->query("
 
 <main class="main-content dash-wrap">
 
-    <!-- â”€â”€ Welcome â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+    <!-- ── Welcome ──────────────────────────────────────────────────────â”€ -->
     <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:24px">
         <div>
             <h1 style="font-size:1.6rem;font-weight:800;color:#111;margin:0">
-                ðŸ‘‹ Welcome back, <?= htmlspecialchars($_SESSION['admin_username'] ?? 'Admin') ?>!
+                <i class="fas fa-hand-sparkles" style="color:#f59e0b;"></i> Welcome back, <?= htmlspecialchars($_SESSION['admin_username'] ?? 'Admin') ?>!
             </h1>
             <p style="color:#6b7280;font-size:.9rem;margin:4px 0 0">
-                <?= date('l, d F Y') ?> &nbsp;Â·&nbsp; Here's what's happening with Nexopay events.
+                <?= date('l, d F Y') ?> &nbsp;&middot;&nbsp; Here's what's happening with Nexopay events.
             </p>
         </div>
         <?php if ($stats['pending'] > 0): ?>
@@ -178,7 +178,19 @@ $methods = $db->query("
         <?php endif; ?>
     </div>
 
-    <!-- â”€â”€ KPI Grid â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+    <!-- ── Dedicated Revenue Overview ──────────────────────────────────────── -->
+    <div style="background: linear-gradient(135deg, #10b981, #059669); border-radius: 16px; padding: 30px; margin-bottom: 24px; color: white; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 10px 25px rgba(16, 185, 129, 0.2);">
+        <div>
+            <h2 style="margin: 0; font-size: 1.2rem; font-weight: 600; opacity: 0.9;"><i class="fas fa-wallet"></i> Total Lifetime Revenue</h2>
+            <div style="font-size: 3.5rem; font-weight: 800; line-height: 1.2; margin-top: 5px;">&#2547;<?= number_format($stats['revenue'], 0) ?></div>
+            <p style="margin: 5px 0 0; opacity: 0.8; font-size: 0.95rem;">Accumulated from all approved event registrations globally.</p>
+        </div>
+        <div style="font-size: 5rem; opacity: 0.15; padding-right: 20px;">
+            <i class="fas fa-chart-line"></i>
+        </div>
+    </div>
+
+    <!-- ── KPI Grid ────────────────────────────────────────────────────── -->
     <div class="kpi-grid">
         <div class="kpi-card">
             <div class="kpi-icon c-blue"><i class="fas fa-calendar"></i></div>
@@ -202,10 +214,7 @@ $methods = $db->query("
             <div class="kpi-icon c-green"><i class="fas fa-check-circle"></i></div>
             <div><div class="kpi-num"><?= number_format($stats['approved']) ?></div><div class="kpi-label">Approved</div></div>
         </div>
-        <div class="kpi-card">
-            <div class="kpi-icon c-green" style="background:#d1fae5;color:#059669"><i class="fas fa-money-bill-wave"></i></div>
-            <div><div class="kpi-num" style="font-size:1.4rem">à§³<?= number_format($stats['revenue'], 0) ?></div><div class="kpi-label">Revenue Collected</div></div>
-        </div>
+
         <div class="kpi-card">
             <div class="kpi-icon c-purple"><i class="fas fa-graduation-cap"></i></div>
             <div><div class="kpi-num"><?= number_format($stats['ca_apps']) ?></div><div class="kpi-label">CA Applications</div></div>
@@ -218,13 +227,13 @@ $methods = $db->query("
             <div class="kpi-icon c-red" style="background:#fee2e2"><i class="fas fa-envelope"></i></div>
             <div><div class="kpi-num"><?= $total_msg ?></div><div class="kpi-label">Messages</div>
             <?php if ($total_msg > 0): ?>
-            <a href="messages.php" style="font-size:.75rem;color:#6366f1">View â†’</a>
+            <a href="messages.php" style="font-size:.75rem;color:#6366f1">View &rarr;</a>
             <?php endif; ?>
             </div>
         </div>
     </div>
 
-    <!-- â”€â”€ Per-Event Cards â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+    <!-- ── Per-Event Cards ──────────────────────────────────────────────â”€ -->
     <h2 class="section-h"><i class="fas fa-chart-bar"></i> Event-by-Event Breakdown</h2>
     <div class="event-cards" style="margin-bottom:30px">
     <?php foreach ($event_stats as $ev):
@@ -239,8 +248,8 @@ $methods = $db->query("
                 <span class="status-dot <?= $dot_cls ?>"></span>
                 <?= htmlspecialchars($ev['title']) ?>
             </h3>
-            <div class="date"><i class="fas fa-calendar-alt"></i> <?= $ev['event_date'] ? date('d M Y', strtotime($ev['event_date'])) : 'â€”' ?>
-                &nbsp;Â·&nbsp; <?= ucfirst($ev['event_status'] ?? 'â€”') ?>
+            <div class="date"><i class="fas fa-calendar-alt"></i> <?= $ev['event_date'] ? date('d M Y', strtotime($ev['event_date'])) : '&mdash;' ?>
+                &nbsp;&middot;&nbsp; <?= ucfirst($ev['event_status'] ?? '&mdash;') ?>
             </div>
         </div>
         <div class="ev-card-body">
@@ -270,7 +279,7 @@ $methods = $db->query("
             <div style="display:flex;gap:10px;margin-top:12px">
                 <?php if ($ev['ca_count'] > 0): ?>
                 <span style="background:#ede9fe;color:#6d28d9;padding:3px 9px;border-radius:50rem;font-size:.77rem;font-weight:700">
-                    ðŸŽ“ <?= $ev['ca_count'] ?> CA
+                    <i class="fas fa-graduation-cap"></i> <?= $ev['ca_count'] ?> CA
                 </span>
                 <?php endif; ?>
                 <?php if ($ev['vol_count'] > 0): ?>
@@ -282,14 +291,14 @@ $methods = $db->query("
             <?php endif; ?>
         </div>
         <div class="ev-footer">
-            <div class="ev-revenue">à§³<?= number_format($ev['revenue'], 0) ?> collected</div>
-            <a href="registrations.php?event_id=<?= $ev['id'] ?>" class="ev-link">View Registrations â†’</a>
+            <div class="ev-revenue">&#2547;<?= number_format($ev['revenue'], 0) ?> collected</div>
+            <a href="registrations.php?event_id=<?= $ev['id'] ?>" class="ev-link">View Registrations &rarr;</a>
         </div>
     </div>
     <?php endforeach; ?>
     </div>
 
-    <!-- â”€â”€ Two-column section: chart + feed â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+    <!-- ── Two-column section: chart + feed ────────────────────────────â”€ -->
     <div class="two-col">
         <!-- Left: Charts -->
         <div>
@@ -348,13 +357,13 @@ $methods = $db->query("
                     <div class="act-avatar"><?= $initials ?></div>
                     <div>
                         <div class="act-name"><?= htmlspecialchars($ra['full_name']) ?></div>
-                        <div class="act-meta"><?= htmlspecialchars($ra['event_title'] ?? 'â€”') ?> Â· <?= $since ?></div>
+                        <div class="act-meta"><?= htmlspecialchars($ra['event_title'] ?? '&mdash;') ?> &middot; <?= $since ?></div>
                         <span class="act-badge ab-<?= $ra['approval_status'] ?>">
-                            <?= ['pending'=>'â³ Pending','approved'=>'âœ… Approved','rejected'=>'âŒ Rejected'][$ra['approval_status']] ?? $ra['approval_status'] ?>
+                            <?= ['pending'=>'â³ Pending','approved'=>'<i class="fas fa-check-circle"></i> Approved','rejected'=>'âŒ Rejected'][$ra['approval_status']] ?? $ra['approval_status'] ?>
                         </span>
                     </div>
                     <span style="margin-left:auto;font-size:.85rem;font-weight:700;color:#16a34a;white-space:nowrap">
-                        à§³<?= number_format($ra['total_amount'] ?? 0, 0) ?>
+                        &#2547;<?= number_format($ra['total_amount'] ?? 0, 0) ?>
                     </span>
                 </li>
                 <?php endforeach; ?>
@@ -363,7 +372,7 @@ $methods = $db->query("
                 <?php endif; ?>
                 </ul>
                 <a href="registrations.php" style="display:block;text-align:center;margin-top:14px;font-size:.85rem;color:#6366f1;font-weight:600;text-decoration:none;padding:10px;background:#f5f3ff;border-radius:8px">
-                    View All Registrations â†’
+                    View All Registrations &rarr;
                 </a>
             </div>
         </div>
@@ -372,7 +381,7 @@ $methods = $db->query("
 </main>
 
 <script>
-// â”€â”€ Revenue Chart â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Revenue Chart ────────────────────────────────────────────────────────────
 const ctx = document.getElementById('revenueChart');
 if (ctx) {
     new Chart(ctx, {
@@ -390,10 +399,10 @@ if (ctx) {
         options: {
             responsive: true,
             plugins: { legend: { display: false },
-                tooltip: { callbacks: { label: ctx => 'à§³' + Number(ctx.raw).toLocaleString() } } },
+                tooltip: { callbacks: { label: ctx => '&#2547;' + Number(ctx.raw).toLocaleString() } } },
             scales: {
                 y: { beginAtZero: true, grid: { color: '#f1f5f9' },
-                     ticks: { callback: v => 'à§³' + v.toLocaleString() } },
+                     ticks: { callback: v => '&#2547;' + v.toLocaleString() } },
                 x: { grid: { display: false } }
             }
         }

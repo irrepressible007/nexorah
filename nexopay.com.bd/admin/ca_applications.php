@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'], $_POST['app
     try {
         if ($_POST['action'] === 'approve') {
             $db->prepare("UPDATE ca_applications SET approval_status='approved', approved_date=NOW() WHERE id=:id")->execute([':id' => $id]);
-            $flash = ['type'=>'success','msg'=>'âœ… CA Application #'.$id.' approved!'];
+            $flash = ['type'=>'success','msg'=>'<i class="fas fa-check-circle"></i> CA Application #'.$id.' approved!'];
         } elseif ($_POST['action'] === 'reject') {
             $reason = trim($_POST['rejection_reason'] ?? 'No reason provided');
             $db->prepare("UPDATE ca_applications SET approval_status='rejected', rejection_reason=:r, approved_date=NOW() WHERE id=:id")->execute([':r'=>$reason,':id'=>$id]);
@@ -100,7 +100,7 @@ tbody td{padding:11px 14px;vertical-align:middle}
     <?php if ($flash): ?>
     <div class="flash flash-<?= htmlspecialchars($flash['type']) ?>" id="flashMsg">
         <?= htmlspecialchars($flash['msg']) ?>
-        <button onclick="this.parentElement.remove()" style="margin-left:auto;background:none;border:none;cursor:pointer">âœ•</button>
+        <button onclick="this.parentElement.remove()" style="margin-left:auto;background:none;border:none;cursor:pointer">&times;</button>
     </div>
     <?php endif; ?>
 
@@ -113,15 +113,15 @@ tbody td{padding:11px 14px;vertical-align:middle}
 
     <form method="GET" class="filter-bar">
         <div><label>ðŸ” Search</label><input type="text" name="search" placeholder="Name, email, institutionâ€¦" value="<?= htmlspecialchars($search) ?>"></div>
-        <div><label>ðŸ“‹ Status</label>
+        <div><label><i class="fas fa-clipboard-list"></i> Status</label>
             <select name="status">
                 <option value="">All</option>
                 <option value="pending"  <?= $filter_status=='pending'  ?'selected':'' ?>>â³ Pending</option>
-                <option value="approved" <?= $filter_status=='approved' ?'selected':'' ?>>âœ… Approved</option>
+                <option value="approved" <?= $filter_status=='approved' ?'selected':'' ?>><i class="fas fa-check-circle"></i> Approved</option>
                 <option value="rejected" <?= $filter_status=='rejected' ?'selected':'' ?>>âŒ Rejected</option>
             </select>
         </div>
-        <div><label>ðŸ“… Event</label>
+        <div><label><i class="fas fa-calendar"></i> Event</label>
             <select name="event_id">
                 <option value="">All Events</option>
                 <?php foreach ($events as $ev): ?>
@@ -155,11 +155,11 @@ tbody td{padding:11px 14px;vertical-align:middle}
                 <td><?= htmlspecialchars($a['institution']) ?></td>
                 <td>
                     <div style="font-size:.85rem"><?= htmlspecialchars($a['contact_number']) ?></div>
-                    <div style="font-size:.78rem;color:#94a3b8">WA: <?= htmlspecialchars($a['whatsapp_number'] ?? 'â€”') ?></div>
+                    <div style="font-size:.78rem;color:#94a3b8">WA: <?= htmlspecialchars($a['whatsapp_number'] ?? '&mdash;') ?></div>
                 </td>
-                <td><?= htmlspecialchars($a['event_title'] ?? 'â€”') ?></td>
+                <td><?= htmlspecialchars($a['event_title'] ?? '&mdash;') ?></td>
                 <td><span class="badge badge-<?= $a['approval_status'] ?>">
-                    <?= ['pending'=>'â³ Pending','approved'=>'âœ… Approved','rejected'=>'âŒ Rejected'][$a['approval_status']] ?>
+                    <?= ['pending'=>'â³ Pending','approved'=>'<i class="fas fa-check-circle"></i> Approved','rejected'=>'âŒ Rejected'][$a['approval_status']] ?>
                 </span></td>
                 <td style="font-size:.82rem;white-space:nowrap">
                     <?= date('d M Y', strtotime($a['submission_date'])) ?><br>
@@ -196,12 +196,12 @@ tbody td{padding:11px 14px;vertical-align:middle}
 <!-- Approve Modal -->
 <div class="modal-overlay" id="approveModal">
     <div class="modal-box" style="max-width:380px">
-        <div style="font-size:1.1rem;font-weight:700;margin-bottom:12px">âœ… Confirm Approval</div>
+        <div style="font-size:1.1rem;font-weight:700;margin-bottom:12px"><i class="fas fa-check-circle"></i> Confirm Approval</div>
         <p style="color:#374151;margin-bottom:20px">Approve this Campus Ambassador application?</p>
         <form method="POST"><input type="hidden" name="app_id" id="approveId"><input type="hidden" name="action" value="approve">
             <div style="display:flex;gap:10px;justify-content:flex-end">
                 <button type="button" onclick="closeModals()" style="padding:8px 18px;background:#f3f4f6;border:none;border-radius:10px;font-weight:600;cursor:pointer">Cancel</button>
-                <button type="submit" style="padding:8px 20px;background:#16a34a;color:#fff;border:none;border-radius:10px;font-weight:700;cursor:pointer">âœ… Approve</button>
+                <button type="submit" style="padding:8px 20px;background:#16a34a;color:#fff;border:none;border-radius:10px;font-weight:700;cursor:pointer"><i class="fas fa-check-circle"></i> Approve</button>
             </div>
         </form>
     </div>
@@ -226,7 +226,7 @@ tbody td{padding:11px 14px;vertical-align:middle}
 
 <script>
 function viewApp(a) {
-    const fields = [['#', '#'+a.id],['Full Name',a.full_name],['Email',a.email],['Institution',a.institution],['Contact',a.contact_number],['WhatsApp',a.whatsapp_number||'â€”'],['DOB',a.dob||'â€”'],['NID/BC',a.nid_bc||'â€”'],['Guardian',a.guardian_name||'â€”'],['Guardian Contact',a.guardian_contact||'â€”'],['Experience',a.experience||'â€”'],['Status',a.approval_status],['Event',a.event_title||'â€”'],['Submitted',a.submission_date]];
+    const fields = [['#', '#'+a.id],['Full Name',a.full_name],['Email',a.email],['Institution',a.institution],['Contact',a.contact_number],['WhatsApp',a.whatsapp_number||'&mdash;'],['DOB',a.dob||'&mdash;'],['NID/BC',a.nid_bc||'&mdash;'],['Guardian',a.guardian_name||'&mdash;'],['Guardian Contact',a.guardian_contact||'&mdash;'],['Experience',a.experience||'&mdash;'],['Status',a.approval_status],['Event',a.event_title||'&mdash;'],['Submitted',a.submission_date]];
     document.getElementById('appGrid').innerHTML = fields.map(([l,v])=>`<div class="detail-item"><label>${l}</label><span>${v}</span></div>`).join('');
     const photo = document.getElementById('appPhoto');
     photo.innerHTML = a.picture_path ? `<img src="../${a.picture_path}" alt="Photo">` : '';

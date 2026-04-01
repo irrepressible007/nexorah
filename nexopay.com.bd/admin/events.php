@@ -248,7 +248,7 @@ include 'includes/sidebar.php';
                                         <?php endif; ?>
                                     </td>
                                     <td>
-                                        <span class="fee-badge">à§³<?php echo number_format($event['fee'], 2); ?></span>
+                                        <span class="fee-badge">&#2547;<?php echo number_format($event['fee'], 2); ?></span>
                                     </td>
                                     <td>
                                         <div class="datetime-info">
