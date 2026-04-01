@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * Nexopay Admin Setup Script
  * Run this file once to properly set up the admin system

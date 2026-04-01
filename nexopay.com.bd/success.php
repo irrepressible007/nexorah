@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 $status  = $_GET['status'] ?? 'success'; // 'success' or 'error'
 $message = $_GET['message'] ?? '';
 $txn     = $_GET['txn'] ?? '';

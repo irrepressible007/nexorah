@@ -1,4 +1,4 @@
-﻿<header class="admin-header">
+<header class="admin-header">
     <link rel="stylesheet" href="../assets/css/admin-mobile.css">
     <div class="admin-mobile-backdrop" id="adminBackdrop"></div>
     <div class="header-content">

@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 // â”€â”€ DATABASE CONFIGURATION â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // Copy this file to database.php and fill in your actual credentials.
 // database.php is excluded from Git via .gitignore â€” never commit live passwords!

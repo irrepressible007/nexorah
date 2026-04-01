@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 // â”€â”€ Nexorah main database connection â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // Copy this file to nexorah_db.php and fill in your live credentials.
 // nexorah_db.php is excluded from Git â€” never commit live passwords!
