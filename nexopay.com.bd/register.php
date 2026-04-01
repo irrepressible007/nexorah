@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 // Load database connections (excluded from Git for security)
 require_once __DIR__ . '/config/nexorah_db.php';
 require_once __DIR__ . '/config/database.php';
@@ -11,7 +11,7 @@ $error_message = '';
 
 // Map of event IDs â†’ which form template to use
 // Add new event forms here as they are created
-$supported_forms = [4 => 'steam_carnival']; // National STEAM Carnival = ID 4
+$supported_forms = [4 => 'steam_carnival', 6 => 'steam_olympiad'];
 
 if ($event_id && array_key_exists($event_id, $supported_forms)) {
     // Fetch the event from the main nexorah DB
@@ -700,6 +700,126 @@ if (!$show_form) {
         </div>
     </section>
 
+    <?php elseif ($show_form === 'steam_olympiad' && $event): ?>
+    <!-- â”€â”€ STEAM OLYMPIAD FORM â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+    <section class="form-section">
+        <div class="container">
+            <div class="action-buttons-container">
+                <a href="register.php" class="back-link"><i class="fas fa-arrow-left"></i> Back to all events</a>
+                <div class="action-buttons-right">
+                    <a href="register-ca.php?event_id=<?php echo $event['id']; ?>" class="btn-register-hub" style="background: linear-gradient(135deg, #8e44ad, #9b59b6); padding: 10px 20px; font-size: 0.9rem;"><i class="fas fa-user-tie"></i> Register as CA</a>
+                    <a href="register-volunteer.php?event_id=<?php echo $event['id']; ?>" class="btn-register-hub" style="background: linear-gradient(135deg, #e67e22, #f39c12); padding: 10px 20px; font-size: 0.9rem;"><i class="fas fa-hands-helping"></i> Register as Volunteer</a>
+                </div>
+            </div>
+            <form id="steamOlympiadForm" action="?event_id=<?php echo $event['id']; ?>" method="POST" class="registration-form">
+                <h3>National STEAM Olympiad Registration</h3>
+                <?php if ($error_message): ?>
+                <div style="background:#fee2e2;border:1.5px solid #fca5a5;border-radius:10px;padding:15px;margin-bottom:20px;color:#991b1b;font-weight:600">
+                    <i class="fas fa-exclamation-circle" style="margin-right:8px;"></i> <?= htmlspecialchars($error_message) ?>
+                </div>
+                <?php endif; ?>
+                <p class="form-desc">Join the National STEAM Olympiad! All registrations are Individual (Solo).</p>
+
+                <!-- â”€â”€ REQUIRED FIELDS â”€â”€ -->
+                <input type="hidden" name="reg_type" value="solo">
+                
+                <h4 class="form-heading"><i class="fas fa-user"></i> Participant Information</h4>
+                <div class="form-grid">
+                    <div class="form-group"><label>Full Name *</label><input type="text" name="full_name" class="form-control" required></div>
+                    <div class="form-group"><label>Institution *</label><input type="text" name="institution" class="form-control" required></div>
+                    <div class="form-group">
+                        <label>Category *</label>
+                        <select name="class_grade" id="olympiadCategory" class="form-control" required onchange="handleCategoryChange()">
+                            <option value="">Select Category...</option>
+                            <option value="Elementary">Elementary (Class 1 - Class 3)</option>
+                            <option value="Primary">Primary (Class 4 - Class 5)</option>
+                            <option value="Junior">Junior (Class 6 - Class 8)</option>
+                            <option value="Secondary">Secondary (Class 9 - Class 10)</option>
+                            <option value="Senior">Senior (Class 11 - Class 12+)</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>Contact Number *</label><input type="tel" name="contact" class="form-control" required></div>
+                </div>
+
+                <div class="form-group mb-4" style="margin-top:20px;">
+                    <label class="segments-main-label">Segments * <span>(Can choose multiple)</span></label>
+                    <div class="segment-groups">
+
+                        <div class="segment-card seg-olympiad">
+                            <div class="segment-card-header">
+                                <span><i class="fas fa-brain"></i> Olympiad</span>
+                                <span class="seg-rate-badge">200 BDT</span>
+                            </div>
+                            <div class="segment-card-body">
+                                <label class="option-label"><input type="checkbox" name="segments[]" value="Olympiad" data-section="olympiad" onchange="calcOlympiadTotal()"> National STEAM Olympiad</label>
+                            </div>
+                        </div>
+
+                        <div class="segment-card seg-art">
+                            <div class="segment-card-header">
+                                <span><i class="fas fa-palette"></i> Art</span>
+                                <span class="seg-rate-badge">200 BDT</span>
+                            </div>
+                            <div class="segment-card-body">
+                                <label class="option-label"><input type="checkbox" name="segments[]" value="Art Exhibition" data-section="art" onchange="calcOlympiadTotal()"> Art Exhibition</label>
+                                <label class="option-label" id="artCompetitionWrapper" style="display:none;"><input type="checkbox" name="segments[]" value="Art Competition" id="artCompCheckbox" data-section="art" onchange="calcOlympiadTotal()"> Art Competition <small style="color:#e74c3c;font-weight:600;">(Primary/Junior Only)</small></label>
+                            </div>
+                        </div>
+
+                        <div class="segment-card seg-photo">
+                            <div class="segment-card-header">
+                                <span><i class="fas fa-camera"></i> Photography</span>
+                                <span class="seg-rate-badge">300 BDT</span>
+                            </div>
+                            <div class="segment-card-body">
+                                <label class="option-label"><input type="checkbox" name="segments[]" value="Mobile Photography" data-section="photo" onchange="calcOlympiadTotal()"> Mobile Photography</label>
+                                <label class="option-label"><input type="checkbox" name="segments[]" value="DSLR Photography" data-section="photo" onchange="calcOlympiadTotal()"> DSLR Photography</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="total-bar">
+                    <span class="total-label">Grand Total:</span>
+                    <span class="total-amount"><span id="olympiadGrandTotalAmt">0</span> BDT</span>
+                    <input type="hidden" name="total_amount" id="olympiadTotalInput" value="0">
+                </div>
+                
+                <div id="olympiadSharedPayment" style="display:none; margin-top:20px;">
+                    <div class="payment-instruction">
+                        <h4><i class="fas fa-info-circle"></i> Payment Instructions</h4>
+                        <p>Complete your payment of <strong id="olympiadInstructionAmount">0 BDT</strong> to the following numbers:</p>
+                        <div style="display:flex;gap:15px;margin-top:10px;flex-wrap:wrap">
+                            <span class="payment-badge bkash-badge">bKash: 01857108193</span>
+                            <span class="payment-badge nagad-badge">Nagad: 01857108193</span>
+                        </div>
+                    </div>
+                    
+                    <h4 class="form-heading"><i class="fas fa-money-check-alt"></i> Payment Verification</h4>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Payment Method *</label>
+                            <select name="payment_method" id="olympiadPaymentMethod" class="form-control" onchange="showOlympiadPaymentSection()">
+                                <option value="">Select Method...</option>
+                                <option value="bKash">bKash</option>
+                                <option value="Nagad">Nagad</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="olympiadPaymentSection" style="display:none;margin-top:20px">
+                        <h4 class="form-heading" id="olympiadPaymentTitle">Payment Details</h4>
+                        <div class="form-grid">
+                            <div class="form-group"><label><span id="olympiadMethodNameLabel"></span> Sent From Number *</label><input type="text" name="sender_number" id="olympiadSenderNumber" class="form-control" placeholder="e.g. 01XXXXXXXXX"></div>
+                            <div class="form-group"><label><span id="olympiadMethodTxnLabel"></span> Transaction ID *</label><input type="text" name="transaction_id" id="olympiadTransactionId" class="form-control" placeholder="e.g. TRNX12345678"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit">Complete Registration</button>
+            </form>
+        </div>
+    </section>
+
     <?php else: ?>
     <!-- â”€â”€ EVENT HUB â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
     <section class="hub-section">
@@ -871,6 +991,80 @@ if (!$show_form) {
                     alert('Group registration requires at least 2 participants. Please fill in Participant 2 details.');
                     p2.focus();
                 }
+            }
+        });
+    </script>
+    <?php elseif ($show_form === 'steam_olympiad'): ?>
+    <script>
+        const OLYMPIAD_FEES = { olympiad: 200, art: 200, photo: 300 };
+
+        function handleCategoryChange() {
+            const cat = document.getElementById('olympiadCategory').value;
+            const wrap = document.getElementById('artCompetitionWrapper');
+            const box = document.getElementById('artCompCheckbox');
+            if (cat === 'Primary' || cat === 'Junior') {
+                wrap.style.display = 'block';
+            } else {
+                wrap.style.display = 'none';
+                box.checked = false; // logic reset if excluded category
+            }
+            calcOlympiadTotal();
+        }
+
+        function calcOlympiadTotal() {
+            let total = 0;
+            document.querySelectorAll('#steamOlympiadForm input[name="segments[]"]:checked').forEach(cb => {
+                const sec = cb.getAttribute('data-section');
+                if (sec && OLYMPIAD_FEES[sec]) total += OLYMPIAD_FEES[sec];
+            });
+
+            document.getElementById('olympiadGrandTotalAmt').innerText = total;
+            document.getElementById('olympiadTotalInput').value = total;
+            document.getElementById('olympiadInstructionAmount').innerText = total + ' BDT';
+
+            const paymentBlock = document.getElementById('olympiadSharedPayment');
+            const pm = document.getElementById('olympiadPaymentMethod');
+            if (total > 0) {
+                paymentBlock.style.display = 'block';
+                pm.setAttribute('required', 'required');
+            } else {
+                paymentBlock.style.display = 'none';
+                pm.removeAttribute('required');
+                pm.value = '';
+                showOlympiadPaymentSection();
+            }
+        }
+
+        function showOlympiadPaymentSection() {
+            const method = document.getElementById('olympiadPaymentMethod').value;
+            const section = document.getElementById('olympiadPaymentSection');
+            const sender  = document.getElementById('olympiadSenderNumber');
+            const txn     = document.getElementById('olympiadTransactionId');
+
+            if (!method || method === '') {
+                section.style.display = 'none';
+                sender.removeAttribute('required'); txn.removeAttribute('required');
+            } else {
+                section.style.display = 'block';
+                document.getElementById('olympiadPaymentTitle').innerText = method + ' Payment Details';
+                document.getElementById('olympiadMethodNameLabel').innerText = method;
+                document.getElementById('olympiadMethodTxnLabel').innerText = method;
+                sender.setAttribute('required','required');
+                txn.setAttribute('required','required');
+            }
+        }
+        
+        document.getElementById('steamOlympiadForm').addEventListener('submit', function(e) {
+            const checked = document.querySelectorAll('#steamOlympiadForm input[name="segments[]"]:checked').length;
+            if (checked === 0) {
+                e.preventDefault();
+                alert('Please select at least one segment to register for.');
+            }
+            
+            const total = parseInt(document.getElementById('olympiadTotalInput').value) || 0;
+            if (total > 0 && document.getElementById('olympiadPaymentMethod').value === '') {
+                e.preventDefault();
+                alert('Please select a payment method and provide transaction details.');
             }
         });
     </script>
