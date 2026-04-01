@@ -667,20 +667,37 @@ if (!$show_form) {
                             <option value="Bkash">Bkash</option>
                             <option value="Nagad">Nagad</option>
                             <option value="Rocket">Rocket</option>
+                            <option value="Bank">Bank Deposit</option>
                         </select>
                     </div>
 
                     <div id="paymentSection" style="display:none;" class="payment-section-divider">
                         <h3 id="paymentTitle" class="payment-title">Payment Details</h3>
-                        <p class="payment-instructions">
-                            1. Go to <strong>Send Money</strong> option in your app.<br>
-                            2. Type the receiver number: <strong>01829981710 (Personal)</strong><br>
-                            3. Enter reference as your <strong>Name</strong> or <strong>CA Ref</strong><br>
-                            4. Enter your exact total amount: <strong id="instructionAmount">0 BDT</strong><br>
-                            5. Send the money<br>
-                            6. Copy the <strong>Transaction ID</strong> given by your operator<br>
-                            7. Paste the Transaction ID below
-                        </p>
+                        <div id="mobilePayInstructions">
+                            <p class="payment-instructions">
+                                1. Go to <strong>Send Money</strong> option in your app.<br>
+                                2. Type the receiver number: <strong>01829981710 (Personal)</strong><br>
+                                3. Enter reference as your <strong>Name</strong> or <strong>CA Ref</strong><br>
+                                4. Enter your exact total amount: <strong id="instructionAmount">0 BDT</strong><br>
+                                5. Send the money<br>
+                                6. Copy the <strong>Transaction ID</strong> given by your operator<br>
+                                7. Paste the Transaction ID below
+                            </p>
+                        </div>
+                        <div id="bankPayInstructions" style="display:none; margin-bottom:15px;">
+                            <p class="payment-instructions">
+                                1. Transfer your total amount: <strong id="bankInstructionAmount">0 BDT</strong> to:<br>
+                            </p>
+                            <div style="background:#f1f5f9; padding:15px; border-radius:8px; font-size:0.9rem;">
+                                <strong>Bank:</strong> BRAC Bank PLC (MAZAR ROAD SUB BRANCH)<br>
+                                <strong>Acc Name:</strong> NEXOPAY<br>
+                                <strong>Acc No:</strong> 2076517310001<br>
+                                <strong>Routing/SWIFT:</strong> 060261997 / BRAKBDDH
+                            </div>
+                            <p class="payment-instructions" style="margin-top:10px;">
+                                2. Save your Bank Receipt or Transaction Reference ID.
+                            </p>
+                        </div>
                         <div class="form-group mb-3">
                             <label><span id="methodNameLabel"></span> Number *</label>
                             <input type="tel" name="sender_number" id="senderNumber" class="form-control" inputmode="tel">
@@ -788,10 +805,21 @@ if (!$show_form) {
                 <div id="olympiadSharedPayment" style="display:none; margin-top:20px;">
                     <div class="payment-instruction">
                         <h4><i class="fas fa-info-circle"></i> Payment Instructions</h4>
-                        <p>Complete your payment of <strong id="olympiadInstructionAmount">0 BDT</strong> to the following numbers:</p>
-                        <div style="display:flex;gap:15px;margin-top:10px;flex-wrap:wrap">
-                            <span class="payment-badge bkash-badge">bKash: 01857108193</span>
-                            <span class="payment-badge nagad-badge">Nagad: 01857108193</span>
+                        <div id="olympiadMobileInst">
+                            <p>Complete your payment of <strong id="olympiadInstructionAmount">0 BDT</strong> to the following numbers:</p>
+                            <div style="display:flex;gap:15px;margin-top:10px;flex-wrap:wrap">
+                                <span class="payment-badge bkash-badge">bKash: 01857108193</span>
+                                <span class="payment-badge nagad-badge">Nagad: 01857108193</span>
+                            </div>
+                        </div>
+                        <div id="olympiadBankInst" style="display:none; margin-top:10px;">
+                            <p>Bank Transfer of <strong id="olympiadBankAmount">0 BDT</strong> to:</p>
+                            <div style="background:#f1f5f9; padding:15px; border-radius:8px; font-size:0.9rem;">
+                                <strong>Bank:</strong> BRAC Bank PLC (MAZAR ROAD SUB BRANCH)<br>
+                                <strong>Acc Name:</strong> NEXOPAY<br>
+                                <strong>Acc No:</strong> 2076517310001<br>
+                                <strong>Routing/SWIFT:</strong> 060261997 / BRAKBDDH
+                            </div>
                         </div>
                     </div>
                     
@@ -803,6 +831,7 @@ if (!$show_form) {
                                 <option value="">Select Method...</option>
                                 <option value="bKash">bKash</option>
                                 <option value="Nagad">Nagad</option>
+                                <option value="Bank">Bank Deposit</option>
                             </select>
                         </div>
                     </div>
@@ -961,15 +990,32 @@ if (!$show_form) {
             const section = document.getElementById('paymentSection');
             const sender  = document.getElementById('senderNumber');
             const txn     = document.getElementById('transactionId');
+            
+            const mobilePay = document.getElementById('mobilePayInstructions');
+            const bankPay   = document.getElementById('bankPayInstructions');
 
             if (!method) {
                 section.style.display = 'none';
                 sender.removeAttribute('required'); txn.removeAttribute('required');
             } else {
                 section.style.display = 'block';
-                document.getElementById('paymentTitle').innerText    = method + ' Payment Details';
-                document.getElementById('methodNameLabel').innerText = method;
-                document.getElementById('methodTxnLabel').innerText  = method;
+                document.getElementById('paymentTitle').innerText = method + ' Payment Details';
+                
+                if (method === 'Bank') {
+                    if(mobilePay) mobilePay.style.display = 'none';
+                    if(bankPay) { 
+                        bankPay.style.display = 'block';
+                        document.getElementById('bankInstructionAmount').innerText = document.getElementById('instructionAmount').innerText;
+                    }
+                    document.getElementById('methodNameLabel').innerText = "Bank Account Name / Number";
+                    document.getElementById('methodTxnLabel').innerText  = "Bank Reference / Receipt";
+                } else {
+                    if(mobilePay) mobilePay.style.display = 'block';
+                    if(bankPay) bankPay.style.display = 'none';
+                    document.getElementById('methodNameLabel').innerText = method;
+                    document.getElementById('methodTxnLabel').innerText  = method;
+                }
+                
                 sender.setAttribute('required','required');
                 txn.setAttribute('required','required');
             }
@@ -1041,6 +1087,9 @@ if (!$show_form) {
             const section = document.getElementById('olympiadPaymentSection');
             const sender  = document.getElementById('olympiadSenderNumber');
             const txn     = document.getElementById('olympiadTransactionId');
+            
+            const mobInst = document.getElementById('olympiadMobileInst');
+            const bankInst = document.getElementById('olympiadBankInst');
 
             if (!method || method === '') {
                 section.style.display = 'none';
@@ -1048,8 +1097,22 @@ if (!$show_form) {
             } else {
                 section.style.display = 'block';
                 document.getElementById('olympiadPaymentTitle').innerText = method + ' Payment Details';
-                document.getElementById('olympiadMethodNameLabel').innerText = method;
-                document.getElementById('olympiadMethodTxnLabel').innerText = method;
+                
+                if (method === 'Bank') {
+                    if(mobInst) mobInst.style.display = 'none';
+                    if(bankInst) {
+                        bankInst.style.display = 'block';
+                        document.getElementById('olympiadBankAmount').innerText = document.getElementById('olympiadInstructionAmount').innerText;
+                    }
+                    document.getElementById('olympiadMethodNameLabel').innerText = "Bank Account Name / Number";
+                    document.getElementById('olympiadMethodTxnLabel').innerText  = "Bank Reference / Receipt";
+                } else {
+                    if(mobInst) mobInst.style.display = 'block';
+                    if(bankInst) bankInst.style.display = 'none';
+                    document.getElementById('olympiadMethodNameLabel').innerText = method;
+                    document.getElementById('olympiadMethodTxnLabel').innerText  = method;
+                }
+                
                 sender.setAttribute('required','required');
                 txn.setAttribute('required','required');
             }
