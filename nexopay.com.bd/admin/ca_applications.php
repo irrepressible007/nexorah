@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 require_once 'includes/auth_check.php';
 require_once '../config/database.php';
 
@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'], $_POST['app
         } elseif ($_POST['action'] === 'reject') {
             $reason = trim($_POST['rejection_reason'] ?? 'No reason provided');
             $db->prepare("UPDATE ca_applications SET approval_status='rejected', rejection_reason=:r, approved_date=NOW() WHERE id=:id")->execute([':r'=>$reason,':id'=>$id]);
-            $flash = ['type'=>'warning','msg'=>'âŒ CA Application #'.$id.' rejected.'];
+            $flash = ['type'=>'warning','msg'=>'&#10060; CA Application #'.$id.' rejected.'];
         }
     } catch (Exception $e) {
         $flash = ['type'=>'error','msg'=>'Error: '.$e->getMessage()];
@@ -48,7 +48,7 @@ $events = $db->query("SELECT id, title FROM events ORDER BY event_date DESC")->f
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>CA Applications â€“ Nexopay Admin</title>
+<title>CA Applications &ndash; Nexopay Admin</title>
 <link rel="stylesheet" href="../assets/css/admin.css">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 <style>
@@ -112,13 +112,13 @@ tbody td{padding:11px 14px;vertical-align:middle}
     </div>
 
     <form method="GET" class="filter-bar">
-        <div><label>ðŸ” Search</label><input type="text" name="search" placeholder="Name, email, institutionâ€¦" value="<?= htmlspecialchars($search) ?>"></div>
+        <div><label><i class="fas fa-search"></i> Search</label><input type="text" name="search" placeholder="Name, email, institution..." value="<?= htmlspecialchars($search) ?>"></div>
         <div><label><i class="fas fa-clipboard-list"></i> Status</label>
             <select name="status">
                 <option value="">All</option>
-                <option value="pending"  <?= $filter_status=='pending'  ?'selected':'' ?>>â³ Pending</option>
+                <option value="pending"  <?= $filter_status=='pending'  ?'selected':'' ?>>&#9203; Pending</option>
                 <option value="approved" <?= $filter_status=='approved' ?'selected':'' ?>><i class="fas fa-check-circle"></i> Approved</option>
-                <option value="rejected" <?= $filter_status=='rejected' ?'selected':'' ?>>âŒ Rejected</option>
+                <option value="rejected" <?= $filter_status=='rejected' ?'selected':'' ?>>&#10060; Rejected</option>
             </select>
         </div>
         <div><label><i class="fas fa-calendar"></i> Event</label>
@@ -159,7 +159,7 @@ tbody td{padding:11px 14px;vertical-align:middle}
                 </td>
                 <td><?= htmlspecialchars($a['event_title'] ?? '&mdash;') ?></td>
                 <td><span class="badge badge-<?= $a['approval_status'] ?>">
-                    <?= ['pending'=>'â³ Pending','approved'=>'<i class="fas fa-check-circle"></i> Approved','rejected'=>'âŒ Rejected'][$a['approval_status']] ?>
+                    <?= ['pending'=>'&#9203; Pending','approved'=>'<i class="fas fa-check-circle"></i> Approved','rejected'=>'&#10060; Rejected'][$a['approval_status']] ?>
                 </span></td>
                 <td style="font-size:.82rem;white-space:nowrap">
                     <?= date('d M Y', strtotime($a['submission_date'])) ?><br>
@@ -210,15 +210,15 @@ tbody td{padding:11px 14px;vertical-align:middle}
 <!-- Reject Modal -->
 <div class="modal-overlay" id="rejectModal">
     <div class="modal-box" style="max-width:420px">
-        <div style="font-size:1.1rem;font-weight:700;margin-bottom:12px">âŒ Reject Application</div>
+        <div style="font-size:1.1rem;font-weight:700;margin-bottom:12px">&#10060; Reject Application</div>
         <form method="POST"><input type="hidden" name="app_id" id="rejectId"><input type="hidden" name="action" value="reject">
             <div style="margin-bottom:16px">
                 <label style="font-weight:600;display:block;margin-bottom:7px">Reason *</label>
-                <textarea name="rejection_reason" rows="3" required style="width:100%;padding:10px;border:1.5px solid #e5e7eb;border-radius:10px;font-family:inherit;font-size:.9rem" placeholder="Explain why this application is rejectedâ€¦"></textarea>
+                <textarea name="rejection_reason" rows="3" required style="width:100%;padding:10px;border:1.5px solid #e5e7eb;border-radius:10px;font-family:inherit;font-size:.9rem" placeholder="Explain why this application is rejected..."></textarea>
             </div>
             <div style="display:flex;gap:10px;justify-content:flex-end">
                 <button type="button" onclick="closeModals()" style="padding:8px 18px;background:#f3f4f6;border:none;border-radius:10px;font-weight:600;cursor:pointer">Cancel</button>
-                <button type="submit" style="padding:8px 20px;background:#dc2626;color:#fff;border:none;border-radius:10px;font-weight:700;cursor:pointer">âŒ Reject</button>
+                <button type="submit" style="padding:8px 20px;background:#dc2626;color:#fff;border:none;border-radius:10px;font-weight:700;cursor:pointer">&#10060; Reject</button>
             </div>
         </form>
     </div>
