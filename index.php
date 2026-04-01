@@ -1,4 +1,4 @@
-﻿<?php include 'includes/header.php'; ?>
+<?php include 'includes/header.php'; ?>
 
 <!-- Hero Section -->
 <section class="hero-section">
@@ -114,7 +114,7 @@
             <div class="col-lg-4 col-md-6" data-aos="fade-up">
                 <div class="event-card">
                     <div class="event-img">
-                        <img src="<?php echo !empty($event['image_path']) ? '9173182/' . $event['image_path'] : 'assets/images/default-event.jpg'; ?>" alt="<?php echo $event['title']; ?>">
+                        <img src="<?php echo (!empty($event['image_path']) ? (strpos($event['image_path'], 'assets/') === 0 ? $event['image_path'] : '9173182/' . $event['image_path']) : 'assets/images/default-event.jpg'); ?>" alt="<?php echo $event['title']; ?>">
                     </div>
                     <div class="event-content">
                         <div class="event-meta">

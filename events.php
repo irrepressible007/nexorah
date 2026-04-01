@@ -1,4 +1,4 @@
-﻿<?php include 'includes/header.php'; ?>
+<?php include 'includes/header.php'; ?>
 
 <!-- Page Banner -->
 <section class="page-banner">
@@ -37,8 +37,11 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
 // Display single event
 if ($singleEvent) :
     $eventDate = new DateTime($event['event_date']);
-    // Fix image path
-    $imagePath = !empty($event['image_path']) ? '9173182/' . $event['image_path'] : 'assets/images/default-event.jpg';
+    // Fix image path natively vs admin uploads
+    $imagePath = 'assets/images/default-event.jpg';
+    if (!empty($event['image_path'])) {
+        $imagePath = (strpos($event['image_path'], 'assets/') === 0) ? $event['image_path'] : '9173182/' . $event['image_path'];
+    }
 ?>
 
 <!-- Single Event Section -->
@@ -103,8 +106,11 @@ if ($singleEvent) :
                 if (count($upcomingEvents) > 0) :
                     foreach ($upcomingEvents as $event) :
                         $eventDate = new DateTime($event['event_date']);
-                        // Fix image path
-                        $imagePath = !empty($event['image_path']) ? '9173182/' . $event['image_path'] : 'assets/images/default-event.jpg';
+                        // Fix image path natively vs admin uploads
+                        $imagePath = 'assets/images/default-event.jpg';
+                        if (!empty($event['image_path'])) {
+                            $imagePath = (strpos($event['image_path'], 'assets/') === 0) ? $event['image_path'] : '9173182/' . $event['image_path'];
+                        }
                 ?>
                 <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up">
                     <div class="event-card" data-event-id="<?php echo $event['id']; ?>" onclick="window.location.href='events.php?id=<?php echo $event['id']; ?>'" style="cursor: pointer;">
@@ -150,8 +156,11 @@ if ($singleEvent) :
                 if (count($pastEvents) > 0) :
                     foreach ($pastEvents as $event) :
                         $eventDate = new DateTime($event['event_date']);
-                        // Fix image path
-                        $imagePath = !empty($event['image_path']) ? '9173182/' . $event['image_path'] : 'assets/images/default-event.jpg';
+                        // Fix image path natively vs admin uploads
+                        $imagePath = 'assets/images/default-event.jpg';
+                        if (!empty($event['image_path'])) {
+                            $imagePath = (strpos($event['image_path'], 'assets/') === 0) ? $event['image_path'] : '9173182/' . $event['image_path'];
+                        }
                 ?>
                 <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up">
                     <div class="event-card past-event" data-event-id="<?php echo $event['id']; ?>" onclick="window.location.href='events.php?id=<?php echo $event['id']; ?>'" style="cursor: pointer;">

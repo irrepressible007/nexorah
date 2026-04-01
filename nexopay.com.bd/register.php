@@ -835,9 +835,10 @@ if (!$show_form) {
             <?php else: ?>
                 <div class="event-hub-grid">
                     <?php foreach ($open_events as $ev):
-                        $imgSrc = !empty($ev['image_path'])
-                            ? '../9173182/' . htmlspecialchars($ev['image_path'])
-                            : 'assets/images/public/Steam Carnival Wallpaper.jpeg';
+                        $imgSrc = 'assets/images/public/Steam Carnival Wallpaper.jpeg';
+                        if (!empty($ev['image_path'])) {
+                            $imgSrc = (strpos($ev['image_path'], 'assets/') === 0) ? '../' . $ev['image_path'] : '../9173182/' . $ev['image_path'];
+                        }
                         $formSupported = array_key_exists((int)$ev['id'], $supported_forms);
                     ?>
                     <div class="event-hub-card">
