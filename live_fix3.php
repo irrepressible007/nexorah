@@ -15,6 +15,11 @@ try {
 
     $sql = file_get_contents($sql_file);
     
+    // Strip out CREATE DATABASE and USE statements since cPanel users don't have this privilege
+    // and PDO is already connected to the correct database!
+    $sql = preg_replace('/CREATE DATABASE IF NOT EXISTS [^;]+;/i', '', $sql);
+    $sql = preg_replace('/USE [^;]+;/i', '', $sql);
+    
     // Quick hack to prevent ALTER TABLE failures if ran twice
     $sql = str_replace("ALTER TABLE blog_posts ADD COLUMN media_type", "-- comment", $sql);
     $sql = str_replace("ALTER TABLE blog_posts CHANGE image_path media_path", "-- comment", $sql);
