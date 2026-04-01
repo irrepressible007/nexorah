@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 // Start session
 session_start();
 
@@ -44,8 +44,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
             <div class="container">
-                <a class="navbar-brand" href="index.php">
-                    <img src="assets/images/public/Nexorah New logo.png" alt="Nexorah Logo" height="45">
+                <a class="navbar-brand d-flex align-items-center" href="index.php">
+                    <img src="assets/images/public/Nexorah New logo.png" alt="Nexorah Logo" style="height: 65px; width: auto; object-fit: contain;">
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
