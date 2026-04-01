@@ -398,9 +398,8 @@ if (!$singleEvent) {
                     ? 'register.php?event_id=' . $ev['id']
                     : 'event-details.php?id='  . $ev['id'];
             ?>
-            <!-- Whole card is clickable via wrapping <a> -->
-            <a href="events.php?id=<?php echo $ev['id']; ?>" class="event-card-link" aria-label="<?php echo htmlspecialchars($ev['title']); ?>">
-                <div class="event-card <?php echo $ev['status']; ?>">
+            <div class="event-card-link">
+                <div class="event-card <?php echo $ev['status']; ?>" onclick="window.location.href='events.php?id=<?php echo $ev['id']; ?>'" style="cursor: pointer;">
                     <img src="<?php echo $img; ?>" alt="<?php echo htmlspecialchars($ev['title']); ?>">
                     <div class="event-info">
                         <div class="event-meta">
@@ -430,7 +429,7 @@ if (!$singleEvent) {
                         </div>
                     </div>
                 </div>
-            </a>
+            </div>
             <?php endforeach; ?>
         <?php else: ?>
             <div class="no-events" style="grid-column:1/-1;text-align:center;padding:60px 20px;color:#94a3b8;">
