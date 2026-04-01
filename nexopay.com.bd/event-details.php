@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 require_once 'config/database.php';
 
 $database = new Database();
@@ -74,8 +74,8 @@ if ($_POST && $event['status'] == 'upcoming') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($event['title']); ?> - Nexopay</title>
     <!-- Favicon -->
-    <link rel="icon" type="image/jpeg" href="assets/images/public/Nexopay logo horizontal.jpeg">
-    <link rel="shortcut icon" href="assets/images/public/Nexopay logo horizontal.jpeg">
+    <link rel="icon" type="image/png" href="assets/images/public/Nex Pay new logo.png">
+    <link rel="shortcut icon" href="assets/images/public/Nex Pay new logo.png">
     <link rel="stylesheet" href="assets/css/style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
@@ -86,7 +86,7 @@ if ($_POST && $event['status'] == 'upcoming') {
         <div class="container">
             <div class="nav-brand">
                 <a href="index.php" style="display: flex; align-items: center; text-decoration: none;">
-                    <img src="assets/images/public/Nexopay logo horizontal.jpeg" alt="Nexopay Logo" style="height: 45px; width: auto;">
+                    <img src="assets/images/public/Nex Pay new logo.png" alt="Nexopay Logo" style="height: 45px; width: auto;">
                 </a>
             </div>
             <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
@@ -128,7 +128,7 @@ if ($_POST && $event['status'] == 'upcoming') {
                     </p>
                     <p class="event-fee">
                         <i class="fas fa-tag"></i> 
-                        Registration Fee: ৳<?php echo number_format($event['fee'], 2); ?> BDT
+                        Registration Fee: à§³<?php echo number_format($event['fee'], 2); ?> BDT
                     </p>
                 </div>
             </div>
@@ -148,7 +148,7 @@ if ($_POST && $event['status'] == 'upcoming') {
                             <p><strong>Name:</strong> <?php echo htmlspecialchars($registration_data['full_name']); ?></p>
                             <p><strong>Event:</strong> <?php echo htmlspecialchars($event['title']); ?></p>
                             <p><strong>Tickets:</strong> <?php echo $registration_data['ticket_quantity']; ?></p>
-                            <p><strong>Total Amount:</strong> ৳<?php echo number_format($registration_data['total_amount'], 2); ?> BDT</p>
+                            <p><strong>Total Amount:</strong> à§³<?php echo number_format($registration_data['total_amount'], 2); ?> BDT</p>
                         </div>
                         
                         <div class="qr-payment-section">
@@ -190,7 +190,7 @@ if ($_POST && $event['status'] == 'upcoming') {
                         reference: 'NEX<?php echo $event_id . time(); ?>'
                     };
                     
-                    const qrText = `Payment for ${paymentData.event}\nAmount: ৳${paymentData.amount} BDT\nReference: ${paymentData.reference}`;
+                    const qrText = `Payment for ${paymentData.event}\nAmount: à§³${paymentData.amount} BDT\nReference: ${paymentData.reference}`;
                     
                     QRCode.toCanvas(document.getElementById('qrcode'), qrText, {
                         width: 200,
@@ -217,7 +217,7 @@ if ($_POST && $event['status'] == 'upcoming') {
 
                         <form method="POST" id="registrationForm">
                             <div class="form-group">
-                                <label>Registration Fee: ৳<?php echo number_format($event['fee'], 2); ?> BDT</label>
+                                <label>Registration Fee: à§³<?php echo number_format($event['fee'], 2); ?> BDT</label>
                             </div>
                             
                             <div class="form-group">
@@ -247,7 +247,7 @@ if ($_POST && $event['status'] == 'upcoming') {
                             
                             <div class="form-group">
                                 <label>Total Ticket Price</label>
-                                <div class="total-price" id="totalPrice">৳<?php echo number_format($event['fee'], 2); ?> BDT</div>
+                                <div class="total-price" id="totalPrice">à§³<?php echo number_format($event['fee'], 2); ?> BDT</div>
                             </div>
                             
                             <button type="submit" class="btn-primary btn-large">Pay Now</button>
@@ -262,7 +262,7 @@ if ($_POST && $event['status'] == 'upcoming') {
                         ticketQuantity.addEventListener('input', function() {
                             const quantity = parseInt(this.value) || 1;
                             const total = eventFee * quantity;
-                            totalPrice.textContent = '৳' + total.toFixed(2) + ' BDT';
+                            totalPrice.textContent = 'à§³' + total.toFixed(2) + ' BDT';
                         });
                         </script>
                     </div>

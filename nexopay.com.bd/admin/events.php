@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 require_once 'includes/auth_check.php';
 require_once '../config/database.php';
 
@@ -248,7 +248,7 @@ include 'includes/sidebar.php';
                                         <?php endif; ?>
                                     </td>
                                     <td>
-                                        <span class="fee-badge">৳<?php echo number_format($event['fee'], 2); ?></span>
+                                        <span class="fee-badge">à§³<?php echo number_format($event['fee'], 2); ?></span>
                                     </td>
                                     <td>
                                         <div class="datetime-info">

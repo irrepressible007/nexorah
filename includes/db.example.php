@@ -1,8 +1,8 @@
-<?php
-// ── DATABASE CONFIGURATION ─────────────────────────────────────────────────
+﻿<?php
+// â”€â”€ DATABASE CONFIGURATION â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // Copy this file to db.php and fill in your actual credentials.
-// db.php is excluded from Git via .gitignore — never commit live passwords!
-// ──────────────────────────────────────────────────────────────────────────
+// db.php is excluded from Git via .gitignore â€” never commit live passwords!
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 $host     = 'localhost';
 $dbname   = 'your_database_name';   // e.g. nexorahc_nexorah on live server

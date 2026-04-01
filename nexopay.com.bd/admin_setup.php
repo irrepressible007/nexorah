@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * Nexopay Admin Setup Script
  * Run this file once to properly set up the admin system
@@ -19,22 +19,22 @@ echo ".error{color:#dc3545;background:#f8d7da;padding:10px;border-radius:4px;mar
 echo ".info{color:#0c5460;background:#d1ecf1;padding:10px;border-radius:4px;margin:10px 0;}";
 echo "</style></head><body><div class='container'>";
 
-echo "<h1>🔧 Nexopay Admin Setup</h1>";
+echo "<h1>ðŸ”§ Nexopay Admin Setup</h1>";
 echo "<p>This script will set up your admin system properly.</p>";
 
 try {
     // Test database connection
-    echo "<h2>📊 Database Connection</h2>";
+    echo "<h2>ðŸ“Š Database Connection</h2>";
     $database = new Database();
     $db = $database->getConnection();
     
     if (!$db) {
         throw new Exception("Failed to connect to database");
     }
-    echo "<div class='success'>✅ Database connection successful</div>";
+    echo "<div class='success'>âœ… Database connection successful</div>";
     
     // Check if database exists and create tables if needed
-    echo "<h2>🗄️ Database Structure</h2>";
+    echo "<h2>ðŸ—„ï¸ Database Structure</h2>";
     
     // Check if admin_users table exists
     $query = "SHOW TABLES LIKE 'admin_users'";
@@ -56,13 +56,13 @@ try {
             )
         ";
         $db->exec($create_table);
-        echo "<div class='success'>✅ admin_users table created</div>";
+        echo "<div class='success'>âœ… admin_users table created</div>";
     } else {
-        echo "<div class='success'>✅ admin_users table exists</div>";
+        echo "<div class='success'>âœ… admin_users table exists</div>";
     }
     
     // Check for existing admin user
-    echo "<h2>👤 Admin User Setup</h2>";
+    echo "<h2>ðŸ‘¤ Admin User Setup</h2>";
     $query = "SELECT * FROM admin_users WHERE username = 'admin'";
     $stmt = $db->prepare($query);
     $stmt->execute();
@@ -73,21 +73,21 @@ try {
         
         // Test current password
         if (password_verify('admin123', $existing_admin['password'])) {
-            echo "<div class='success'>✅ Admin password is correct and working</div>";
+            echo "<div class='success'>âœ… Admin password is correct and working</div>";
             echo "<div class='info'><strong>Login Details:</strong><br>";
             echo "Username: admin<br>";
             echo "Password: admin123</div>";
         } else {
-            echo "<div class='error'>❌ Password verification failed. Updating password...</div>";
+            echo "<div class='error'>âŒ Password verification failed. Updating password...</div>";
             $new_password = password_hash('admin123', PASSWORD_DEFAULT);
             $update_query = "UPDATE admin_users SET password = :password WHERE username = 'admin'";
             $update_stmt = $db->prepare($update_query);
             $update_stmt->bindParam(':password', $new_password);
             
             if ($update_stmt->execute()) {
-                echo "<div class='success'>✅ Password updated successfully</div>";
+                echo "<div class='success'>âœ… Password updated successfully</div>";
             } else {
-                echo "<div class='error'>❌ Failed to update password</div>";
+                echo "<div class='error'>âŒ Failed to update password</div>";
             }
         }
     } else {
@@ -108,21 +108,21 @@ try {
         $insert_stmt->bindParam(':email', $email);
         
         if ($insert_stmt->execute()) {
-            echo "<div class='success'>✅ Admin user created successfully</div>";
+            echo "<div class='success'>âœ… Admin user created successfully</div>";
         } else {
-            echo "<div class='error'>❌ Failed to create admin user</div>";
+            echo "<div class='error'>âŒ Failed to create admin user</div>";
         }
     }
     
     // Final verification
-    echo "<h2>🔍 Final Verification</h2>";
+    echo "<h2>ðŸ” Final Verification</h2>";
     $query = "SELECT * FROM admin_users WHERE username = 'admin'";
     $stmt = $db->prepare($query);
     $stmt->execute();
     $admin = $stmt->fetch(PDO::FETCH_ASSOC);
     
     if ($admin && password_verify('admin123', $admin['password'])) {
-        echo "<div class='success'>✅ Setup completed successfully!</div>";
+        echo "<div class='success'>âœ… Setup completed successfully!</div>";
         echo "<div class='info'><strong>Your admin credentials:</strong><br>";
         echo "Username: <strong>admin</strong><br>";
         echo "Password: <strong>admin123</strong><br>";
@@ -131,14 +131,14 @@ try {
         // Clean up sessions
         session_start();
         session_destroy();
-        echo "<div class='info'>🧹 Cleared any existing sessions</div>";
+        echo "<div class='info'>ðŸ§¹ Cleared any existing sessions</div>";
         
     } else {
-        echo "<div class='error'>❌ Setup verification failed</div>";
+        echo "<div class='error'>âŒ Setup verification failed</div>";
     }
     
 } catch (Exception $e) {
-    echo "<div class='error'>❌ Error: " . $e->getMessage() . "</div>";
+    echo "<div class='error'>âŒ Error: " . $e->getMessage() . "</div>";
     
     if (strpos($e->getMessage(), 'Unknown database') !== false) {
         echo "<div class='error'><strong>Database 'nexopay' doesn't exist!</strong><br>";
@@ -149,9 +149,9 @@ try {
     }
 }
 
-echo "<hr><h2>🔧 Additional Options</h2>";
-echo "<p><a href='?force=true'>🔄 Force Reset Admin User</a> - Use if you're still having issues</p>";
-echo "<p><a href='admin/login.php'>🔑 Go to Admin Login</a></p>";
-echo "<p><a href='index.php'>🏠 Back to Website</a></p>";
+echo "<hr><h2>ðŸ”§ Additional Options</h2>";
+echo "<p><a href='?force=true'>ðŸ”„ Force Reset Admin User</a> - Use if you're still having issues</p>";
+echo "<p><a href='admin/login.php'>ðŸ”‘ Go to Admin Login</a></p>";
+echo "<p><a href='index.php'>ðŸ  Back to Website</a></p>";
 echo "</div></body></html>";
 ?>

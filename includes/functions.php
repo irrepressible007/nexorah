@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 // Function to sanitize user input
 function sanitize($data) {
     $data = trim($data);

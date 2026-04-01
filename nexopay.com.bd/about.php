@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 require_once 'config/database.php';
 
 $database = new Database();
@@ -30,8 +30,8 @@ $ongoing_events = $ongoing_stmt->fetchAll(PDO::FETCH_ASSOC);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About Us - Nexopay</title>
     <!-- Favicon -->
-    <link rel="icon" type="image/jpeg" href="assets/images/public/Nexopay logo horizontal.jpeg">
-    <link rel="shortcut icon" href="assets/images/public/Nexopay logo horizontal.jpeg">
+    <link rel="icon" type="image/png" href="assets/images/public/Nex Pay new logo.png">
+    <link rel="shortcut icon" href="assets/images/public/Nex Pay new logo.png">
     <link rel="stylesheet" href="assets/css/style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script defer src="assets/js/main.js"></script>
@@ -42,7 +42,7 @@ $ongoing_events = $ongoing_stmt->fetchAll(PDO::FETCH_ASSOC);
         <div class="container">
             <div class="nav-brand">
                 <a href="index.php" style="display: flex; align-items: center; text-decoration: none;">
-                    <img src="assets/images/public/Nexopay logo horizontal.jpeg" alt="Nexopay Logo" style="height: 45px; width: auto;">
+                    <img src="assets/images/public/Nex Pay new logo.png" alt="Nexopay Logo" style="height: 45px; width: auto;">
                 </a>
             </div>
             <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
@@ -65,7 +65,7 @@ $ongoing_events = $ongoing_stmt->fetchAll(PDO::FETCH_ASSOC);
         <section class="mission-section">
             <div class="content-wrapper">
                 <h1>Our Mission</h1>
-                <p>Our mission is to redefine how the world pays—delivering smart, secure, and truly seamless experiences. We empower individuals and businesses to move money without limits, anytime and anywhere, with absolute confidence and ease. Powered by cutting-edge technology and uncompromising security, NexoPay makes payments effortless while safeguarding your data and funds. We build trust through transparency, innovation, and exceptional service.</p>
+                <p>Our mission is to redefine how the world paysâ€”delivering smart, secure, and truly seamless experiences. We empower individuals and businesses to move money without limits, anytime and anywhere, with absolute confidence and ease. Powered by cutting-edge technology and uncompromising security, NexoPay makes payments effortless while safeguarding your data and funds. We build trust through transparency, innovation, and exceptional service.</p>
             </div>
         </section>
 

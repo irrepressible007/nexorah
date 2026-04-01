@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 require_once 'config/database.php';
 
 // Test database connection
@@ -6,7 +6,7 @@ echo "<h2>Database Connection Test</h2>";
 try {
     $database = new Database();
     $db = $database->getConnection();
-    echo "✅ Database connection successful<br>";
+    echo "âœ… Database connection successful<br>";
     
     // Check if admin_users table exists
     $query = "SHOW TABLES LIKE 'admin_users'";
@@ -15,7 +15,7 @@ try {
     $table_exists = $stmt->fetch();
     
     if ($table_exists) {
-        echo "✅ admin_users table exists<br>";
+        echo "âœ… admin_users table exists<br>";
         
         // Check admin user
         $query = "SELECT * FROM admin_users WHERE username = 'admin'";
@@ -24,16 +24,16 @@ try {
         $admin = $stmt->fetch(PDO::FETCH_ASSOC);
         
         if ($admin) {
-            echo "✅ Admin user found<br>";
+            echo "âœ… Admin user found<br>";
             echo "Username: " . $admin['username'] . "<br>";
             echo "Email: " . $admin['email'] . "<br>";
             
             // Test password verification
             $test_password = 'admin123';
             if (password_verify($test_password, $admin['password'])) {
-                echo "✅ Password verification successful for 'admin123'<br>";
+                echo "âœ… Password verification successful for 'admin123'<br>";
             } else {
-                echo "❌ Password verification failed<br>";
+                echo "âŒ Password verification failed<br>";
                 echo "Current hash: " . $admin['password'] . "<br>";
                 
                 // Generate new hash
@@ -45,13 +45,13 @@ try {
                 $update_stmt = $db->prepare($update_query);
                 $update_stmt->bindParam(':password', $new_hash);
                 if ($update_stmt->execute()) {
-                    echo "✅ Password updated successfully<br>";
+                    echo "âœ… Password updated successfully<br>";
                 } else {
-                    echo "❌ Failed to update password<br>";
+                    echo "âŒ Failed to update password<br>";
                 }
             }
         } else {
-            echo "❌ Admin user not found<br>";
+            echo "âŒ Admin user not found<br>";
             
             // Create admin user
             $username = 'admin';
@@ -65,18 +65,18 @@ try {
             $insert_stmt->bindParam(':email', $email);
             
             if ($insert_stmt->execute()) {
-                echo "✅ Admin user created successfully<br>";
+                echo "âœ… Admin user created successfully<br>";
             } else {
-                echo "❌ Failed to create admin user<br>";
+                echo "âŒ Failed to create admin user<br>";
             }
         }
     } else {
-        echo "❌ admin_users table does not exist<br>";
+        echo "âŒ admin_users table does not exist<br>";
         echo "Please run the SQL schema file to create the database structure.<br>";
     }
     
 } catch (Exception $e) {
-    echo "❌ Error: " . $e->getMessage() . "<br>";
+    echo "âŒ Error: " . $e->getMessage() . "<br>";
     
     if (strpos($e->getMessage(), 'Unknown database') !== false) {
         echo "<br><strong>The 'nexopay' database doesn't exist. Please create it first:</strong><br>";

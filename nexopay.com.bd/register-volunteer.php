@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 // Load database connection from external config (excluded from Git for security)
 require_once __DIR__ . '/config/nexorah_db.php';
 require_once __DIR__ . '/config/database.php'; // nexopay DB for admin tables
@@ -18,7 +18,7 @@ if ($event_id) {
     }
 }
 
-// ── Handle form POST ──────────────────────────────────────────────────────────
+// â”€â”€ Handle form POST â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $db_obj = new Database();
@@ -108,7 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header("Location: success.php?status=success&type=volunteer");
         exit;
     } catch (Exception $e) {
-        $error_message = '⚠️ Something went wrong. Please try again. (' . $e->getMessage() . ')';
+        $error_message = 'âš ï¸ Something went wrong. Please try again. (' . $e->getMessage() . ')';
     }
 }
 ?>
@@ -118,8 +118,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Volunteer Registration | Nexopay</title>
-    <link rel="icon" type="image/jpeg" href="assets/images/public/Nexopay logo horizontal.jpeg">
-    <link rel="shortcut icon" href="assets/images/public/Nexopay logo horizontal.jpeg">
+    <link rel="icon" type="image/png" href="assets/images/public/Nex Pay new logo.png">
+    <link rel="shortcut icon" href="assets/images/public/Nex Pay new logo.png">
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/mobile.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -196,7 +196,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="container">
             <div class="nav-brand">
                 <a href="index.php" style="display: flex; align-items: center; text-decoration: none;">
-                    <img src="assets/images/public/Nexopay logo horizontal.jpeg" alt="Nexopay Logo" style="height: 45px; width: auto;">
+                    <img src="assets/images/public/Nex Pay new logo.png" alt="Nexopay Logo" style="height: 45px; width: auto;">
                 </a>
             </div>
             <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false"><i class="fas fa-bars"></i></button>

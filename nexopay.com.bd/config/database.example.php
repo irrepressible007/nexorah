@@ -1,8 +1,8 @@
-<?php
-// ── DATABASE CONFIGURATION ─────────────────────────────────────────────────
+﻿<?php
+// â”€â”€ DATABASE CONFIGURATION â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // Copy this file to database.php and fill in your actual credentials.
-// database.php is excluded from Git via .gitignore — never commit live passwords!
-// ──────────────────────────────────────────────────────────────────────────
+// database.php is excluded from Git via .gitignore â€” never commit live passwords!
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 class Database {
     private $host     = 'localhost';

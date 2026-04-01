@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 session_start();
 require_once 'includes/auth_check.php';
 require_once '../config/database.php';
@@ -74,7 +74,7 @@ if (!$event) {
     <div class="main-content">
         <div class="content-header">
             <h1>Edit Event</h1>
-            <a href="events.php" class="btn btn-secondary">← Back to Events</a>
+            <a href="events.php" class="btn btn-secondary">â† Back to Events</a>
         </div>
         
         <?php if (isset($success_message)): ?>
@@ -116,7 +116,7 @@ if (!$event) {
                 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="fee">Fee (৳)</label>
+                        <label for="fee">Fee (à§³)</label>
                         <input type="number" id="fee" name="fee" step="0.01" value="<?php echo $event['fee']; ?>" required>
                     </div>
                     

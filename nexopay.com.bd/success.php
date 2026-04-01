@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 $status  = $_GET['status'] ?? 'success'; // 'success' or 'error'
 $message = $_GET['message'] ?? '';
 $txn     = $_GET['txn'] ?? '';
@@ -25,8 +25,8 @@ if (empty($message)) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $status === 'success' ? 'Success' : 'Error'; ?> | Nexopay</title>
     <!-- Favicon -->
-    <link rel="icon" type="image/jpeg" href="assets/images/public/Nexopay logo horizontal.jpeg">
-    <link rel="shortcut icon" href="assets/images/public/Nexopay logo horizontal.jpeg">
+    <link rel="icon" type="image/png" href="assets/images/public/Nex Pay new logo.png">
+    <link rel="shortcut icon" href="assets/images/public/Nex Pay new logo.png">
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/mobile.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -137,7 +137,7 @@ if (empty($message)) {
         <div class="container">
             <div class="nav-brand">
                 <a href="index.php" style="display: flex; align-items: center; text-decoration: none;">
-                    <img src="assets/images/public/Nexopay logo horizontal.jpeg" alt="Nexopay Logo" style="height: 45px; width: auto;">
+                    <img src="assets/images/public/Nex Pay new logo.png" alt="Nexopay Logo" style="height: 45px; width: auto;">
                 </a>
             </div>
             <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">

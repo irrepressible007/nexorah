@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 require_once 'config/database.php';
 
 $database = new Database();
@@ -28,8 +28,8 @@ if (!empty($user_email)) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Registrations - Nexopay</title>
     <!-- Favicon -->
-    <link rel="icon" type="image/jpeg" href="assets/images/public/Nexopay logo horizontal.jpeg">
-    <link rel="shortcut icon" href="assets/images/public/Nexopay logo horizontal.jpeg">
+    <link rel="icon" type="image/png" href="assets/images/public/Nex Pay new logo.png">
+    <link rel="shortcut icon" href="assets/images/public/Nex Pay new logo.png">
     <link rel="stylesheet" href="assets/css/style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -40,7 +40,7 @@ if (!empty($user_email)) {
         <div class="container">
             <div class="nav-brand">
                 <a href="index.php" style="display: flex; align-items: center; text-decoration: none;">
-                    <img src="assets/images/public/Nexopay logo horizontal.jpeg" alt="Nexopay logo" style="height: 45px; width: auto;">
+                    <img src="assets/images/public/Nex Pay new logo.png" alt="Nexopay logo" style="height: 45px; width: auto;">
                 </a>
             </div>
             <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
@@ -154,7 +154,7 @@ if (!empty($user_email)) {
                                 <i class="fas fa-credit-card"></i>
                             </div>
                             <div class="stat-info">
-                                <h4>৳<?php echo number_format(array_sum(array_column($user_registrations, 'total_amount')), 2); ?></h4>
+                                <h4>à§³<?php echo number_format(array_sum(array_column($user_registrations, 'total_amount')), 2); ?></h4>
                                 <p>Total Spent</p>
                             </div>
                         </div>
@@ -203,7 +203,7 @@ if (!empty($user_email)) {
                                         </div>
                                         <div class="detail-item">
                                             <i class="fas fa-money-bill-wave"></i>
-                                            <span>৳<?php echo number_format($registration['total_amount'], 2); ?> BDT</span>
+                                            <span>à§³<?php echo number_format($registration['total_amount'], 2); ?> BDT</span>
                                         </div>
                                         <div class="detail-item">
                                             <i class="fas fa-clock"></i>

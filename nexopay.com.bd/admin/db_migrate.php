@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * DB Migration: Add payment_method, registration_type, extra_data columns
  * Run this ONCE at: /admin/db_migrate.php
@@ -10,7 +10,7 @@ $db = $database->getConnection();
 
 $sql = [];
 
-// ── Add columns to registrations if not present ──────────────────────────────
+// â”€â”€ Add columns to registrations if not present â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 $sql[] = "ALTER TABLE registrations 
           ADD COLUMN IF NOT EXISTS payment_method VARCHAR(50) DEFAULT 'bkash' AFTER transaction_id";
 
@@ -18,9 +18,9 @@ $sql[] = "ALTER TABLE registrations
           ADD COLUMN IF NOT EXISTS registration_type ENUM('general','campus_ambassador','volunteer') DEFAULT 'general' AFTER payment_method";
 
 $sql[] = "ALTER TABLE registrations 
-          ADD COLUMN IF NOT EXISTS extra_data TEXT NULL COMMENT 'JSON – extra fields for CA/volunteer forms' AFTER registration_type";
+          ADD COLUMN IF NOT EXISTS extra_data TEXT NULL COMMENT 'JSON â€“ extra fields for CA/volunteer forms' AFTER registration_type";
 
-// ── Create ca_applications table ─────────────────────────────────────────────
+// â”€â”€ Create ca_applications table â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 $sql[] = "CREATE TABLE IF NOT EXISTS ca_applications (
     id INT AUTO_INCREMENT PRIMARY KEY,
     event_id INT DEFAULT NULL,
@@ -44,7 +44,7 @@ $sql[] = "CREATE TABLE IF NOT EXISTS ca_applications (
     INDEX idx_status (approval_status)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
 
-// ── Create volunteer_applications table ─────────────────────────────────────
+// â”€â”€ Create volunteer_applications table â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 $sql[] = "CREATE TABLE IF NOT EXISTS volunteer_applications (
     id INT AUTO_INCREMENT PRIMARY KEY,
     event_id INT DEFAULT NULL,
@@ -102,7 +102,7 @@ foreach ($sql as $query) {
     </style>
 </head>
 <body>
-    <h1>🔧 DB Migration Results</h1>
+    <h1>ðŸ”§ DB Migration Results</h1>
     <table>
         <thead><tr><th>Status</th><th>Query (truncated)</th></tr></thead>
         <tbody>
@@ -117,8 +117,8 @@ foreach ($sql as $query) {
         </tbody>
     </table>
     <div class="done">
-        ✅ Migration complete. <strong>Delete or rename this file after running.</strong>
-        <br><a href="dashboard.php" style="color:#00d4aa;">→ Go to Admin Dashboard</a>
+        âœ… Migration complete. <strong>Delete or rename this file after running.</strong>
+        <br><a href="dashboard.php" style="color:#00d4aa;">â†’ Go to Admin Dashboard</a>
     </div>
 </body>
 </html>

@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 session_start();
 require_once '../config/database.php';
 
@@ -61,7 +61,7 @@ if ($_POST) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login – Nexopay</title>
+    <title>Admin Login â€“ Nexopay</title>
     <!-- Modern Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -322,7 +322,7 @@ if ($_POST) {
                 <div class="form-group">
                     <label for="password">Password</label>
                     <div class="input-wrap">
-                        <input type="password" id="password" name="password" class="form-control" autocomplete="current-password" placeholder="••••••••" required>
+                        <input type="password" id="password" name="password" class="form-control" autocomplete="current-password" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" required>
                         <i class="fas fa-lock"></i>
                     </div>
                 </div>

@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 require_once 'config/database.php';
 
 $database = new Database();
@@ -28,8 +28,8 @@ $past_events = $past_stmt->fetchAll(PDO::FETCH_ASSOC);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nexopay - Smart Secure Seamless</title>
     <!-- Favicon -->
-    <link rel="icon" type="image/jpeg" href="assets/images/public/Nexopay logo horizontal.jpeg">
-    <link rel="shortcut icon" href="assets/images/public/Nexopay logo horizontal.jpeg">
+    <link rel="icon" type="image/png" href="assets/images/public/Nex Pay new logo.png">
+    <link rel="shortcut icon" href="assets/images/public/Nex Pay new logo.png">
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/mobile.css">
     <!-- Premium font -->
@@ -44,7 +44,7 @@ $past_events = $past_stmt->fetchAll(PDO::FETCH_ASSOC);
         <div class="container">
             <div class="nav-brand">
                 <a href="index.php" style="display: flex; align-items: center; text-decoration: none;">
-                    <img src="assets/images/public/Nexopay logo horizontal.jpeg" alt="Nexopay Logo" style="height: 45px; width: auto;">
+                    <img src="assets/images/public/Nex Pay new logo.png" alt="Nexopay Logo" style="height: 45px; width: auto;">
                 </a>
             </div>
             <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
@@ -67,7 +67,7 @@ $past_events = $past_stmt->fetchAll(PDO::FETCH_ASSOC);
         <div class="container">
             <div class="hero-content reveal">
                 <h3 class="subtitle">Smart. Secure. Seamless.</h3>
-                <h1 class="main-heading">Make smarter, secure payments—without limits. Anytime. Anywhere.</h1>
+                <h1 class="main-heading">Make smarter, secure paymentsâ€”without limits. Anytime. Anywhere.</h1>
                 <a href="events.php" class="cta-button"><i class="fas fa-bolt"></i> Explore Signature Events</a>
             </div>
         </div>
@@ -87,7 +87,7 @@ $past_events = $past_stmt->fetchAll(PDO::FETCH_ASSOC);
                                     <h3><?php echo htmlspecialchars($event['title']); ?></h3>
                                     <p><?php echo htmlspecialchars(substr($event['description'], 0, 100)) . '...'; ?></p>
                                     <div class="event-meta">
-                                        <span class="fee">৳<?php echo number_format($event['fee'], 2); ?></span>
+                                        <span class="fee">à§³<?php echo number_format($event['fee'], 2); ?></span>
                                         <span class="date"><?php echo date('M d, Y', strtotime($event['event_date'])); ?></span>
                                     </div>
                                     <span class="btn-primary">Register Now</span>

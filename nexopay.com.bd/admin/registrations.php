@@ -1,11 +1,11 @@
-<?php
+﻿<?php
 require_once 'includes/auth_check.php';
 require_once '../config/database.php';
 
 $database = new Database();
 $db = $database->getConnection();
 
-// ── Fix admin_id from username if missing ────────────────────────────────────
+// â”€â”€ Fix admin_id from username if missing â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 if (!isset($_SESSION['admin_id']) && isset($_SESSION['admin_username'])) {
     $s = $db->prepare("SELECT id FROM admin_users WHERE username = :u");
     $s->bindParam(':u', $_SESSION['admin_username']);
@@ -14,7 +14,7 @@ if (!isset($_SESSION['admin_id']) && isset($_SESSION['admin_username'])) {
     if ($a) $_SESSION['admin_id'] = $a['id'];
 }
 
-// ── Handle AJAX live-poll request ────────────────────────────────────────────
+// â”€â”€ Handle AJAX live-poll request â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 if (isset($_GET['poll'])) {
     $last_id = (int)($_GET['last_id'] ?? 0);
     $stmt = $db->prepare("
@@ -35,7 +35,7 @@ if (isset($_GET['poll'])) {
     exit;
 }
 
-// ── Handle Approve / Reject action ──────────────────────────────────────────
+// â”€â”€ Handle Approve / Reject action â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 $flash = null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'], $_POST['registration_id'])) {
     $rid    = (int)$_POST['registration_id'];
@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'], $_POST['reg
             $st = $db->prepare($q);
             $st->bindParam(':id', $rid, PDO::PARAM_INT);
             $st->execute();
-            $flash = ['type' => 'success', 'msg' => '✅ Registration #' . $rid . ' approved!'];
+            $flash = ['type' => 'success', 'msg' => 'âœ… Registration #' . $rid . ' approved!'];
         } elseif ($action === 'reject') {
             $reason = trim($_POST['rejection_reason'] ?? 'No reason provided');
             $q = "UPDATE registrations SET approval_status='rejected', rejection_reason=:r, approved_date=NOW() WHERE id=:id";
@@ -54,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'], $_POST['reg
             $st->bindParam(':r', $reason);
             $st->bindParam(':id', $rid, PDO::PARAM_INT);
             $st->execute();
-            $flash = ['type' => 'warning', 'msg' => '❌ Registration #' . $rid . ' rejected.'];
+            $flash = ['type' => 'warning', 'msg' => 'âŒ Registration #' . $rid . ' rejected.'];
         }
     } catch (Exception $e) {
         $flash = ['type' => 'error', 'msg' => 'Error: ' . $e->getMessage()];
@@ -64,20 +64,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'], $_POST['reg
     exit;
 }
 
-// ── Handle Delete ────────────────────────────────────────────────────────────
+// â”€â”€ Handle Delete â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 if (isset($_GET['delete'])) {
     $id = (int)$_GET['delete'];
     $db->prepare("DELETE FROM registrations WHERE id=:id")->execute([':id' => $id]);
-    header('Location: registrations.php?flash=' . urlencode('🗑️ Registration deleted.') . '&ftype=warning');
+    header('Location: registrations.php?flash=' . urlencode('ðŸ—‘ï¸ Registration deleted.') . '&ftype=warning');
     exit;
 }
 
-// ── Flash from redirect ──────────────────────────────────────────────────────
+// â”€â”€ Flash from redirect â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 if (!$flash && isset($_GET['flash'])) {
     $flash = ['type' => $_GET['ftype'] ?? 'success', 'msg' => $_GET['flash']];
 }
 
-// ── Filters ──────────────────────────────────────────────────────────────────
+// â”€â”€ Filters â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 $filter_event  = $_GET['event_id']  ?? '';
 $filter_status = $_GET['status']    ?? '';
 $filter_method = $_GET['method']    ?? '';
@@ -128,14 +128,14 @@ $max_id = $db->query("SELECT COALESCE(MAX(id),0) AS m FROM registrations")->fetc
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Registrations – Nexopay Admin</title>
+<title>Registrations â€“ Nexopay Admin</title>
 <link rel="stylesheet" href="../assets/css/admin.css">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 <style>
-/* ─── LAYOUT ────────────────────────────────────────────────────── */
+/* â”€â”€â”€ LAYOUT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .reg-wrap { padding: 28px 24px; }
 
-/* ─── KPI STRIP ─────────────────────────────────────────────────── */
+/* â”€â”€â”€ KPI STRIP â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .kpi-strip { display:flex; flex-wrap:wrap; gap:16px; margin-bottom:28px; }
 .kpi { flex:1; min-width:160px; background:#fff; border-radius:14px;
        padding:20px 22px; box-shadow:0 2px 12px rgba(0,0,0,.06);
@@ -151,7 +151,7 @@ $max_id = $db->query("SELECT COALESCE(MAX(id),0) AS m FROM registrations")->fetc
 .kpi-num  { font-size:1.7rem; font-weight:800; color:#111; line-height:1; }
 .kpi-label{ font-size:.8rem; color:#6b7280; margin-top:3px; font-weight:500; }
 
-/* ─── FILTER BAR ────────────────────────────────────────────────── */
+/* â”€â”€â”€ FILTER BAR â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .filter-bar { background:#fff; border-radius:14px; padding:18px 20px;
               box-shadow:0 2px 12px rgba(0,0,0,.06); margin-bottom:22px;
               display:flex; flex-wrap:wrap; gap:12px; align-items:flex-end; }
@@ -168,7 +168,7 @@ $max_id = $db->query("SELECT COALESCE(MAX(id),0) AS m FROM registrations")->fetc
 .btn-reset  { padding:9px 18px; background:#f3f4f6; color:#374151; border:none;
               border-radius:10px; font-weight:600; font-size:.9rem; cursor:pointer; }
 
-/* ─── SECTION HEADER ────────────────────────────────────────────── */
+/* â”€â”€â”€ SECTION HEADER â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .section-header { display:flex; align-items:center; justify-content:space-between;
                   margin-bottom:16px; flex-wrap:wrap; gap:10px; }
 .section-title  { font-size:1.2rem; font-weight:700; color:#111; }
@@ -178,7 +178,7 @@ $max_id = $db->query("SELECT COALESCE(MAX(id),0) AS m FROM registrations")->fetc
 .badge-count { background:#ef4444; color:#fff; border-radius:50rem; padding:2px 10px;
                font-size:.78rem; font-weight:700; }
 
-/* ─── TABLE ─────────────────────────────────────────────────────── */
+/* â”€â”€â”€ TABLE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .table-card { background:#fff; border-radius:14px; box-shadow:0 2px 12px rgba(0,0,0,.06);
               overflow:hidden; }
 .table-scroll { overflow-x:auto; }
@@ -194,7 +194,7 @@ tbody td { padding:12px 14px; vertical-align:middle; }
 .td-name { font-weight:600; color:#1e293b; }
 .td-sub  { font-size:.8rem; color:#94a3b8; margin-top:2px; }
 
-/* ─── BADGES ────────────────────────────────────────────────────── */
+/* â”€â”€â”€ BADGES â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .badge { display:inline-block; padding:3px 11px; border-radius:50rem;
          font-size:.76rem; font-weight:700; white-space:nowrap; }
 .badge-pending  { background:#fef9c3; color:#92400e; }
@@ -208,7 +208,7 @@ tbody td { padding:12px 14px; vertical-align:middle; }
 .badge-ca       { background:#ede9fe; color:#6d28d9; }
 .badge-volunteer{ background:#ecfdf5; color:#047857; }
 
-/* ─── ACTIONS ───────────────────────────────────────────────────── */
+/* â”€â”€â”€ ACTIONS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .action-group { display:flex; gap:6px; flex-wrap:wrap; }
 .btn-sm { padding:5px 12px; border:none; border-radius:8px; font-size:.8rem;
           font-weight:600; cursor:pointer; transition:all .15s; }
@@ -221,21 +221,21 @@ tbody td { padding:12px 14px; vertical-align:middle; }
 .btn-del     { background:#f3f4f6; color:#6b7280; }
 .btn-del:hover     { background:#e5e7eb; color:#ef4444; }
 
-/* ─── COPY CHIP ─────────────────────────────────────────────────── */
+/* â”€â”€â”€ COPY CHIP â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .copy-chip { cursor:pointer; font-family:monospace; font-size:.82rem;
              background:#f1f5f9; padding:3px 9px; border-radius:6px;
              border:1px solid #e2e8f0; transition:background .15s; user-select:none; }
 .copy-chip:hover { background:#e2e8f0; }
 .copy-chip:active { background:#cbd5e1; }
 
-/* ─── FLASH ─────────────────────────────────────────────────────── */
+/* â”€â”€â”€ FLASH â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .flash { padding:14px 18px; border-radius:10px; margin-bottom:20px;
          font-weight:600; display:flex; align-items:center; gap:10px; }
 .flash-success { background:#dcfce7; color:#166534; border:1px solid #bbf7d0; }
 .flash-warning { background:#fef9c3; color:#92400e; border:1px solid #fde68a; }
 .flash-error   { background:#fee2e2; color:#991b1b; border:1px solid #fca5a5; }
 
-/* ─── MODAL ─────────────────────────────────────────────────────── */
+/* â”€â”€â”€ MODAL â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.55);
                  z-index:9999; align-items:center; justify-content:center; }
 .modal-overlay.open { display:flex; }
@@ -254,7 +254,7 @@ tbody td { padding:12px 14px; vertical-align:middle; }
                         border-radius:10px; font-family:inherit; font-size:.95rem; resize:vertical; }
 .reject-form textarea:focus { outline:none; border-color:#ef4444; }
 
-/* ─── EMPTY STATE ───────────────────────────────────────────────── */
+/* â”€â”€â”€ EMPTY STATE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .empty-state { text-align:center; padding:60px 20px; }
 .empty-state i { font-size:3rem; color:#cbd5e1; margin-bottom:14px; display:block; }
 .empty-state p { color:#94a3b8; }
@@ -274,7 +274,7 @@ tbody td { padding:12px 14px; vertical-align:middle; }
 
 <main class="main-content reg-wrap">
 
-    <!-- ── Page Title ──────────────────────────────────────────────── -->
+    <!-- â”€â”€ Page Title â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
     <div class="section-header">
         <div>
             <h1 style="font-size:1.6rem;font-weight:800;color:#111;margin:0">
@@ -283,7 +283,7 @@ tbody td { padding:12px 14px; vertical-align:middle; }
             </h1>
             <p style="color:#6b7280;font-size:.9rem;margin:4px 0 0">
                 <span class="live-dot"></span>
-                Live – auto-refreshes every 30 seconds
+                Live â€“ auto-refreshes every 30 seconds
             </p>
         </div>
         <a href="../admin/download_registrations_pdf.php" target="_blank"
@@ -292,15 +292,15 @@ tbody td { padding:12px 14px; vertical-align:middle; }
         </a>
     </div>
 
-    <!-- ── Flash Message ───────────────────────────────────────────── -->
+    <!-- â”€â”€ Flash Message â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
     <?php if ($flash): ?>
     <div class="flash flash-<?= htmlspecialchars($flash['type']) ?>" id="flashMsg">
         <?= htmlspecialchars($flash['msg']) ?>
-        <button onclick="document.getElementById('flashMsg').remove()" style="margin-left:auto;background:none;border:none;cursor:pointer;font-size:1.1rem;">✕</button>
+        <button onclick="document.getElementById('flashMsg').remove()" style="margin-left:auto;background:none;border:none;cursor:pointer;font-size:1.1rem;">âœ•</button>
     </div>
     <?php endif; ?>
 
-    <!-- ── KPI Strip ───────────────────────────────────────────────── -->
+    <!-- â”€â”€ KPI Strip â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
     <div class="kpi-strip">
         <div class="kpi">
             <div class="kpi-icon blue"><i class="fas fa-users"></i></div>
@@ -323,18 +323,18 @@ tbody td { padding:12px 14px; vertical-align:middle; }
         </div>
         <div class="kpi">
             <div class="kpi-icon purple"><i class="fas fa-money-bill-wave"></i></div>
-            <div><div class="kpi-num">৳<?= number_format($stats['revenue'], 0) ?></div><div class="kpi-label">Revenue Collected</div></div>
+            <div><div class="kpi-num">à§³<?= number_format($stats['revenue'], 0) ?></div><div class="kpi-label">Revenue Collected</div></div>
         </div>
     </div>
 
-    <!-- ── Filter Bar ──────────────────────────────────────────────── -->
+    <!-- â”€â”€ Filter Bar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
     <form method="GET" class="filter-bar">
         <div>
-            <label>🔍 Search</label>
-            <input type="text" name="search" placeholder="Name, email, phone, Txn ID…" value="<?= htmlspecialchars($search) ?>">
+            <label>ðŸ” Search</label>
+            <input type="text" name="search" placeholder="Name, email, phone, Txn IDâ€¦" value="<?= htmlspecialchars($search) ?>">
         </div>
         <div>
-            <label>📅 Event</label>
+            <label>ðŸ“… Event</label>
             <select name="event_id">
                 <option value="">All Events</option>
                 <?php foreach ($events as $ev): ?>
@@ -345,16 +345,16 @@ tbody td { padding:12px 14px; vertical-align:middle; }
             </select>
         </div>
         <div>
-            <label>📋 Status</label>
+            <label>ðŸ“‹ Status</label>
             <select name="status">
                 <option value="">All Statuses</option>
-                <option value="pending"  <?= $filter_status=='pending'  ? 'selected':'' ?>>⏳ Pending</option>
-                <option value="approved" <?= $filter_status=='approved' ? 'selected':'' ?>>✅ Approved</option>
-                <option value="rejected" <?= $filter_status=='rejected' ? 'selected':'' ?>>❌ Rejected</option>
+                <option value="pending"  <?= $filter_status=='pending'  ? 'selected':'' ?>>â³ Pending</option>
+                <option value="approved" <?= $filter_status=='approved' ? 'selected':'' ?>>âœ… Approved</option>
+                <option value="rejected" <?= $filter_status=='rejected' ? 'selected':'' ?>>âŒ Rejected</option>
             </select>
         </div>
         <div>
-            <label>💳 Payment Method</label>
+            <label>ðŸ’³ Payment Method</label>
             <select name="method">
                 <option value="">All Methods</option>
                 <option value="bkash"         <?= $filter_method=='bkash'         ? 'selected':'' ?>>bKash</option>
@@ -364,7 +364,7 @@ tbody td { padding:12px 14px; vertical-align:middle; }
             </select>
         </div>
         <div>
-            <label>🏷️ Type</label>
+            <label>ðŸ·ï¸ Type</label>
             <select name="type">
                 <option value="">All Types</option>
                 <option value="general"           <?= $filter_type=='general'           ? 'selected':'' ?>>General</option>
@@ -378,7 +378,7 @@ tbody td { padding:12px 14px; vertical-align:middle; }
         </div>
     </form>
 
-    <!-- ── Table ───────────────────────────────────────────────────── -->
+    <!-- â”€â”€ Table â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
     <div class="section-header">
         <span class="section-title">
             Showing <?= count($registrations) ?> registration<?= count($registrations) !== 1 ? 's' : '' ?>
@@ -418,7 +418,7 @@ tbody td { padding:12px 14px; vertical-align:middle; }
                         <div class="td-sub"><?= htmlspecialchars($r['email']) ?></div>
                         <div class="td-sub"><?= htmlspecialchars($r['phone'] ?? '') ?></div>
                     </td>
-                    <td><?= htmlspecialchars($r['event_title'] ?? '—') ?></td>
+                    <td><?= htmlspecialchars($r['event_title'] ?? 'â€”') ?></td>
                     <td>
                         <?php
                         $type = $r['registration_type'] ?? 'general';
@@ -448,14 +448,14 @@ tbody td { padding:12px 14px; vertical-align:middle; }
                         <span class="copy-chip" onclick="copyText('<?= htmlspecialchars($r['transaction_id']) ?>', this)" title="Click to copy">
                             <?= htmlspecialchars($r['transaction_id']) ?>
                         </span>
-                        <?php else: ?>—<?php endif; ?>
+                        <?php else: ?>â€”<?php endif; ?>
                     </td>
-                    <td style="text-align:center"><?= $r['ticket_quantity'] ?? '—' ?></td>
-                    <td><strong>৳<?= number_format($r['total_amount'] ?? 0, 2) ?></strong></td>
+                    <td style="text-align:center"><?= $r['ticket_quantity'] ?? 'â€”' ?></td>
+                    <td><strong>à§³<?= number_format($r['total_amount'] ?? 0, 2) ?></strong></td>
                     <td>
                         <?php $st = $r['approval_status'] ?? 'pending'; ?>
                         <span class="badge badge-<?= $st ?>">
-                            <?= ['pending'=>'⏳ Pending','approved'=>'✅ Approved','rejected'=>'❌ Rejected'][$st] ?? ucfirst($st) ?>
+                            <?= ['pending'=>'â³ Pending','approved'=>'âœ… Approved','rejected'=>'âŒ Rejected'][$st] ?? ucfirst($st) ?>
                         </span>
                     </td>
                     <td style="white-space:nowrap">
@@ -490,7 +490,7 @@ tbody td { padding:12px 14px; vertical-align:middle; }
     </div>
 </main>
 
-<!-- ── View Details Modal ──────────────────────────────────────────────── -->
+<!-- â”€â”€ View Details Modal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
 <div class="modal-overlay" id="viewModal">
     <div class="modal-box">
         <div class="modal-title"><i class="fas fa-id-card" style="margin-right:8px;color:#6366f1"></i>Registration Details</div>
@@ -501,10 +501,10 @@ tbody td { padding:12px 14px; vertical-align:middle; }
     </div>
 </div>
 
-<!-- ── Approve Modal ───────────────────────────────────────────────────── -->
+<!-- â”€â”€ Approve Modal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
 <div class="modal-overlay" id="approveModal">
     <div class="modal-box" style="max-width:400px">
-        <div class="modal-title">✅ Confirm Approval</div>
+        <div class="modal-title">âœ… Confirm Approval</div>
         <p style="color:#374151;margin-bottom:22px">Are you sure you want to <strong>approve</strong> this registration? The applicant will be notified.</p>
         <form method="POST" id="approveForm">
             <input type="hidden" name="registration_id" id="approveId">
@@ -512,28 +512,28 @@ tbody td { padding:12px 14px; vertical-align:middle; }
             <div class="modal-footer">
                 <button class="btn-close-modal" type="button" onclick="closeModals()">Cancel</button>
                 <button type="submit" style="padding:9px 24px;background:#16a34a;color:#fff;border:none;border-radius:10px;font-weight:700;cursor:pointer">
-                    ✅ Yes, Approve
+                    âœ… Yes, Approve
                 </button>
             </div>
         </form>
     </div>
 </div>
 
-<!-- ── Reject Modal ────────────────────────────────────────────────────── -->
+<!-- â”€â”€ Reject Modal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
 <div class="modal-overlay" id="rejectModal">
     <div class="modal-box" style="max-width:440px">
-        <div class="modal-title">❌ Reject Registration</div>
+        <div class="modal-title">âŒ Reject Registration</div>
         <form method="POST" id="rejectForm" class="reject-form">
             <input type="hidden" name="registration_id" id="rejectId">
             <input type="hidden" name="action" value="reject">
             <div style="margin-bottom:18px">
                 <label style="font-weight:600;color:#374151;display:block;margin-bottom:8px">Reason for Rejection *</label>
-                <textarea name="rejection_reason" rows="4" required placeholder="Please explain why this registration is being rejected…"></textarea>
+                <textarea name="rejection_reason" rows="4" required placeholder="Please explain why this registration is being rejectedâ€¦"></textarea>
             </div>
             <div class="modal-footer">
                 <button class="btn-close-modal" type="button" onclick="closeModals()">Cancel</button>
                 <button type="submit" style="padding:9px 24px;background:#dc2626;color:#fff;border:none;border-radius:10px;font-weight:700;cursor:pointer">
-                    ❌ Reject
+                    âŒ Reject
                 </button>
             </div>
         </form>
@@ -543,33 +543,33 @@ tbody td { padding:12px 14px; vertical-align:middle; }
 <script>
 let lastId = <?= (int)$max_id ?>;
 
-// ── Copy Transaction ID ────────────────────────────────────────────────────
+// â”€â”€ Copy Transaction ID â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function copyText(text, el) {
     navigator.clipboard.writeText(text).then(() => {
         const old = el.textContent;
-        el.textContent = '✓ Copied!';
+        el.textContent = 'âœ“ Copied!';
         el.style.background = '#d1fae5';
         setTimeout(() => { el.textContent = old; el.style.background = ''; }, 1500);
     });
 }
 
-// ── View Details Modal ─────────────────────────────────────────────────────
+// â”€â”€ View Details Modal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function viewDetails(r) {
     const fields = [
         ['Registration #', '#' + r.id],
         ['Full Name', r.full_name],
         ['Email', r.email],
-        ['Phone', r.phone || '—'],
-        ['Event', r.event_title || '—'],
+        ['Phone', r.phone || 'â€”'],
+        ['Event', r.event_title || 'â€”'],
         ['Registration Type', r.registration_type || 'general'],
-        ['Tickets', r.ticket_quantity || '—'],
-        ['Total Amount', '৳' + parseFloat(r.total_amount || 0).toFixed(2)],
-        ['Payment Method', r.payment_method || '—'],
-        ['Transaction ID', r.transaction_id || '—'],
-        ['Payment Status', r.payment_status || '—'],
-        ['Approval Status', r.approval_status || '—'],
+        ['Tickets', r.ticket_quantity || 'â€”'],
+        ['Total Amount', 'à§³' + parseFloat(r.total_amount || 0).toFixed(2)],
+        ['Payment Method', r.payment_method || 'â€”'],
+        ['Transaction ID', r.transaction_id || 'â€”'],
+        ['Payment Status', r.payment_status || 'â€”'],
+        ['Approval Status', r.approval_status || 'â€”'],
         ['Date', r.registration_date],
-        ['Rejection Reason', r.rejection_reason || '—'],
+        ['Rejection Reason', r.rejection_reason || 'â€”'],
     ];
     const grid = document.getElementById('detailGrid');
     grid.innerHTML = fields.map(([label, val]) =>
@@ -578,7 +578,7 @@ function viewDetails(r) {
     document.getElementById('viewModal').classList.add('open');
 }
 
-// ── Approve / Reject Modals ────────────────────────────────────────────────
+// â”€â”€ Approve / Reject Modals â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function openApprove(id) {
     document.getElementById('approveId').value = id;
     document.getElementById('approveModal').classList.add('open');
@@ -594,7 +594,7 @@ document.querySelectorAll('.modal-overlay').forEach(m => {
     m.addEventListener('click', e => { if (e.target === m) closeModals(); });
 });
 
-// ── Live Polling ───────────────────────────────────────────────────────────
+// â”€â”€ Live Polling â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function pollNewRegistrations() {
     fetch(`registrations.php?poll=1&last_id=${lastId}`)
         .then(r => r.json())
@@ -610,7 +610,7 @@ function pollNewRegistrations() {
                 const methodCls = {bkash:'badge-bkash',bank_transfer:'badge-bank',nagad:'badge-bkash'};
                 const methodLabel = {bkash:'bKash',bank_transfer:'Bank Transfer',nagad:'Nagad',cash:'Cash'};
                 const st  = r.approval_status;
-                const stIcon = {pending:'⏳ Pending',approved:'✅ Approved',rejected:'❌ Rejected'};
+                const stIcon = {pending:'â³ Pending',approved:'âœ… Approved',rejected:'âŒ Rejected'};
                 const type   = r.registration_type || 'general';
                 const method = r.payment_method || 'bkash';
                 const row = document.createElement('tr');
@@ -619,12 +619,12 @@ function pollNewRegistrations() {
                 row.innerHTML = `
                     <td><strong>#${r.id}</strong></td>
                     <td><div class="td-name">${r.full_name}</div><div class="td-sub">${r.email}</div></td>
-                    <td>${r.event_title || '—'}</td>
+                    <td>${r.event_title || 'â€”'}</td>
                     <td><span class="badge ${typeCls[type] || 'badge-general'}">${typeLabel[type] || type}</span></td>
                     <td><span class="badge ${methodCls[method] || 'badge-bkash'}">${methodLabel[method] || method}</span></td>
-                    <td><span class="copy-chip" onclick="copyText('${r.transaction_id||''}',this)">${r.transaction_id||'—'}</span></td>
-                    <td style="text-align:center">${r.ticket_quantity||'—'}</td>
-                    <td><strong>৳${parseFloat(r.total_amount||0).toFixed(2)}</strong></td>
+                    <td><span class="copy-chip" onclick="copyText('${r.transaction_id||''}',this)">${r.transaction_id||'â€”'}</span></td>
+                    <td style="text-align:center">${r.ticket_quantity||'â€”'}</td>
+                    <td><strong>à§³${parseFloat(r.total_amount||0).toFixed(2)}</strong></td>
                     <td><span class="badge badge-${st}">${stIcon[st]||st}</span></td>
                     <td><div class="td-sub">${r.registration_date}</div></td>
                     <td>
@@ -638,7 +638,7 @@ function pollNewRegistrations() {
                 tbody.prepend(row);
                 // Flash notification
                 if (Notification && Notification.permission === 'granted') {
-                    new Notification('🆕 New Registration', { body: `${r.full_name} just registered for ${r.event_title||'an event'}!` });
+                    new Notification('ðŸ†• New Registration', { body: `${r.full_name} just registered for ${r.event_title||'an event'}!` });
                 }
             });
         })

@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 // Remove this line: session_start();
 require_once 'includes/auth_check.php';
 require_once '../config/database.php';
@@ -74,7 +74,7 @@ foreach ($registrations as $registration) {
                 <td>' . htmlspecialchars($registration['phone']) . '</td>
                 <td>' . htmlspecialchars($registration['guardian_number']) . '</td>
                 <td>' . $tickets . '</td>
-                <td>৳' . number_format($amount, 2) . '</td>
+                <td>à§³' . number_format($amount, 2) . '</td>
                 <td>' . date('M d, Y', strtotime($registration['registration_date'])) . '</td>
             </tr>';
 }
@@ -83,7 +83,7 @@ $html .= '
             <tr class="total-row">
                 <td colspan="5"><strong>TOTAL</strong></td>
                 <td><strong>' . $totalTickets . '</strong></td>
-                <td><strong>৳' . number_format($totalAmount, 2) . '</strong></td>
+                <td><strong>à§³' . number_format($totalAmount, 2) . '</strong></td>
                 <td></td>
             </tr>
         </tbody>

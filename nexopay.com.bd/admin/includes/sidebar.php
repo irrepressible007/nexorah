@@ -1,4 +1,4 @@
-<nav class="admin-sidebar">
+﻿<nav class="admin-sidebar">
     <ul class="sidebar-menu">
         <li><a href="dashboard.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'dashboard.php' ? 'active' : ''; ?>">
             <i class="fas fa-tachometer-alt"></i> Dashboard

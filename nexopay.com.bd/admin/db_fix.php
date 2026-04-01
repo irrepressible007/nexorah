@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * DB Fix Script - Run once to:
  * 1. Drop the FK constraint on registrations.event_id (cross-DB references can't be enforced)

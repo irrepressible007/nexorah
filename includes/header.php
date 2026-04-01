@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 // Start session
 session_start();
 
@@ -19,8 +19,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
     <title>Nexorah - <?php echo ucfirst(str_replace(".php", "", $current_page)); ?></title>
     
     <!-- Favicon -->
-    <link rel="icon" type="image/gif" href="assets/images/public/Nexorah logo.gif">
-    <link rel="shortcut icon" href="assets/images/public/Nexorah logo.gif">
+    <link rel="icon" type="image/png" href="assets/images/public/Nexorah New logo.png">
+    <link rel="shortcut icon" href="assets/images/public/Nexorah New logo.png">
     <meta name="msapplication-TileColor" content="#002147">
     <meta name="theme-color" content="#002147">
     
@@ -45,7 +45,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
             <div class="container">
                 <a class="navbar-brand" href="index.php">
-                    <img src="assets/images/public/Nexorah logo.gif" alt="Nexorah Logo" height="45">
+                    <img src="assets/images/public/Nexorah New logo.png" alt="Nexorah Logo" height="45">
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>

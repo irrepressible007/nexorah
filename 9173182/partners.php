@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 session_start();
 
 // Check if admin is logged in

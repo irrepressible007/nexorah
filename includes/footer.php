@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 // Get active social media links
 $socialMediaQuery = "SELECT * FROM social_media WHERE is_active = 1 ORDER BY platform ASC";
 $socialMediaStmt = $pdo->query($socialMediaQuery);

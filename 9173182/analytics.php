@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 // Start session only if one isn't already active
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -159,7 +159,7 @@ include 'includes/admin_header.php';
                 <div class="btn-toolbar mb-2 mb-md-0">
                     <div class="btn-group me-2">
                         <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
-                        <form method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to reset ALL analytics data? This will clear:\n\n• Total Page Views: <?php echo number_format($totalPageViews); ?>\n• Unique Visitors: <?php echo number_format($uniqueVisitors); ?>\n• Event Views: <?php echo number_format($totalEventViews); ?>\n• Interactions: <?php echo number_format($totalInteractions); ?>\n• All Recent Activity\n\nThis action cannot be undone!');">
+                        <form method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to reset ALL analytics data? This will clear:\n\nâ€¢ Total Page Views: <?php echo number_format($totalPageViews); ?>\nâ€¢ Unique Visitors: <?php echo number_format($uniqueVisitors); ?>\nâ€¢ Event Views: <?php echo number_format($totalEventViews); ?>\nâ€¢ Interactions: <?php echo number_format($totalInteractions); ?>\nâ€¢ All Recent Activity\n\nThis action cannot be undone!');">
                             <button type="submit" name="reset_analytics" class="btn btn-sm btn-danger ms-2">
                                 <i class="fas fa-redo-alt"></i> Reset Analytics
                             </button>

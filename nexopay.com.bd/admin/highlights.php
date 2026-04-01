@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 require_once 'includes/auth_check.php';
 require_once '../config/database.php';
 
@@ -134,8 +134,8 @@ include 'includes/header.php';
                         </label>
                         <select id="media_type" name="media_type" required>
                             <option value="">Select media type</option>
-                            <option value="photo">📷 Photo</option>
-                            <option value="video">🎥 Video</option>
+                            <option value="photo">ðŸ“· Photo</option>
+                            <option value="video">ðŸŽ¥ Video</option>
                         </select>
                     </div>
                     

@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * Direct Admin Fix Script
  * This will diagnose and fix the admin login issue immediately
@@ -16,12 +16,12 @@ try {
     $db = $database->getConnection();
     
     if (!$db) {
-        echo "<div class='error'>❌ Database connection failed!</div>";
+        echo "<div class='error'>âŒ Database connection failed!</div>";
         echo "<p>Please check:</p>";
         echo "<ul><li>XAMPP MySQL is running</li><li>Database 'nexopay' exists</li></ul>";
         exit;
     }
-    echo "<div class='success'>✅ Database connected successfully</div>";
+    echo "<div class='success'>âœ… Database connected successfully</div>";
     
     // Check if admin_users table exists
     echo "<h2>Checking Database Structure...</h2>";
@@ -38,9 +38,9 @@ try {
             )
         ";
         $db->exec($sql);
-        echo "<div class='success'>✅ Table created</div>";
+        echo "<div class='success'>âœ… Table created</div>";
     } else {
-        echo "<div class='success'>✅ admin_users table exists</div>";
+        echo "<div class='success'>âœ… admin_users table exists</div>";
     }
     
     // Remove any existing admin user and create fresh one
@@ -55,7 +55,7 @@ try {
     $result = $stmt->execute([$username, $password, $email]);
     
     if ($result) {
-        echo "<div class='success'>✅ Admin user created successfully!</div>";
+        echo "<div class='success'>âœ… Admin user created successfully!</div>";
         
         // Test the password immediately
         $stmt = $db->prepare("SELECT * FROM admin_users WHERE username = 'admin'");
@@ -63,8 +63,8 @@ try {
         $admin = $stmt->fetch(PDO::FETCH_ASSOC);
         
         if ($admin && password_verify('admin123', $admin['password'])) {
-            echo "<div class='success'>✅ Password verification test passed!</div>";
-            echo "<h2>🎉 Setup Complete!</h2>";
+            echo "<div class='success'>âœ… Password verification test passed!</div>";
+            echo "<h2>ðŸŽ‰ Setup Complete!</h2>";
             echo "<div class='info'>";
             echo "<strong>Your login credentials:</strong><br>";
             echo "Username: <strong>admin</strong><br>";
@@ -72,14 +72,14 @@ try {
             echo "<br><a href='admin/login.php' style='background:#007bff;color:white;padding:10px 20px;text-decoration:none;border-radius:4px;'>Go to Admin Login</a>";
             echo "</div>";
         } else {
-            echo "<div class='error'>❌ Password verification failed!</div>";
+            echo "<div class='error'>âŒ Password verification failed!</div>";
         }
     } else {
-        echo "<div class='error'>❌ Failed to create admin user</div>";
+        echo "<div class='error'>âŒ Failed to create admin user</div>";
     }
     
 } catch (Exception $e) {
-    echo "<div class='error'>❌ Error: " . $e->getMessage() . "</div>";
+    echo "<div class='error'>âŒ Error: " . $e->getMessage() . "</div>";
     
     if (strpos($e->getMessage(), 'Unknown database') !== false) {
         echo "<div class='error'><strong>The 'nexopay' database doesn't exist!</strong></div>";

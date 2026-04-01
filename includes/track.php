@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 // Server-side tracking endpoint
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
