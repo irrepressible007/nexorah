@@ -69,8 +69,8 @@ $methods = $db->query("
 @media(max-width:1100px){ .two-col { grid-template-columns:1fr; } }
 
 /* ??─ KPI CARDS ??????????????????????????????????─ */
-.kpi-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:16px; margin-bottom:26px; }
-.kpi-card { background:#fff; border-radius:14px; padding:22px; box-shadow:0 2px 14px rgba(0,0,0,.06);
+.kpi-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:16px; margin-bottom:26px; }
+.kpi-card { background:#fff; border-radius:14px; padding:20px 16px; box-shadow:0 2px 14px rgba(0,0,0,.06);
             display:flex; align-items:center; gap:14px; transition:transform .2s; position:relative; overflow:hidden; }
 .kpi-card::before { content:''; position:absolute; inset:0; border-radius:14px;
                     transition:opacity .2s; opacity:0; }
