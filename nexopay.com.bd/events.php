@@ -1,4 +1,4 @@
-?<?php
+<?php
 require_once 'config/database.php';
 
 $database = new Database();
@@ -411,7 +411,12 @@ if (!$singleEvent) {
                             <?php endif; ?>
                         </div>
                         <h3><?php echo htmlspecialchars($ev['title']); ?></h3>
-                        <p><?php echo htmlspecialchars(substr(strip_tags($ev['description']), 0, 110)); ?>…</p>
+                        <?php 
+                            $cleanDesc = preg_replace('/<style\b[^>]*>(.*?)<\/style>/is', '', $ev['description']);
+                            $cleanDesc = strip_tags(str_replace('<', ' <', $cleanDesc));
+                            $cleanDesc = trim(preg_replace('/\s+/', ' ', $cleanDesc));
+                        ?>
+                        <p><?php echo htmlspecialchars(mb_substr($cleanDesc, 0, 110)); ?>…</p>
 
                         <div class="card-footer-row">
                             <span class="card-price"><i class="fas fa-ticket-alt"></i> ৳<?php echo number_format($ev['fee'], 2); ?></span>

@@ -114,8 +114,8 @@ if ($singleEvent) :
                 ?>
                 <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up">
                     <div class="event-card" data-event-id="<?php echo $event['id']; ?>" onclick="window.location.href='events.php?id=<?php echo $event['id']; ?>'" style="cursor: pointer;">
-                        <div class="event-img">
-                            <img src="<?php echo $imagePath; ?>" alt="<?php echo htmlspecialchars($event['title']); ?>">
+                        <div class="event-img" style="height: 220px; overflow: hidden;">
+                            <img src="<?php echo $imagePath; ?>" alt="<?php echo htmlspecialchars($event['title']); ?>" style="width: 100%; height: 100%; object-fit: cover;">
                         </div>
                         <div class="event-content">
                             <div class="event-meta">
@@ -123,7 +123,12 @@ if ($singleEvent) :
                                 <span><i class="far fa-clock"></i> <?php echo date('h:i A', strtotime($event['event_time'])); ?></span>
                             </div>
                             <h3><?php echo htmlspecialchars($event['title']); ?></h3>
-                            <p><?php echo htmlspecialchars(substr(strip_tags($event['description']), 0, 100)) . '...'; ?></p>
+                            <?php 
+                                $cleanDesc = preg_replace('/<style\b[^>]*>(.*?)<\/style>/is', '', $event['description']);
+                                $cleanDesc = strip_tags(str_replace('<', ' <', $cleanDesc));
+                                $cleanDesc = trim(preg_replace('/\s+/', ' ', $cleanDesc));
+                            ?>
+                            <p><?php echo htmlspecialchars(mb_substr($cleanDesc, 0, 100)) . '...'; ?></p>
                             <div class="d-flex justify-content-between align-items-center mt-3 gap-2">
                                 <span class="text-muted" style="font-size: 0.95rem; line-height: 1.4;"><i class="fas fa-map-marker-alt" style="color: var(--primary-color); margin-right: 5px;"></i> <?php echo htmlspecialchars($event['location']); ?></span>
                                 <?php if (isset($event['is_registration_open']) && $event['is_registration_open']) : ?>
@@ -164,8 +169,8 @@ if ($singleEvent) :
                 ?>
                 <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up">
                     <div class="event-card past-event" data-event-id="<?php echo $event['id']; ?>" onclick="window.location.href='events.php?id=<?php echo $event['id']; ?>'" style="cursor: pointer;">
-                        <div class="event-img">
-                            <img src="<?php echo $imagePath; ?>" alt="<?php echo htmlspecialchars($event['title']); ?>">
+                        <div class="event-img" style="height: 220px; overflow: hidden;">
+                            <img src="<?php echo $imagePath; ?>" alt="<?php echo htmlspecialchars($event['title']); ?>" style="width: 100%; height: 100%; object-fit: cover;">
                             <div class="past-event-overlay">
                                 <span>Past Event</span>
                             </div>
@@ -176,7 +181,12 @@ if ($singleEvent) :
                                 <span><i class="far fa-clock"></i> <?php echo date('h:i A', strtotime($event['event_time'])); ?></span>
                             </div>
                             <h3><?php echo htmlspecialchars($event['title']); ?></h3>
-                            <p><?php echo htmlspecialchars(substr(strip_tags($event['description']), 0, 100)) . '...'; ?></p>
+                            <?php 
+                                $cleanDesc = preg_replace('/<style\b[^>]*>(.*?)<\/style>/is', '', $event['description']);
+                                $cleanDesc = strip_tags(str_replace('<', ' <', $cleanDesc));
+                                $cleanDesc = trim(preg_replace('/\s+/', ' ', $cleanDesc));
+                            ?>
+                            <p><?php echo htmlspecialchars(mb_substr($cleanDesc, 0, 100)) . '...'; ?></p>
                             <div class="d-flex justify-content-between align-items-center mt-3 gap-2">
                                 <span class="text-muted" style="font-size: 0.95rem; line-height: 1.4;"><i class="fas fa-map-marker-alt" style="color: var(--primary-color); margin-right: 5px;"></i> <?php echo htmlspecialchars($event['location']); ?></span>
                                 <?php if (isset($event['is_registration_open']) && $event['is_registration_open']) : ?>
