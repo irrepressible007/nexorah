@@ -2,8 +2,8 @@
 session_start();
 
 // Simple admin authentication (in a real-world scenario, use proper authentication)
-$admin_username = "tanim";
-$admin_password = "tanim123"; // In production, use hashed passwords
+$admin_username = "admin";
+$admin_password = "superadmin123"; // Updated per request
 
 $error = false;
 
