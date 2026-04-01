@@ -60,7 +60,7 @@
                     </div>
                     <div class="highlight-content">
                         <h3><?php echo $highlight['title']; ?></h3>
-                        <p><?php echo $highlight['description']; ?></p>
+                        <p><?php echo htmlspecialchars(strip_tags($highlight['description'])); ?></p>
                     </div>
                 </div>
             </div>
@@ -88,7 +88,7 @@
                         <img src="<?php echo $partner['image_path']; ?>" alt="<?php echo $partner['name']; ?>">
                     </div>
                     <h3><?php echo $partner['name']; ?></h3>
-                    <p><?php echo $partner['description']; ?></p>
+                    <p><?php echo htmlspecialchars(strip_tags($partner['description'])); ?></p>
                 </div>
             </div>
             <?php endforeach; ?>
@@ -122,7 +122,7 @@
                             <span><i class="far fa-clock"></i> <?php echo date('h:i A', strtotime($event['event_time'])); ?></span>
                         </div>
                         <h3><?php echo $event['title']; ?></h3>
-                        <p><?php echo substr($event['description'], 0, 100) . '...'; ?></p>
+                        <p><?php echo substr(strip_tags($event['description']), 0, 100) . '...'; ?></p>
                         <div class="d-flex justify-content-between align-items-center">
                             <span><i class="fas fa-map-marker-alt"></i> <?php echo $event['location']; ?></span>
                             <a href="events.php?id=<?php echo $event['id']; ?>" class="btn btn-primary">Learn More</a>
