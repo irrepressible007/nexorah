@@ -61,6 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $event) {
 
         if ($reg_type === 'solo') {
             $full_name = trim($_POST['full_name'] ?? '');
+            $email = trim($_POST['email'] ?? '');
             $phone = trim($_POST['contact'] ?? '');
             $guardian_number = trim($_POST['emergency_contact'] ?? '');
             
@@ -76,6 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $event) {
             }
         } elseif ($reg_type === 'group') {
             $full_name = trim($_POST['grp_p1_name'] ?? 'Group Leader');
+            $email = trim($_POST['email'] ?? '');
             $phone = trim($_POST['grp_p1_contact'] ?? '');
             $guardian_number = trim($_POST['grp_emergency_contact'] ?? '');
             
@@ -525,6 +527,10 @@ if (!$show_form) {
                                 <input type="text" name="full_name" class="form-control" required autocomplete="name">
                             </div>
                             <div class="form-group mb-3">
+                                <label>Email Address *</label>
+                                <input type="email" name="email" class="form-control" required autocomplete="email">
+                            </div>
+                            <div class="form-group mb-3">
                                 <label>Institution Name *</label>
                                 <input type="text" name="institution" class="form-control" required autocomplete="organization">
                             </div>
@@ -597,6 +603,7 @@ if (!$show_form) {
                         </div>
                         <div class="participant-card-body">
                             <div class="form-group mb-3"><label>Full Name *</label><input type="text" name="grp_p1_name" id="grpP1Name" class="form-control" autocomplete="name"></div>
+                            <div class="form-group mb-3"><label>Email Address *</label><input type="email" name="email" class="form-control" autocomplete="email"></div>
                             <div class="form-group mb-3"><label>Institution Name *</label><input type="text" name="grp_p1_institution" class="form-control" autocomplete="organization"></div>
                             <div class="form-group mb-3"><label>Class / Grade *</label><input type="text" name="grp_p1_class" class="form-control"></div>
                             <div class="form-group mb-3"><label>Contact Number *</label><input type="tel" name="grp_p1_contact" class="form-control" inputmode="tel"></div>
@@ -743,6 +750,7 @@ if (!$show_form) {
                 <h4 class="form-heading"><i class="fas fa-user"></i> Participant Information</h4>
                 <div class="form-grid">
                     <div class="form-group"><label>Full Name *</label><input type="text" name="full_name" class="form-control" required></div>
+                    <div class="form-group"><label>Email Address *</label><input type="email" name="email" class="form-control" required></div>
                     <div class="form-group"><label>Institution *</label><input type="text" name="institution" class="form-control" required></div>
                     <div class="form-group">
                         <label>Category *</label>
@@ -925,8 +933,8 @@ if (!$show_form) {
             document.getElementById('groupForm').style.display   = isGroup ? 'block' : 'none';
             document.getElementById('sharedPayment').style.display = 'block';
 
-            const soloRequired  = ['[name="full_name"]','[name="institution"]','[name="class_grade"]','[name="contact"]','[name="emergency_contact"]','[name="guardian_name"]'];
-            const groupRequired = ['[name="grp_p1_name"]','[name="grp_p1_institution"]','[name="grp_p1_class"]','[name="grp_p1_contact"]',
+            const soloRequired  = ['[name="full_name"]','[name="email"]','[name="institution"]','[name="class_grade"]','[name="contact"]','[name="emergency_contact"]','[name="guardian_name"]'];
+            const groupRequired = ['[name="grp_p1_name"]','[name="email"]','[name="grp_p1_institution"]','[name="grp_p1_class"]','[name="grp_p1_contact"]',
                                    '[name="grp_p2_name"]','[name="grp_p2_institution"]','[name="grp_p2_class"]','[name="grp_p2_contact"]',
                                    '[name="grp_emergency_contact"]','[name="grp_guardian_name"]'];
 
