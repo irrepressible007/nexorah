@@ -812,9 +812,19 @@ if (!$show_form) {
                 </div>
                 
                 <div id="olympiadSharedPayment" style="display:none; margin-top:20px;">
-                    <div class="payment-instruction">
-                        <h4><i class="fas fa-info-circle"></i> Payment Instructions</h4>
-                        <div id="olympiadMobileInst" style="margin-bottom:15px;">
+                    <div class="form-group mb-3">
+                        <label>Choose your Payment Method *</label>
+                        <select name="payment_method" id="olympiadPaymentMethod" class="form-control" onchange="showOlympiadPaymentSection()">
+                            <option value="">-- Select Payment Method --</option>
+                            <option value="bKash">bKash</option>
+                            <option value="Bank">Bank Deposit</option>
+                        </select>
+                    </div>
+
+                    <div id="olympiadPaymentSection" style="display:none;" class="payment-section-divider">
+                        <h3 id="olympiadPaymentTitle" class="payment-title">Payment Details</h3>
+                        
+                        <div id="olympiadMobileInst">
                             <p class="payment-instructions" style="background:#f8f9fa; padding:15px; border-radius:8px; border-left:4px solid #3498db;">
                                 1. Go to <strong>Payment</strong> option in your app or simply scan the QR<br>
                                 2. Type the receiver number: <strong>01805548970 (Merchant)</strong><br>
@@ -826,7 +836,7 @@ if (!$show_form) {
                                 <img src="assets/images/public/bKash qr.png" alt="bKash QR" style="max-width:260px; display:block; margin: 10px auto; border-radius: 8px;">
                             </p>
                         </div>
-                        <div id="olympiadBankInst" style="display:none; margin-top:10px; margin-bottom:15px;">
+                        <div id="olympiadBankInst" style="display:none; margin-bottom:15px;">
                             <p class="payment-instructions">Bank Transfer of <strong id="olympiadBankAmount">0 BDT</strong> to:</p>
                             <div style="background:#f1f5f9; padding:15px; border-radius:8px; font-size:0.9rem;">
                                 <strong>Bank:</strong> BRAC Bank PLC<br>
@@ -837,24 +847,14 @@ if (!$show_form) {
                                 <strong>SWIFT Code:</strong> BRAKBDDH
                             </div>
                         </div>
-                    </div>
-                    
-                    <h4 class="form-heading"><i class="fas fa-money-check-alt"></i> Payment Verification</h4>
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label>Payment Method *</label>
-                            <select name="payment_method" id="olympiadPaymentMethod" class="form-control" onchange="showOlympiadPaymentSection()">
-                                <option value="">Select Method...</option>
-                                <option value="bKash">bKash</option>
-                                <option value="Bank">Bank Deposit</option>
-                            </select>
+
+                        <div class="form-group mb-3">
+                            <label><span id="olympiadMethodNameLabel"></span> Number *</label>
+                            <input type="tel" name="sender_number" id="olympiadSenderNumber" class="form-control" inputmode="tel" placeholder="e.g. 01XXXXXXXXX">
                         </div>
-                    </div>
-                    <div id="olympiadPaymentSection" style="display:none;margin-top:20px">
-                        <h4 class="form-heading" id="olympiadPaymentTitle">Payment Details</h4>
-                        <div class="form-grid">
-                            <div class="form-group"><label><span id="olympiadMethodNameLabel"></span> Sent From Number *</label><input type="text" name="sender_number" id="olympiadSenderNumber" class="form-control" placeholder="e.g. 01XXXXXXXXX"></div>
-                            <div class="form-group"><label><span id="olympiadMethodTxnLabel"></span> Transaction ID *</label><input type="text" name="transaction_id" id="olympiadTransactionId" class="form-control" placeholder="e.g. TRNX12345678"></div>
+                        <div class="form-group mb-3">
+                            <label><span id="olympiadMethodTxnLabel"></span> Transaction ID *</label>
+                            <input type="text" name="transaction_id" id="olympiadTransactionId" class="form-control" autocomplete="off" placeholder="e.g. TRNX12345678">
                         </div>
                     </div>
                 </div>
