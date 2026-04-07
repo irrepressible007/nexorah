@@ -34,6 +34,22 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
             $old_contact = "+880 1857-108193";
             $new_contact = "+880 1886-365082";
             $event['description'] = str_replace($old_contact, $new_contact, $event['description']);
+
+            // Rebuild the CSS rule for the bullets to use font-awesome instead of unicode characters
+            $new_css_rule = ".nso-detail .rules-list li::before { content: '\\\\f0da'; font-family: 'Font Awesome 5 Free', 'Font Awesome 6 Free'; font-weight: 900; color: var(--primary-color, #3498db); flex-shrink: 0; margin-top: 3px; margin-right: 10px; font-size: 1.1rem; }";
+            $event['description'] = preg_replace('/\.nso-detail \.rules-list li::before\s*\{[^}]+\}/', $new_css_rule, $event['description']);
+            
+            // Fix encoding errors on the live DB (where dashes became ?)
+            $event['description'] = str_replace(' ? a', ' &mdash; a', $event['description']);
+            $event['description'] = str_replace(' ? ', ' &mdash; ', $event['description']);
+            $event['description'] = preg_replace('/Class (\d+)\?(\d+)/', 'Class $1&ndash;$2', $event['description']);
+            $event['description'] = str_replace('8?8"', '8&times;8"', $event['description']);
+            $event['description'] = str_replace('10?8"', '10&times;8"', $event['description']);
+            $event['description'] = str_replace('12?8"', '12&times;8"', $event['description']);
+            $event['description'] = str_replace('12?12"', '12&times;12"', $event['description']);
+            $event['description'] = str_replace('20?12"', '20&times;12"', $event['description']);
+            $event['description'] = str_replace('20?20"', '20&times;20"', $event['description']);
+            $event['description'] = str_replace('›', '<i class="fas fa-caret-right"></i>', $event['description']);
         }
         $singleEvent = true;
         
