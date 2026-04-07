@@ -91,8 +91,8 @@
     /* ── Event cards inside white sections ── */
     .upcoming-events .event-card,
     .past-events .event-card {
-        background: #1e2b3d !important;
-        border-color: rgba(124, 58, 237, 0.2) !important;
+        background: #1e2530 !important;
+        border-color: rgba(255, 255, 255, 0.08) !important;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
     }
 
@@ -149,7 +149,7 @@
 
     .event-date,
     .event-fee {
-        background: #1e2b3d !important;
+        background: #1e2530 !important;
         color: #c9d1d9 !important;
         border-left-color: #7c3aed !important;
     }
@@ -181,8 +181,8 @@
     .form-group input,
     .form-group textarea,
     .form-group select {
-        background: #1e2b3d !important;
-        border-color: rgba(124, 58, 237, 0.3) !important;
+        background: rgba(255, 255, 255, 0.04) !important;
+        border-color: rgba(255, 255, 255, 0.08) !important;
         color: #e6edf3 !important;
     }
 
@@ -195,6 +195,22 @@
     .form-group textarea:focus {
         border-color: #7c3aed !important;
         box-shadow: 0 0 0 3px rgba(124,58,237,0.25) !important;
+    }
+
+    .form-group input[type="file"]::file-selector-button,
+    .form-group input[type="file"]::-webkit-file-upload-button {
+        background: #1e2530 !important;
+        color: #e6edf3 !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        border-radius: 6px;
+        padding: 6px 12px;
+        margin-right: 15px;
+        cursor: pointer;
+        transition: background 0.2s ease-in-out;
+    }
+
+    .form-group input[type="file"]::file-selector-button:hover {
+        background: #2a3441 !important;
     }
 
     /* ── Highlight items ── */
@@ -271,7 +287,7 @@
 
     /* ── btn-secondary in dark mode ── */
     .btn-secondary {
-        background: #1e2b3d !important;
+        background: #1e2530 !important;
         color: #c9d1d9 !important;
         border-color: rgba(255,255,255,0.15) !important;
     }
@@ -540,8 +556,8 @@ html, body {
 
     /* Registration type toggle buttons */
     .reg-type-btn {
-        background: #1e2b3d !important;
-        border-color: rgba(124, 58, 237, 0.25) !important;
+        background: rgba(255, 255, 255, 0.04) !important;
+        border-color: rgba(255, 255, 255, 0.08) !important;
         color: #c9d1d9 !important;
     }
 
@@ -578,8 +594,8 @@ html, body {
     .form-group input,
     .form-group textarea,
     .form-group select {
-        background: #1e2b3d !important;
-        border-color: rgba(124, 58, 237, 0.3) !important;
+        background: rgba(255, 255, 255, 0.04) !important;
+        border-color: rgba(255, 255, 255, 0.08) !important;
         color: #e6edf3 !important;
     }
 
@@ -658,6 +674,21 @@ html, body {
         background: #2a1f08 !important;
         border-color: #5a4010 !important;
         color: #f0c070 !important;
+    }
+
+    /* Terms box */
+    .terms-box {
+        background: #2a1f08 !important;
+        border-color: #5a4010 !important;
+    }
+
+    .terms-box label[style*="color:#d35400"] {
+        color: #e67e22 !important;
+    }
+
+    .terms-box p,
+    .terms-box .radio-options label {
+        color: #c9d1d9 !important;
     }
 
     /* Payment section */
