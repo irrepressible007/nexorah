@@ -912,7 +912,11 @@ if (!$show_form) {
                         }
                         $formSupported = array_key_exists((int)$ev['id'], $supported_forms);
                     ?>
+                    <?php if ($formSupported): ?>
+                    <div class="event-hub-card" style="cursor: pointer;" onclick="window.location.href='register.php?event_id=<?php echo (int)$ev['id']; ?>'">
+                    <?php else: ?>
                     <div class="event-hub-card">
+                    <?php endif; ?>
                         <div class="event-hub-card-img">
                             <img src="<?php echo $imgSrc; ?>" alt="<?php echo htmlspecialchars($ev['title']); ?>">
                             <span class="hub-reg-badge">✓ Registration Open</span>
