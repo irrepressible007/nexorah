@@ -1,4 +1,4 @@
-?<?php
+<?php
 // Load database connection from external config (excluded from Git for security)
 require_once __DIR__ . '/config/nexorah_db.php';
 require_once __DIR__ . '/config/database.php'; // nexopay DB for admin tables
