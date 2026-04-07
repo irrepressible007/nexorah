@@ -4,6 +4,31 @@ require_once 'config/database.php';
 $database = new Database();
 $db = $database->getConnection();
 
+/**
+ * Strip <style> and <script> BLOCKS (including their content) from HTML,
+ * then return the remaining safe HTML. Used for rendering rich descriptions
+ * stored in the database that may contain inline style/script injections.
+ */
+function clean_html_description(string $html): string {
+    // Remove <style>...</style> blocks entirely (content + tag)
+    $html = preg_replace('/<style\b[^>]*>.*?<\/style>/is', '', $html);
+    // Remove <script>...</script> blocks entirely
+    $html = preg_replace('/<script\b[^>]*>.*?<\/script>/is', '', $html);
+    // Remove on* event attributes (e.g. onclick, onload)
+    $html = preg_replace('/\s+on\w+\s*=\s*(["\']).*?\1/i', '', $html);
+    return $html;
+}
+
+/**
+ * Return a plain-text excerpt from a rich HTML description, stripping all tags.
+ */
+function desc_excerpt(string $html, int $length = 120): string {
+    $clean = clean_html_description($html);
+    $clean = strip_tags(str_replace('<', ' <', $clean));
+    $clean = trim(preg_replace('/\s+/', ' ', $clean));
+    return mb_substr($clean, 0, $length);
+}
+
 // ── Single event detail view (triggered by ?id=N) ─────────────────────────
 $singleEvent = false;
 $event = null;
@@ -330,9 +355,9 @@ if (!$singleEvent) {
             <span class="status-pill <?php echo $pillClass; ?>"><?php echo strtoupper($status); ?></span>
             <h2><?php echo htmlspecialchars($event['title']); ?></h2>
 
-            <!-- Render stored HTML description as-is -->
-            <div class="detail-body">
-                <?php echo $event['description']; ?>
+            <!-- Render stored HTML description with style/script blocks stripped -->
+            <div class="detail-body event-desc-content">
+                <?php echo clean_html_description($event['description']); ?>
             </div>
         </div>
 

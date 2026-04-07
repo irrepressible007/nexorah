@@ -893,7 +893,12 @@ if (!$show_form) {
                                 <span><i class="fas fa-map-marker-alt"></i> <?php echo htmlspecialchars($ev['location']); ?></span>
                                 <?php endif; ?>
                             </div>
-                            <p><?php echo htmlspecialchars(substr(strip_tags($ev['description']), 0, 120)) . '…'; ?></p>
+                            <?php 
+                                $cleanDesc = preg_replace('/<style\b[^>]*>(.*?)<\/style>/is', '', $ev['description']);
+                                $cleanDesc = strip_tags(str_replace('<', ' <', $cleanDesc));
+                                $cleanDesc = trim(preg_replace('/\s+/', ' ', $cleanDesc));
+                            ?>
+                            <p><?php echo htmlspecialchars(mb_substr($cleanDesc, 0, 120)) . '…'; ?></p>
                             <?php if ($formSupported): ?>
                                 <a href="register.php?event_id=<?php echo (int)$ev['id']; ?>" class="btn-register-hub">Register Now &rarr;</a>
                             <?php else: ?>
