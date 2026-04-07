@@ -110,22 +110,41 @@
             
             foreach ($upcomingEvents as $event) :
                 $eventDate = new DateTime($event['event_date']);
+                $dispDateShort = $eventDate->format('M d, Y');
+                $dispTime      = date('h:i A', strtotime($event['event_time']));
+                $dispLoc       = htmlspecialchars($event['location']);
+                
+                if ($event['id'] == 6) {
+                    $dispDateShort = 'May 02, 2026';
+                    $dispTime      = '9AM to 6PM';
+                    $dispLoc       = 'SOS HERMANN GMEINER COLLEGE DHAKA, Plot No. 3-B, Block-A, Section-13, Mirpur, Dhaka-1216, Bangladesh';
+                }
+                if ($event['id'] == 4) {
+                    $dispDateShort = '7th May to 9th May, 2026';
+                    $dispTime      = '8AM to 6PM';
+                    $dispLoc       = 'Bangladesh University of Engineering and Technology (BUET)';
+                }
             ?>
             <div class="col-lg-4 col-md-6" data-aos="fade-up">
                 <div class="event-card" onclick="window.location.href='events.php?id=<?php echo $event['id']; ?>'" style="cursor: pointer;">
                     <div class="event-img">
-                        <img src="<?php echo (!empty($event['image_path']) ? (strpos($event['image_path'], 'assets/') === 0 ? $event['image_path'] : '9173182/' . $event['image_path']) : 'assets/images/default-event.jpg'); ?>" alt="<?php echo $event['title']; ?>">
+                        <img src="<?php echo (!empty($event['image_path']) ? (strpos($event['image_path'], 'assets/') === 0 ? $event['image_path'] : '9173182/' . $event['image_path']) : 'assets/images/default-event.jpg'); ?>" alt="<?php echo htmlspecialchars($event['title']); ?>">
                     </div>
                     <div class="event-content">
                         <div class="event-meta">
-                            <span><i class="far fa-calendar-alt"></i> <?php echo $eventDate->format('M d, Y'); ?></span>
-                            <span><i class="far fa-clock"></i> <?php echo date('h:i A', strtotime($event['event_time'])); ?></span>
+                            <span><i class="far fa-calendar-alt"></i> <?php echo $dispDateShort; ?></span>
+                            <span><i class="far fa-clock"></i> <?php echo $dispTime; ?></span>
                         </div>
-                        <h3><?php echo $event['title']; ?></h3>
-                        <p><?php echo substr(strip_tags($event['description']), 0, 100) . '...'; ?></p>
+                        <h3><?php echo htmlspecialchars($event['title']); ?></h3>
+                        <?php 
+                            $cleanDesc = preg_replace('/<style\b[^>]*>(.*?)<\/style>/is', '', $event['description']);
+                            $cleanDesc = strip_tags(str_replace('<', ' <', $cleanDesc));
+                            $cleanDesc = trim(preg_replace('/\s+/', ' ', $cleanDesc));
+                        ?>
+                        <p><?php echo htmlspecialchars(mb_substr($cleanDesc, 0, 100)) . '...'; ?></p>
                         <div class="d-flex justify-content-between align-items-center">
-                            <span><i class="fas fa-map-marker-alt"></i> <?php echo $event['location']; ?></span>
-                            <a href="events.php?id=<?php echo $event['id']; ?>" class="btn btn-primary">Learn More</a>
+                            <span><i class="fas fa-map-marker-alt"></i> <?php echo $dispLoc; ?></span>
+                            <a href="events.php?id=<?php echo $event['id']; ?>" class="btn btn-primary" onclick="event.stopPropagation();">Learn More</a>
                         </div>
                     </div>
                 </div>
