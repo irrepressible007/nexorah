@@ -42,6 +42,18 @@ if ($singleEvent) :
     if (!empty($event['image_path'])) {
         $imagePath = (strpos($event['image_path'], 'assets/') === 0) ? $event['image_path'] : '9173182/' . $event['image_path'];
     }
+
+    $dispDateShort = $eventDate->format('M d, Y');
+    $dispDateLong  = $eventDate->format('F d, Y');
+    $dispTime      = date('h:i A', strtotime($event['event_time']));
+    $dispLoc       = htmlspecialchars($event['location']);
+    
+    if ($event['id'] == 6) {
+        $dispDateShort = 'May 02, 2026';
+        $dispDateLong  = 'May 02, 2026';
+        $dispTime      = '9AM to 6PM';
+        $dispLoc       = 'SOS HERMANN GMEINER COLLEGE DHAKA, Plot No. 3-B, Block-A, Section-13, Mirpur, Dhaka-1216, Bangladesh';
+    }
 ?>
 
 <!-- Single Event Section -->
@@ -54,9 +66,9 @@ if ($singleEvent) :
                         <img src="<?php echo $imagePath; ?>" alt="<?php echo htmlspecialchars($event['title']); ?>" class="img-fluid rounded">
                     </div>
                     <div class="event-meta">
-                        <span><i class="far fa-calendar-alt"></i> <?php echo $eventDate->format('M d, Y'); ?></span>
-                        <span><i class="far fa-clock"></i> <?php echo date('h:i A', strtotime($event['event_time'])); ?></span>
-                        <span><i class="fas fa-map-marker-alt"></i> <?php echo htmlspecialchars($event['location']); ?></span>
+                        <span><i class="far fa-calendar-alt"></i> <?php echo $dispDateShort; ?></span>
+                        <span><i class="far fa-clock"></i> <?php echo $dispTime; ?></span>
+                        <span><i class="fas fa-map-marker-alt"></i> <?php echo $dispLoc; ?></span>
                     </div>
                     <h2><?php echo htmlspecialchars($event['title']); ?></h2>
                     <div class="event-description">
@@ -69,8 +81,8 @@ if ($singleEvent) :
                     <div class="widget mb-4">
                         <h3>Event Details</h3>
                         <ul class="event-info">
-                            <li><i class="far fa-calendar-alt"></i> <strong>Date:</strong> <?php echo $eventDate->format('F d, Y'); ?></li>
-                            <li><i class="far fa-clock"></i> <strong>Time:</strong> <?php echo date('h:i A', strtotime($event['event_time'])); ?></li>
+                            <li><i class="far fa-calendar-alt"></i> <strong>Date:</strong> <?php echo $dispDateLong; ?></li>
+                            <li><i class="far fa-clock"></i> <strong>Time:</strong> <?php echo $dispTime; ?></li>
                         </ul>
                     </div>
                     <?php if (isset($event['is_registration_open']) && $event['is_registration_open']) : ?>
@@ -111,6 +123,15 @@ if ($singleEvent) :
                         if (!empty($event['image_path'])) {
                             $imagePath = (strpos($event['image_path'], 'assets/') === 0) ? $event['image_path'] : '9173182/' . $event['image_path'];
                         }
+                        
+                        $dispDateShort = $eventDate->format('M d, Y');
+                        $dispTime      = date('h:i A', strtotime($event['event_time']));
+                        $dispLoc       = htmlspecialchars($event['location']);
+                        if ($event['id'] == 6) {
+                            $dispDateShort = 'May 02, 2026';
+                            $dispTime      = '9AM to 6PM';
+                            $dispLoc       = 'SOS HERMANN GMEINER COLLEGE DHAKA, Plot No. 3-B, Block-A, Section-13, Mirpur, Dhaka-1216, Bangladesh';
+                        }
                 ?>
                 <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up">
                     <div class="event-card" data-event-id="<?php echo $event['id']; ?>" onclick="window.location.href='events.php?id=<?php echo $event['id']; ?>'" style="cursor: pointer;">
@@ -119,8 +140,8 @@ if ($singleEvent) :
                         </div>
                         <div class="event-content">
                             <div class="event-meta">
-                                <span><i class="far fa-calendar-alt"></i> <?php echo $eventDate->format('M d, Y'); ?></span>
-                                <span><i class="far fa-clock"></i> <?php echo date('h:i A', strtotime($event['event_time'])); ?></span>
+                                <span><i class="far fa-calendar-alt"></i> <?php echo $dispDateShort; ?></span>
+                                <span><i class="far fa-clock"></i> <?php echo $dispTime; ?></span>
                             </div>
                             <h3><?php echo htmlspecialchars($event['title']); ?></h3>
                             <?php 
@@ -130,7 +151,7 @@ if ($singleEvent) :
                             ?>
                             <p><?php echo htmlspecialchars(mb_substr($cleanDesc, 0, 100)) . '...'; ?></p>
                             <div class="d-flex justify-content-between align-items-center mt-3 gap-2">
-                                <span class="text-muted" style="font-size: 0.95rem; line-height: 1.4;"><i class="fas fa-map-marker-alt" style="color: var(--primary-color); margin-right: 5px;"></i> <?php echo htmlspecialchars($event['location']); ?></span>
+                                <span class="text-muted" style="font-size: 0.95rem; line-height: 1.4;"><i class="fas fa-map-marker-alt" style="color: var(--primary-color); margin-right: 5px;"></i> <?php echo $dispLoc; ?></span>
                                 <?php if (isset($event['is_registration_open']) && $event['is_registration_open']) : ?>
                                     <a href="<?php echo getNexopayUrl(); ?>/register.php?event_id=<?php echo $event['id']; ?>" class="btn btn-primary register-btn flex-shrink-0" data-event-id="<?php echo $event['id']; ?>" onclick="event.stopPropagation();">Register</a>
                                 <?php endif; ?>
@@ -177,8 +198,8 @@ if ($singleEvent) :
                         </div>
                         <div class="event-content">
                             <div class="event-meta">
-                                <span><i class="far fa-calendar-alt"></i> <?php echo $eventDate->format('M d, Y'); ?></span>
-                                <span><i class="far fa-clock"></i> <?php echo date('h:i A', strtotime($event['event_time'])); ?></span>
+                                <span><i class="far fa-calendar-alt"></i> <?php echo $dispDateShort; ?></span>
+                                <span><i class="far fa-clock"></i> <?php echo $dispTime; ?></span>
                             </div>
                             <h3><?php echo htmlspecialchars($event['title']); ?></h3>
                             <?php 
@@ -188,7 +209,7 @@ if ($singleEvent) :
                             ?>
                             <p><?php echo htmlspecialchars(mb_substr($cleanDesc, 0, 100)) . '...'; ?></p>
                             <div class="d-flex justify-content-between align-items-center mt-3 gap-2">
-                                <span class="text-muted" style="font-size: 0.95rem; line-height: 1.4;"><i class="fas fa-map-marker-alt" style="color: var(--primary-color); margin-right: 5px;"></i> <?php echo htmlspecialchars($event['location']); ?></span>
+                                <span class="text-muted" style="font-size: 0.95rem; line-height: 1.4;"><i class="fas fa-map-marker-alt" style="color: var(--primary-color); margin-right: 5px;"></i> <?php echo $dispLoc; ?></span>
                                 <?php if (isset($event['is_registration_open']) && $event['is_registration_open']) : ?>
                                     <a href="<?php echo getNexopayUrl(); ?>/register.php?event_id=<?php echo $event['id']; ?>" class="btn btn-primary register-btn flex-shrink-0" data-event-id="<?php echo $event['id']; ?>" onclick="event.stopPropagation();">Register</a>
                                 <?php endif; ?>
