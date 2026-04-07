@@ -694,7 +694,7 @@ if (!$show_form) {
                             <p class="payment-instructions">
                                 1. Transfer your total amount: <strong id="bankInstructionAmount">0 BDT</strong> to:<br>
                             </p>
-                            <div style="background:#f1f5f9; padding:15px; border-radius:8px; font-size:0.9rem;">
+                            <div style="background:#f1f5f9; padding:15px; border-radius:8px; font-size:0.9rem; color:#1e293b;">
                                 <strong>Bank:</strong> BRAC Bank PLC<br>
                                 <strong>Branch Name:</strong> MAZAR ROAD SUB BRANCH<br>
                                 <strong>Account Name:</strong> NEXOPAY<br>
@@ -838,7 +838,7 @@ if (!$show_form) {
                         </div>
                         <div id="olympiadBankInst" style="display:none; margin-bottom:15px;">
                             <p class="payment-instructions">Bank Transfer of <strong id="olympiadBankAmount">0 BDT</strong> to:</p>
-                            <div style="background:#f1f5f9; padding:15px; border-radius:8px; font-size:0.9rem;">
+                            <div style="background:#f1f5f9; padding:15px; border-radius:8px; font-size:0.9rem; color:#1e293b;">
                                 <strong>Bank:</strong> BRAC Bank PLC<br>
                                 <strong>Branch Name:</strong> MAZAR ROAD SUB BRANCH<br>
                                 <strong>Account Name:</strong> NEXOPAY<br>
@@ -1027,7 +1027,7 @@ if (!$show_form) {
                         bankPay.style.display = 'block';
                         document.getElementById('bankInstructionAmount').innerText = document.getElementById('instructionAmount').innerText;
                     }
-                    document.getElementById('methodNameLabel').innerText = "Bank Account Name / Number";
+                    document.getElementById('methodNameLabel').innerText = "Bank Account Name /";
                     document.getElementById('methodTxnLabel').innerText  = "Bank Reference / Receipt";
                 } else {
                     if(mobilePay) mobilePay.style.display = 'block';
@@ -1116,7 +1116,7 @@ if (!$show_form) {
                         bankInst.style.display = 'block';
                         document.getElementById('olympiadBankAmount').innerText = document.getElementById('olympiadInstructionAmount').innerText;
                     }
-                    document.getElementById('olympiadMethodNameLabel').innerText = "Bank Account Name / Number";
+                    document.getElementById('olympiadMethodNameLabel').innerText = "Bank Account Name /";
                     document.getElementById('olympiadMethodTxnLabel').innerText  = "Bank Reference / Receipt";
                 } else {
                     if(mobInst) mobInst.style.display = 'block';
