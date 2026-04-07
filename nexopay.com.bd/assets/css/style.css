@@ -718,6 +718,7 @@ body {
     font-size: 1rem;
     transition: all 0.3s ease;
     background: white;
+    color: #333 !important;
 }
 
 .form-group input:focus,

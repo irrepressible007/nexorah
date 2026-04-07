@@ -26,13 +26,13 @@ $past_events = $past_stmt->fetchAll(PDO::FETCH_ASSOC);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="color-scheme" content="light dark">
+    
     <title>Nexopay - Smart Secure Seamless</title>
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="assets/images/public/Nex Pay new logo.png">
     <link rel="shortcut icon" href="assets/images/public/Nex Pay new logo.png">
     <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="assets/css/dark-mode.css">
+    
     <link rel="stylesheet" href="assets/css/mobile.css">
     <!-- Premium font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

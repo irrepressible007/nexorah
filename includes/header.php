@@ -16,7 +16,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="color-scheme" content="light dark">
+    
     <title>Nexorah - <?php echo ucfirst(str_replace(".php", "", $current_page)); ?></title>
     
     <!-- Favicon -->
@@ -40,7 +40,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
     <!-- Custom CSS -->
     <link rel="stylesheet" href="assets/css/style.css?v=<?php echo time(); ?>">
     <!-- Dark Mode + Mobile Optimisation -->
-    <link rel="stylesheet" href="assets/css/dark-mode.css?v=<?php echo time(); ?>">
+    ">
 </head>
 <body>
     <!-- Header Section -->
