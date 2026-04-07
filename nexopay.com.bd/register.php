@@ -916,11 +916,21 @@ if (!$show_form) {
                         <div class="event-hub-card-body">
                             <h3><?php echo htmlspecialchars($ev['title']); ?></h3>
                             <div class="event-hub-card-meta">
-                                <?php if ($ev['event_date']): ?>
-                                <span><i class="far fa-calendar-alt"></i> <?php echo date('M j, Y', strtotime($ev['event_date'])); ?></span>
+                                <?php
+                                    $evDateDisp = $ev['event_date'] ? date('M j, Y', strtotime($ev['event_date'])) : '';
+                                    $evLocDisp  = htmlspecialchars($ev['location']);
+                                    if ((int)$ev['id'] === 6) {
+                                        $evDateDisp = 'May 2, 2026';
+                                    }
+                                    if ((int)$ev['id'] === 4) {
+                                        $evDateDisp = 'May 7–9, 2026';
+                                    }
+                                ?>
+                                <?php if ($evDateDisp): ?>
+                                <span><i class="far fa-calendar-alt"></i> <?php echo $evDateDisp; ?></span>
                                 <?php endif; ?>
-                                <?php if ($ev['location']): ?>
-                                <span><i class="fas fa-map-marker-alt"></i> <?php echo htmlspecialchars($ev['location']); ?></span>
+                                <?php if ($evLocDisp): ?>
+                                <span><i class="fas fa-map-marker-alt"></i> <?php echo $evLocDisp; ?></span>
                                 <?php endif; ?>
                             </div>
                             <?php 
