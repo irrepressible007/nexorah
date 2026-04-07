@@ -26,6 +26,11 @@ $stmt->bindParam(':id', $event_id);
 $stmt->execute();
 $event = $stmt->fetch(PDO::FETCH_ASSOC);
 
+if ($event && $event['id'] == 3) {
+    $event['event_date'] = '2026-05-02';
+    $event['location'] = 'SOS HERMANN GMEINER COLLEGE DHAKA, Plot No. 3-B, Block-A, Section-13, Mirpur, Dhaka-1216, Bangladesh';
+}
+
 if (!$event) {
     header('Location: events.php');
     exit();

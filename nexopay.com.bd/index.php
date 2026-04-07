@@ -13,12 +13,30 @@ $upcoming_query = "SELECT * FROM events WHERE status = 'upcoming' ORDER BY event
 $upcoming_stmt = $db->prepare($upcoming_query);
 $upcoming_stmt->execute();
 $upcoming_events = $upcoming_stmt->fetchAll(PDO::FETCH_ASSOC);
+if ($upcoming_events) {
+    foreach ($upcoming_events as &$ev) {
+        if ($ev['id'] == 3) {
+            $ev['event_date'] = '2026-05-02';
+            $ev['location'] = 'SOS HERMANN GMEINER COLLEGE DHAKA, Plot No. 3-B, Block-A, Section-13, Mirpur, Dhaka-1216, Bangladesh';
+        }
+    }
+    unset($ev);
+}
 
 // Fetch past events
 $past_query = "SELECT * FROM events WHERE status = 'past' ORDER BY event_date DESC LIMIT 3";
 $past_stmt = $db->prepare($past_query);
 $past_stmt->execute();
 $past_events = $past_stmt->fetchAll(PDO::FETCH_ASSOC);
+if ($past_events) {
+    foreach ($past_events as &$ev) {
+        if ($ev['id'] == 3) {
+            $ev['event_date'] = '2026-05-02';
+            $ev['location'] = 'SOS HERMANN GMEINER COLLEGE DHAKA, Plot No. 3-B, Block-A, Section-13, Mirpur, Dhaka-1216, Bangladesh';
+        }
+    }
+    unset($ev);
+}
 ?>
 
 <!DOCTYPE html>

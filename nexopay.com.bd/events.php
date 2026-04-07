@@ -39,7 +39,13 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
     $stmt->bindParam(':id', $eventId);
     $stmt->execute();
     $event = $stmt->fetch(PDO::FETCH_ASSOC);
-    if ($event) $singleEvent = true;
+    if ($event) {
+        if ($event['id'] == 3) {
+            $event['event_date'] = '2026-05-02';
+            $event['location'] = 'SOS HERMANN GMEINER COLLEGE DHAKA, Plot No. 3-B, Block-A, Section-13, Mirpur, Dhaka-1216, Bangladesh';
+        }
+        $singleEvent = true;
+    }
 }
 
 // ── Card grid: fetch all events ───────────────────────────────────────────
@@ -53,6 +59,13 @@ if (!$singleEvent) {
     $stmt = $db->prepare($query);
     $stmt->execute();
     $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    foreach ($events as &$ev) {
+        if ($ev['id'] == 3) {
+            $ev['event_date'] = '2026-05-02';
+            $ev['location'] = 'SOS HERMANN GMEINER COLLEGE DHAKA, Plot No. 3-B, Block-A, Section-13, Mirpur, Dhaka-1216, Bangladesh';
+        }
+    }
+    unset($ev);
 }
 ?>
 <!DOCTYPE html>
