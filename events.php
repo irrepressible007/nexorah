@@ -54,6 +54,12 @@ if ($singleEvent) :
         $dispTime      = '9AM to 6PM';
         $dispLoc       = 'SOS HERMANN GMEINER COLLEGE DHAKA, Plot No. 3-B, Block-A, Section-13, Mirpur, Dhaka-1216, Bangladesh';
     }
+    if ($event['id'] == 4) {
+        $dispDateShort = 'May 07–09, 2026';
+        $dispDateLong  = '7th May to 9th May, 2026';
+        $dispTime      = '8AM to 6PM';
+        $dispLoc       = 'Bangladesh University of Engineering and Technology (BUET)';
+    }
 ?>
 
 <!-- Single Event Section -->
@@ -133,6 +139,11 @@ if ($singleEvent) :
                             $dispTime      = '9AM to 6PM';
                             $dispLoc       = 'SOS HERMANN GMEINER COLLEGE DHAKA, Plot No. 3-B, Block-A, Section-13, Mirpur, Dhaka-1216, Bangladesh';
                         }
+                        if ($event['id'] == 4) {
+                            $dispDateShort = 'May 07–09, 2026';
+                            $dispTime      = '8AM to 6PM';
+                            $dispLoc       = 'Bangladesh University of Engineering and Technology (BUET)';
+                        }
                 ?>
                 <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up">
                     <div class="event-card" data-event-id="<?php echo $event['id']; ?>" onclick="window.location.href='events.php?id=<?php echo $event['id']; ?>'" style="cursor: pointer;">
@@ -187,6 +198,20 @@ if ($singleEvent) :
                         $imagePath = 'assets/images/default-event.jpg';
                         if (!empty($event['image_path'])) {
                             $imagePath = (strpos($event['image_path'], 'assets/') === 0) ? $event['image_path'] : '9173182/' . $event['image_path'];
+                        }
+
+                        $dispDateShort = $eventDate->format('M d, Y');
+                        $dispTime      = date('h:i A', strtotime($event['event_time']));
+                        $dispLoc       = htmlspecialchars($event['location']);
+                        if ($event['id'] == 6) {
+                            $dispDateShort = 'May 02, 2026';
+                            $dispTime      = '9AM to 6PM';
+                            $dispLoc       = 'SOS HERMANN GMEINER COLLEGE DHAKA, Plot No. 3-B, Block-A, Section-13, Mirpur, Dhaka-1216, Bangladesh';
+                        }
+                        if ($event['id'] == 4) {
+                            $dispDateShort = 'May 07–09, 2026';
+                            $dispTime      = '8AM to 6PM';
+                            $dispLoc       = 'Bangladesh University of Engineering and Technology (BUET)';
                         }
                 ?>
                 <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up">

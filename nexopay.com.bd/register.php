@@ -24,6 +24,11 @@ if ($event_id && array_key_exists($event_id, $supported_forms)) {
             if ($event['id'] == 6) {
                 $event['location'] = "SOS HERMANN GMEINER COLLEGE DHAKA, Plot No. 3-B, Block-A, Section-13, Mirpur, Dhaka-1216, Bangladesh";
             }
+            if ($event['id'] == 4) {
+                $event['location'] = "Bangladesh University of Engineering and Technology (BUET)";
+                $event['event_date'] = '2026-05-07';
+                $event['event_time'] = '08:00:00';
+            }
         }
     } catch (Exception $e) {
         // fall through to hub view
@@ -173,6 +178,9 @@ if (!$show_form) {
         foreach ($open_events as &$ev) {
             if ($ev['id'] == 6) {
                 $ev['location'] = "SOS HERMANN GMEINER COLLEGE DHAKA, Plot No. 3-B, Block-A, Section-13, Mirpur, Dhaka-1216, Bangladesh";
+            }
+            if ($ev['id'] == 4) {
+                $ev['location'] = "Bangladesh University of Engineering and Technology (BUET)";
             }
         }
         unset($ev);
