@@ -77,6 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $event) {
             
             $extra_data['category'] = $_POST['category'] ?? '';
             $extra_data['institution'] = trim($_POST['institution'] ?? '');
+            $extra_data['class'] = trim($_POST['class'] ?? '');
             $extra_data['class_grade'] = trim($_POST['class_grade'] ?? '');
             $extra_data['guardian_name'] = trim($_POST['guardian_name'] ?? '');
             $extra_data['ca_reference'] = trim($_POST['ca_reference'] ?? '');
@@ -593,10 +594,10 @@ if (!$show_form) {
                             <div class="segment-card seg-group">
                                 <div class="segment-card-header">
                                     <span>👥 Group Display Events</span>
-                                    <span class="seg-rate-badge">200 BDT per segment</span>
+                                    <span class="seg-rate-badge">300 BDT per segment</span>
                                 </div>
                                 <div class="segment-card-body">
-                                    <p class="seg-fee-note">Select any segment(s) — each costs 200 BDT for the whole group.</p>
+                                    <p class="seg-fee-note">Select any segment(s) — each costs 300 BDT for the whole group.</p>
                                     <label class="option-label"><input type="checkbox" name="segments[]" value="Project Display"   data-section="group" onchange="calculateTotal()"> Project Display</label>
                                     <label class="option-label"><input type="checkbox" name="segments[]" value="Wall Magazine"     data-section="group" onchange="calculateTotal()"> Wall Magazine</label>
                                     <label class="option-label"><input type="checkbox" name="segments[]" value="Scrapbook Display" data-section="group" onchange="calculateTotal()"> Scrapbook Display</label>
@@ -776,6 +777,7 @@ if (!$show_form) {
                         <div class="form-group mb-3"><label>Full Name *</label><input type="text" name="full_name" class="form-control" required></div>
                         <div class="form-group mb-3"><label>Email Address *</label><input type="email" name="email" class="form-control" required></div>
                         <div class="form-group mb-3"><label>Institution *</label><input type="text" name="institution" class="form-control" required></div>
+                        <div class="form-group mb-3"><label>Class *</label><input type="text" name="class" class="form-control" placeholder="e.g. Class 8" required></div>
                         <div class="form-group mb-3">
                             <label>Category *</label>
                             <select name="class_grade" id="olympiadCategory" class="form-control" required onchange="handleCategoryChange()">
@@ -963,7 +965,7 @@ if (!$show_form) {
 
     <?php if ($show_form === 'steam_carnival'): ?>
     <script>
-        const SECTION_FEES = { olympiad: 200, art: 200, photo: 300, group: 200 };
+        const SECTION_FEES = { olympiad: 200, art: 200, photo: 300, group: 300 };
 
         /* ── Registration Type Toggle ─────────────────────────────── */
         function setRegType(type) {
