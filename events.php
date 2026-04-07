@@ -83,6 +83,7 @@ if ($singleEvent) :
                         <ul class="event-info">
                             <li><i class="far fa-calendar-alt"></i> <strong>Date:</strong> <?php echo $dispDateLong; ?></li>
                             <li><i class="far fa-clock"></i> <strong>Time:</strong> <?php echo $dispTime; ?></li>
+                            <li><i class="fas fa-map-marker-alt"></i> <strong>Venue:</strong> <?php echo $dispLoc; ?></li>
                         </ul>
                     </div>
                     <?php if (isset($event['is_registration_open']) && $event['is_registration_open']) : ?>
