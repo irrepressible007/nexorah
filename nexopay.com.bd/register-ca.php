@@ -34,18 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if ($evRow) $nexopay_event_id = (int)$evRow['id'];
             } catch (Exception $ev_e) { /* keep original */ }
         }
-        // Handle photo upload
         $picture_path = null;
-        if (isset($_FILES['picture']) && $_FILES['picture']['error'] === UPLOAD_ERR_OK) {
-            $upload_dir = __DIR__ . '/uploads/ca/';
-            if (!is_dir($upload_dir)) mkdir($upload_dir, 0755, true);
-            $ext     = pathinfo($_FILES['picture']['name'], PATHINFO_EXTENSION);
-            $fname   = 'ca_' . time() . '_' . rand(1000,9999) . '.' . $ext;
-            if (move_uploaded_file($_FILES['picture']['tmp_name'], $upload_dir . $fname)) {
-                $picture_path = 'uploads/ca/' . $fname;
-            }
-        }
-
         $stmt = $db->prepare("
             INSERT INTO ca_applications
                 (event_id, full_name, email, institution, contact_number, whatsapp_number,
@@ -214,7 +203,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
             <?php endif; ?>
 
-            <form action="" method="POST" enctype="multipart/form-data" class="registration-form">
+            <form action="" method="POST" class="registration-form">
                 <h3>Campus Ambassador Application</h3>
                 <p class="form-desc">Please fill out the form below accurately. All fields marked with an asterisk (*) are required.</p>
 
@@ -288,10 +277,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <textarea name="experience" class="form-control" rows="3" required placeholder="Describe your experience or write 'No' if not applicable."></textarea>
                 </div>
 
-                <div class="form-group mb-4">
-                    <label>Upload Picture * <span style="font-weight:normal; color:#666; font-size:0.9rem;">(Provide a clear picture of your face)</span></label>
-                    <input type="file" name="picture" class="form-control" accept="image/*" required style="padding:10px;">
-                </div>
 
                 <input type="hidden" name="event_id" value="<?php echo $event_id; ?>">
                 

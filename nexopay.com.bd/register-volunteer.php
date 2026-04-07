@@ -35,17 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } catch (Exception $ev_e) { /* keep original */ }
         }
 
-        // Handle photo upload
         $picture_path = null;
-        if (isset($_FILES['picture']) && $_FILES['picture']['error'] === UPLOAD_ERR_OK) {
-            $upload_dir = __DIR__ . '/uploads/volunteers/';
-            if (!is_dir($upload_dir)) mkdir($upload_dir, 0755, true);
-            $ext   = pathinfo($_FILES['picture']['name'], PATHINFO_EXTENSION);
-            $fname = 'vol_' . time() . '_' . rand(1000,9999) . '.' . $ext;
-            if (move_uploaded_file($_FILES['picture']['tmp_name'], $upload_dir . $fname)) {
-                $picture_path = 'uploads/volunteers/' . $fname;
-            }
-        }
 
         $stmt = $db->prepare("
             INSERT INTO volunteer_applications
@@ -233,7 +223,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
             <?php endif; ?>
 
-            <form action="" method="POST" enctype="multipart/form-data" class="registration-form">
+            <form action="" method="POST" class="registration-form">
                 <h3>Volunteer Application</h3>
                 <p class="form-desc">Hello enthusiasts! Please fill out the sections below. All fields marked with (*) are required.</p>
 
@@ -359,10 +349,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <input type="url" name="facebook_link" class="form-control" required placeholder="https://facebook.com/your.profile">
                 </div>
 
-                <div class="form-group mb-4">
-                    <label>Upload Picture * <span style="font-weight:normal; color:#666; font-size:0.9rem;">(Max 10 MB - Provide a clear picture of your face)</span></label>
-                    <input type="file" name="picture" class="form-control" accept="image/*,.pdf,.doc,.docx" required style="padding:10px;">
-                </div>
+
 
                 <div class="terms-box">
                     <label style="font-weight:700; color:#d35400; margin-bottom:10px; display:block;">Terms &amp; Conditions</label>
