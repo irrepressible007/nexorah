@@ -787,7 +787,7 @@ if (!$show_form) {
                             </div>
                             <div class="segment-card-body">
                                 <label class="option-label"><input type="checkbox" name="segments[]" value="Art Exhibition" data-section="art" onchange="calcOlympiadTotal()"> Art Exhibition</label>
-                                <label class="option-label" id="artCompetitionWrapper" style="display:none;"><input type="checkbox" name="segments[]" value="Art Competition" id="artCompCheckbox" data-section="art" onchange="calcOlympiadTotal()"> Art Competition <small style="color:#e74c3c;font-weight:600;">(Primary/Junior Only)</small></label>
+                                <label class="option-label" id="artCompetitionWrapper"><input type="checkbox" name="segments[]" value="Art Competition" id="artCompCheckbox" data-section="art" onchange="calcOlympiadTotal()"> Art Competition</label>
                             </div>
                         </div>
 
@@ -1059,15 +1059,7 @@ if (!$show_form) {
         const OLYMPIAD_FEES = { olympiad: 200, art: 200, photo: 300 };
 
         function handleCategoryChange() {
-            const cat = document.getElementById('olympiadCategory').value;
-            const wrap = document.getElementById('artCompetitionWrapper');
-            const box = document.getElementById('artCompCheckbox');
-            if (cat === 'Primary' || cat === 'Junior') {
-                wrap.style.display = 'block';
-            } else {
-                wrap.style.display = 'none';
-                box.checked = false; // logic reset if excluded category
-            }
+            // Category change no longer hides Art Competition
             calcOlympiadTotal();
         }
 
