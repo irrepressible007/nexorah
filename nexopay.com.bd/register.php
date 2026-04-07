@@ -680,11 +680,11 @@ if (!$show_form) {
                         <h3 id="paymentTitle" class="payment-title">Payment Details</h3>
                         <div id="mobilePayInstructions">
                             <p class="payment-instructions">
-                                1. Go to <strong>Send Money</strong> option in your app.<br>
-                                2. Type the receiver number: <strong>01829981710 (Personal)</strong><br>
+                                1. Go to <strong>Payment</strong> option in your app or simply scan the QR<br>
+                                2. Type the receiver number: <strong>01829981710 (Merchant)</strong><br>
                                 3. Enter reference as your <strong>Name</strong> or <strong>CA Ref</strong><br>
-                                4. Enter your exact total amount: <strong id="instructionAmount">0 BDT</strong><br>
-                                5. Send the money<br>
+                                4. Enter your exact total amount. (Example: <strong id="instructionAmount">200 BDT</strong>)<br>
+                                5. Make the payment.<br>
                                 6. Copy the <strong>Transaction ID</strong> given by your operator<br>
                                 7. Paste the Transaction ID below<br><br>
                                 <img src="assets/images/public/bKash qr.png" alt="bKash QR" style="max-width:260px; display:block; margin: 10px auto; border-radius: 8px;">
@@ -816,11 +816,11 @@ if (!$show_form) {
                         <h4><i class="fas fa-info-circle"></i> Payment Instructions</h4>
                         <div id="olympiadMobileInst" style="margin-bottom:15px;">
                             <p class="payment-instructions" style="background:#f8f9fa; padding:15px; border-radius:8px; border-left:4px solid #3498db;">
-                                1. Go to <strong>Send Money</strong> option in your app.<br>
-                                2. Type the receiver number: <strong>01829981710 (Personal)</strong><br>
+                                1. Go to <strong>Payment</strong> option in your app or simply scan the QR<br>
+                                2. Type the receiver number: <strong>01829981710 (Merchant)</strong><br>
                                 3. Enter reference as your <strong>Name</strong> or <strong>CA Ref</strong><br>
-                                4. Enter your exact total amount: <strong id="olympiadInstructionAmount">0 BDT</strong><br>
-                                5. Send the money<br>
+                                4. Enter your exact total amount. (Example: <strong id="olympiadInstructionAmount">200 BDT</strong>)<br>
+                                5. Make the payment.<br>
                                 6. Copy the <strong>Transaction ID</strong> given by your operator<br>
                                 7. Paste the Transaction ID below<br><br>
                                 <img src="assets/images/public/bKash qr.png" alt="bKash QR" style="max-width:260px; display:block; margin: 10px auto; border-radius: 8px;">
