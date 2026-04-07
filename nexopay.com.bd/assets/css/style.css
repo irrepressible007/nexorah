@@ -572,9 +572,16 @@ body {
 .event-date,
 .event-fee {
     margin-bottom: 1rem;
-    color: #666;
+    color: #1a1a2e;
     font-size: 1.1rem;
-    font-weight: 500;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: #f0f4ff;
+    border-left: 4px solid #3498db;
+    border-radius: 0 8px 8px 0;
 }
 
 .event-description {
@@ -592,9 +599,16 @@ body {
 
 .event-desc-content {
     font-family: inherit;
-    color: #2c3e50;
     line-height: 1.8;
     font-size: 1rem;
+}
+
+/* Force ALL text in description to be readable regardless of inline styles */
+.event-desc-content,
+.event-desc-content * {
+    color: #212529 !important;
+    background-color: transparent !important;
+    font-family: inherit !important;
 }
 
 .event-desc-content h1,
@@ -602,34 +616,36 @@ body {
 .event-desc-content h3,
 .event-desc-content h4,
 .event-desc-content h5 {
-    color: #2c3e50;
-    -webkit-text-fill-color: #2c3e50;
-    background: none;
+    color: #1a1a2e !important;
+    -webkit-text-fill-color: #1a1a2e !important;
+    background: none !important;
     margin-top: 1.5rem;
     margin-bottom: 0.75rem;
-    font-weight: 600;
+    font-weight: 700;
+    font-size: 1.15rem;
 }
 
 .event-desc-content p {
     margin-bottom: 1rem;
-    color: #495057;
+    color: #212529 !important;
 }
 
 .event-desc-content ul,
 .event-desc-content ol {
     padding-left: 1.5rem;
     margin-bottom: 1rem;
-    color: #495057;
+    color: #212529 !important;
 }
 
 .event-desc-content li {
     margin-bottom: 0.4rem;
+    color: #212529 !important;
 }
 
 .event-desc-content strong,
 .event-desc-content b {
-    color: #2c3e50;
-    font-weight: 600;
+    color: #1a1a2e !important;
+    font-weight: 700 !important;
 }
 
 .event-desc-content table {
@@ -643,12 +659,19 @@ body {
     border: 1px solid #dee2e6;
     padding: 0.6rem 1rem;
     text-align: left;
+    color: #212529 !important;
 }
 
 .event-desc-content table th {
-    background: #f1f3f5;
-    font-weight: 600;
-    color: #2c3e50;
+    background: #e9ecef !important;
+    font-weight: 700 !important;
+    color: #1a1a2e !important;
+}
+
+/* Remove any inline <style> color overrides for text spans */
+.event-desc-content span {
+    color: #212529 !important;
+    background: none !important;
 }
 
 /* Enhanced Registration Form */
