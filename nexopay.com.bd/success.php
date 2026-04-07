@@ -183,7 +183,7 @@ if (empty($message)) {
                 
                 <div class="action-buttons">
                     <a href="index.php" class="btn-home"><i class="fas fa-home"></i> Back to Homepage</a>
-                    <?php if ($status === 'success' && $type === 'general'): ?>
+                    <?php if ($status === 'success'): ?>
                         <a href="user-panel.php" class="btn-panel"><i class="fas fa-list-alt"></i> View My Registrations</a>
                     <?php endif; ?>
                 </div>
