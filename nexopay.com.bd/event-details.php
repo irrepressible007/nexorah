@@ -128,14 +128,14 @@ if ($_POST && $event['status'] == 'upcoming') {
                     </p>
                     <p class="event-fee">
                         <i class="fas fa-tag"></i> 
-                        Registration Fee: à§³<?php echo number_format($event['fee'], 2); ?> BDT
+                        Registration Fee: &#2547;<?php echo number_format($event['fee'], 2); ?> BDT
                     </p>
                 </div>
             </div>
 
             <div class="event-description">
                 <h3>Event Description</h3>
-                <p><?php echo nl2br(htmlspecialchars($event['description'])); ?></p>
+                <div class="event-desc-content"><?php echo $event['description']; ?></div>
             </div>
 
             <?php if ($event['status'] == 'upcoming'): ?>
@@ -148,7 +148,7 @@ if ($_POST && $event['status'] == 'upcoming') {
                             <p><strong>Name:</strong> <?php echo htmlspecialchars($registration_data['full_name']); ?></p>
                             <p><strong>Event:</strong> <?php echo htmlspecialchars($event['title']); ?></p>
                             <p><strong>Tickets:</strong> <?php echo $registration_data['ticket_quantity']; ?></p>
-                            <p><strong>Total Amount:</strong> à§³<?php echo number_format($registration_data['total_amount'], 2); ?> BDT</p>
+                            <p><strong>Total Amount:</strong> &#2547;<?php echo number_format($registration_data['total_amount'], 2); ?> BDT</p>
                         </div>
                         
                         <div class="qr-payment-section">
@@ -190,7 +190,7 @@ if ($_POST && $event['status'] == 'upcoming') {
                         reference: 'NEX<?php echo $event_id . time(); ?>'
                     };
                     
-                    const qrText = `Payment for ${paymentData.event}\nAmount: à§³${paymentData.amount} BDT\nReference: ${paymentData.reference}`;
+                    const qrText = `Payment for ${paymentData.event}\nAmount: BDT ${paymentData.amount}\nReference: ${paymentData.reference}`;
                     
                     QRCode.toCanvas(document.getElementById('qrcode'), qrText, {
                         width: 200,
@@ -217,7 +217,7 @@ if ($_POST && $event['status'] == 'upcoming') {
 
                         <form method="POST" id="registrationForm">
                             <div class="form-group">
-                                <label>Registration Fee: à§³<?php echo number_format($event['fee'], 2); ?> BDT</label>
+                                <label>Registration Fee: &#2547;<?php echo number_format($event['fee'], 2); ?> BDT</label>
                             </div>
                             
                             <div class="form-group">
@@ -247,7 +247,7 @@ if ($_POST && $event['status'] == 'upcoming') {
                             
                             <div class="form-group">
                                 <label>Total Ticket Price</label>
-                                <div class="total-price" id="totalPrice">à§³<?php echo number_format($event['fee'], 2); ?> BDT</div>
+                                <div class="total-price" id="totalPrice">&#2547;<?php echo number_format($event['fee'], 2); ?> BDT</div>
                             </div>
                             
                             <button type="submit" class="btn-primary btn-large">Pay Now</button>
@@ -262,7 +262,7 @@ if ($_POST && $event['status'] == 'upcoming') {
                         ticketQuantity.addEventListener('input', function() {
                             const quantity = parseInt(this.value) || 1;
                             const total = eventFee * quantity;
-                            totalPrice.textContent = 'à§³' + total.toFixed(2) + ' BDT';
+                            totalPrice.textContent = '৳' + total.toFixed(2) + ' BDT';
                         });
                         </script>
                     </div>

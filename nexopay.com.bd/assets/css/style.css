@@ -1,4 +1,4 @@
-﻿/* Modern Reset and Base Styles */
+/* Modern Reset and Base Styles */
 * {
     margin: 0;
     padding: 0;
@@ -588,6 +588,67 @@ body {
     background-clip: text;
     margin-bottom: 1.5rem;
     font-size: 1.5rem;
+}
+
+.event-desc-content {
+    font-family: inherit;
+    color: #2c3e50;
+    line-height: 1.8;
+    font-size: 1rem;
+}
+
+.event-desc-content h1,
+.event-desc-content h2,
+.event-desc-content h3,
+.event-desc-content h4,
+.event-desc-content h5 {
+    color: #2c3e50;
+    -webkit-text-fill-color: #2c3e50;
+    background: none;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+}
+
+.event-desc-content p {
+    margin-bottom: 1rem;
+    color: #495057;
+}
+
+.event-desc-content ul,
+.event-desc-content ol {
+    padding-left: 1.5rem;
+    margin-bottom: 1rem;
+    color: #495057;
+}
+
+.event-desc-content li {
+    margin-bottom: 0.4rem;
+}
+
+.event-desc-content strong,
+.event-desc-content b {
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.event-desc-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1.5rem;
+}
+
+.event-desc-content table th,
+.event-desc-content table td {
+    border: 1px solid #dee2e6;
+    padding: 0.6rem 1rem;
+    text-align: left;
+}
+
+.event-desc-content table th {
+    background: #f1f3f5;
+    font-weight: 600;
+    color: #2c3e50;
 }
 
 /* Enhanced Registration Form */
