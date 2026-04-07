@@ -748,23 +748,28 @@ if (!$show_form) {
                 <!-- ── REQUIRED FIELDS ── -->
                 <input type="hidden" name="reg_type" value="solo">
                 
-                <h4 class="form-heading"><i class="fas fa-user"></i> Participant Information</h4>
-                <div class="form-grid">
-                    <div class="form-group"><label>Full Name *</label><input type="text" name="full_name" class="form-control" required></div>
-                    <div class="form-group"><label>Email Address *</label><input type="email" name="email" class="form-control" required></div>
-                    <div class="form-group"><label>Institution *</label><input type="text" name="institution" class="form-control" required></div>
-                    <div class="form-group">
-                        <label>Category *</label>
-                        <select name="class_grade" id="olympiadCategory" class="form-control" required onchange="handleCategoryChange()">
-                            <option value="">Select Category...</option>
-                            <option value="Elementary">Elementary (Class 1 - Class 3)</option>
-                            <option value="Primary">Primary (Class 4 - Class 5)</option>
-                            <option value="Junior">Junior (Class 6 - Class 8)</option>
-                            <option value="Secondary">Secondary (Class 9 - Class 10)</option>
-                            <option value="Senior">Senior (Class 11 - Class 12+)</option>
-                        </select>
+                <div class="participant-card" style="margin-bottom: 2rem;">
+                    <div class="participant-card-header">
+                        <i class="fas fa-user"></i> Participant Information
+                        <span class="participant-badge">Required</span>
                     </div>
-                    <div class="form-group"><label>Contact Number *</label><input type="tel" name="contact" class="form-control" required></div>
+                    <div class="participant-card-body">
+                        <div class="form-group mb-3"><label>Full Name *</label><input type="text" name="full_name" class="form-control" required></div>
+                        <div class="form-group mb-3"><label>Email Address *</label><input type="email" name="email" class="form-control" required></div>
+                        <div class="form-group mb-3"><label>Institution *</label><input type="text" name="institution" class="form-control" required></div>
+                        <div class="form-group mb-3">
+                            <label>Category *</label>
+                            <select name="class_grade" id="olympiadCategory" class="form-control" required onchange="handleCategoryChange()">
+                                <option value="">Select Category...</option>
+                                <option value="Elementary">Elementary (Class 1 - Class 3)</option>
+                                <option value="Primary">Primary (Class 4 - Class 5)</option>
+                                <option value="Junior">Junior (Class 6 - Class 8)</option>
+                                <option value="Secondary">Secondary (Class 9 - Class 10)</option>
+                                <option value="Senior">Senior (Class 11 - Class 12+)</option>
+                            </select>
+                        </div>
+                        <div class="form-group mb-3"><label>Contact Number *</label><input type="tel" name="contact" class="form-control" required></div>
+                    </div>
                 </div>
 
                 <div class="form-group mb-4" style="margin-top:20px;">
@@ -805,9 +810,8 @@ if (!$show_form) {
                     </div>
                 </div>
 
-                <div class="total-bar">
-                    <span class="total-label">Grand Total:</span>
-                    <span class="total-amount"><span id="olympiadGrandTotalAmt">0</span> BDT</span>
+                <div id="totalPriceDisplay" style="margin-bottom: 2rem;">
+                    Grand Total: <span id="olympiadGrandTotalAmt">0</span> BDT
                     <input type="hidden" name="total_amount" id="olympiadTotalInput" value="0">
                 </div>
                 
