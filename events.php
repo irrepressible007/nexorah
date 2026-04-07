@@ -26,6 +26,15 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
     $eventId = (int)$_GET['id'];
     $event = getEventById($pdo, $eventId);
     if ($event) {
+        if ($event['id'] == 6) {
+            $old_loc = "House-17, Road-03, Block-B, Shenpara Parbata, Mirpur-10, Dhaka-1216";
+            $new_loc = "SOS HERMANN GMEINER COLLEGE DHAKA, Plot No. 3-B, Block-A, Section-13, Mirpur, Dhaka-1216, Bangladesh";
+            $event['description'] = str_replace($old_loc, $new_loc, $event['description']);
+            
+            $old_contact = "+880 1857-108193";
+            $new_contact = "+880 1886-365082";
+            $event['description'] = str_replace($old_contact, $new_contact, $event['description']);
+        }
         $singleEvent = true;
         
         // Track event view when viewing single event
