@@ -19,7 +19,12 @@ if ($event_id && array_key_exists($event_id, $supported_forms)) {
         $stmt = $pdo->prepare("SELECT * FROM events WHERE id = ? AND is_registration_open = 1");
         $stmt->execute([$event_id]);
         $event = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($event) $show_form = $supported_forms[$event_id];
+        if ($event) {
+            $show_form = $supported_forms[$event_id];
+            if ($event['id'] == 6) {
+                $event['location'] = "SOS HERMANN GMEINER COLLEGE DHAKA, Plot No. 3-B, Block-A, Section-13, Mirpur, Dhaka-1216, Bangladesh";
+            }
+        }
     } catch (Exception $e) {
         // fall through to hub view
     }
@@ -165,6 +170,12 @@ if (!$show_form) {
     try {
         $stmt = $pdo->query("SELECT * FROM events WHERE is_registration_open = 1 ORDER BY event_date ASC");
         $open_events = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($open_events as &$ev) {
+            if ($ev['id'] == 6) {
+                $ev['location'] = "SOS HERMANN GMEINER COLLEGE DHAKA, Plot No. 3-B, Block-A, Section-13, Mirpur, Dhaka-1216, Bangladesh";
+            }
+        }
+        unset($ev);
     } catch (Exception $e) {
         $open_events = [];
     }
