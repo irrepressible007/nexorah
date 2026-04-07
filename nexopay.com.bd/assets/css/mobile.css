@@ -71,3 +71,15 @@ body {
     font-size: 1.15rem;
     letter-spacing: 0.5px;
 }
+
+/* Payment Instructions Mobile Tweaks */
+@media (max-width: 480px) {
+    .payment-instructions {
+        font-size: 0.88rem !important;
+        padding: 12px !important;
+    }
+    .payment-instructions img {
+        max-width: 100% !important;
+        height: auto;
+    }
+}

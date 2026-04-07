@@ -671,9 +671,7 @@ if (!$show_form) {
                         <label>Choose your Payment Method *</label>
                         <select name="payment_method" id="paymentMethod" class="form-control" required onchange="showPaymentSection()">
                             <option value="">-- Select Payment Method --</option>
-                            <option value="Bkash">Bkash</option>
-                            <option value="Nagad">Nagad</option>
-                            <option value="Rocket">Rocket</option>
+                            <option value="Bkash">bKash</option>
                             <option value="Bank">Bank Deposit</option>
                         </select>
                     </div>
@@ -688,7 +686,8 @@ if (!$show_form) {
                                 4. Enter your exact total amount: <strong id="instructionAmount">0 BDT</strong><br>
                                 5. Send the money<br>
                                 6. Copy the <strong>Transaction ID</strong> given by your operator<br>
-                                7. Paste the Transaction ID below
+                                7. Paste the Transaction ID below<br><br>
+                                <img src="assets/images/public/bKash qr.png" alt="bKash QR" style="max-width:260px; display:block; margin: 10px auto; border-radius: 8px;">
                             </p>
                         </div>
                         <div id="bankPayInstructions" style="display:none; margin-bottom:15px;">
@@ -696,10 +695,12 @@ if (!$show_form) {
                                 1. Transfer your total amount: <strong id="bankInstructionAmount">0 BDT</strong> to:<br>
                             </p>
                             <div style="background:#f1f5f9; padding:15px; border-radius:8px; font-size:0.9rem;">
-                                <strong>Bank:</strong> BRAC Bank PLC (MAZAR ROAD SUB BRANCH)<br>
-                                <strong>Acc Name:</strong> NEXOPAY<br>
-                                <strong>Acc No:</strong> 2076517310001<br>
-                                <strong>Routing/SWIFT:</strong> 060261997 / BRAKBDDH
+                                <strong>Bank:</strong> BRAC Bank PLC<br>
+                                <strong>Branch Name:</strong> MAZAR ROAD SUB BRANCH<br>
+                                <strong>Account Name:</strong> NEXOPAY<br>
+                                <strong>Account Number:</strong> 2076517310001<br>
+                                <strong>Routing Number:</strong> 060261997<br>
+                                <strong>SWIFT Code:</strong> BRAKBDDH
                             </div>
                             <p class="payment-instructions" style="margin-top:10px;">
                                 2. Save your Bank Receipt or Transaction Reference ID.
@@ -813,20 +814,27 @@ if (!$show_form) {
                 <div id="olympiadSharedPayment" style="display:none; margin-top:20px;">
                     <div class="payment-instruction">
                         <h4><i class="fas fa-info-circle"></i> Payment Instructions</h4>
-                        <div id="olympiadMobileInst">
-                            <p>Complete your payment of <strong id="olympiadInstructionAmount">0 BDT</strong> to the following numbers:</p>
-                            <div style="display:flex;gap:15px;margin-top:10px;flex-wrap:wrap">
-                                <span class="payment-badge bkash-badge">bKash: 01857108193</span>
-                                <span class="payment-badge nagad-badge">Nagad: 01857108193</span>
-                            </div>
+                        <div id="olympiadMobileInst" style="margin-bottom:15px;">
+                            <p class="payment-instructions" style="background:#f8f9fa; padding:15px; border-radius:8px; border-left:4px solid #3498db;">
+                                1. Go to <strong>Send Money</strong> option in your app.<br>
+                                2. Type the receiver number: <strong>01829981710 (Personal)</strong><br>
+                                3. Enter reference as your <strong>Name</strong> or <strong>CA Ref</strong><br>
+                                4. Enter your exact total amount: <strong id="olympiadInstructionAmount">0 BDT</strong><br>
+                                5. Send the money<br>
+                                6. Copy the <strong>Transaction ID</strong> given by your operator<br>
+                                7. Paste the Transaction ID below<br><br>
+                                <img src="assets/images/public/bKash qr.png" alt="bKash QR" style="max-width:260px; display:block; margin: 10px auto; border-radius: 8px;">
+                            </p>
                         </div>
-                        <div id="olympiadBankInst" style="display:none; margin-top:10px;">
-                            <p>Bank Transfer of <strong id="olympiadBankAmount">0 BDT</strong> to:</p>
+                        <div id="olympiadBankInst" style="display:none; margin-top:10px; margin-bottom:15px;">
+                            <p class="payment-instructions">Bank Transfer of <strong id="olympiadBankAmount">0 BDT</strong> to:</p>
                             <div style="background:#f1f5f9; padding:15px; border-radius:8px; font-size:0.9rem;">
-                                <strong>Bank:</strong> BRAC Bank PLC (MAZAR ROAD SUB BRANCH)<br>
-                                <strong>Acc Name:</strong> NEXOPAY<br>
-                                <strong>Acc No:</strong> 2076517310001<br>
-                                <strong>Routing/SWIFT:</strong> 060261997 / BRAKBDDH
+                                <strong>Bank:</strong> BRAC Bank PLC<br>
+                                <strong>Branch Name:</strong> MAZAR ROAD SUB BRANCH<br>
+                                <strong>Account Name:</strong> NEXOPAY<br>
+                                <strong>Account Number:</strong> 2076517310001<br>
+                                <strong>Routing Number:</strong> 060261997<br>
+                                <strong>SWIFT Code:</strong> BRAKBDDH
                             </div>
                         </div>
                     </div>
@@ -838,7 +846,6 @@ if (!$show_form) {
                             <select name="payment_method" id="olympiadPaymentMethod" class="form-control" onchange="showOlympiadPaymentSection()">
                                 <option value="">Select Method...</option>
                                 <option value="bKash">bKash</option>
-                                <option value="Nagad">Nagad</option>
                                 <option value="Bank">Bank Deposit</option>
                             </select>
                         </div>
