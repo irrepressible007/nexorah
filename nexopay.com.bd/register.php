@@ -681,7 +681,7 @@ if (!$show_form) {
                         <div id="mobilePayInstructions">
                             <p class="payment-instructions">
                                 1. Go to <strong>Payment</strong> option in your app or simply scan the QR<br>
-                                2. Type the receiver number: <strong>01829981710 (Merchant)</strong><br>
+                                2. Type the receiver number: <strong>01805548970 (Merchant)</strong><br>
                                 3. Enter reference as your <strong>Name</strong> or <strong>CA Ref</strong><br>
                                 4. Enter your exact total amount. (Example: <strong id="instructionAmount">200 BDT</strong>)<br>
                                 5. Make the payment.<br>
@@ -817,7 +817,7 @@ if (!$show_form) {
                         <div id="olympiadMobileInst" style="margin-bottom:15px;">
                             <p class="payment-instructions" style="background:#f8f9fa; padding:15px; border-radius:8px; border-left:4px solid #3498db;">
                                 1. Go to <strong>Payment</strong> option in your app or simply scan the QR<br>
-                                2. Type the receiver number: <strong>01829981710 (Merchant)</strong><br>
+                                2. Type the receiver number: <strong>01805548970 (Merchant)</strong><br>
                                 3. Enter reference as your <strong>Name</strong> or <strong>CA Ref</strong><br>
                                 4. Enter your exact total amount. (Example: <strong id="olympiadInstructionAmount">200 BDT</strong>)<br>
                                 5. Make the payment.<br>
