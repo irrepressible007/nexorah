@@ -1584,3 +1584,148 @@ html, body {
     color: var(--text-color);
     margin-bottom: 0;
 }
+
+/* ═══════════════════════════════════════════════════════
+   MOBILE RESPONSIVE — All pages updated Apr 2026
+═══════════════════════════════════════════════════════ */
+
+/* ── Shared section padding ── */
+@media (max-width: 768px) {
+    .section-padding {
+        padding: 60px 0;
+    }
+    .single-event-section {
+        padding-top: 80px;
+    }
+}
+
+/* ── Hero Text ── */
+@media (max-width: 768px) {
+    .hero-content h1 {
+        font-size: 2.2rem;
+        letter-spacing: 1px;
+    }
+    .hero-content .subtitle {
+        font-size: 1.1rem;
+    }
+    .hero-content p {
+        font-size: 1rem;
+    }
+    .hero-content {
+        padding: 20px 15px;
+    }
+}
+
+/* ── Event Cards (listing pages) ── */
+@media (max-width: 768px) {
+    .event-card {
+        margin-bottom: 20px;
+    }
+    .event-content {
+        padding: 16px;
+    }
+    .event-content h3 {
+        font-size: 1.2rem;
+    }
+    .event-meta span {
+        display: block;
+        margin-right: 0;
+        margin-bottom: 4px;
+        font-size: 0.85rem;
+    }
+    /* Stack register button below location */
+    .d-flex.justify-content-between.align-items-center {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 10px !important;
+    }
+    .d-flex.justify-content-between.align-items-center .btn {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* ── Single Event Page ── */
+@media (max-width: 768px) {
+    .single-event-content {
+        padding: 16px;
+        border-radius: 10px;
+    }
+    .single-event-content h2 {
+        font-size: 1.5rem;
+    }
+    .single-event-content .event-meta {
+        margin: 12px 0;
+    }
+    .single-event-content .event-meta span {
+        display: block;
+        margin-right: 0;
+        margin-bottom: 6px;
+        font-size: 0.9rem;
+    }
+    .event-description {
+        font-size: 1rem;
+    }
+    /* Stack sidebar below content on mobile */
+    .col-lg-4.col-md-6 {
+        margin-top: 20px;
+    }
+}
+
+/* ── Event Sidebar / Details Widget ── */
+@media (max-width: 768px) {
+    .event-sidebar {
+        border-radius: 10px;
+        margin-top: 20px;
+    }
+    .widget {
+        padding: 16px;
+    }
+    .widget h3 {
+        font-size: 1.2rem;
+    }
+    .event-info li {
+        font-size: 0.92rem;
+        flex-direction: row;
+        align-items: flex-start;
+        margin-bottom: 12px;
+        line-height: 1.5;
+    }
+    .event-info li i {
+        flex-shrink: 0;
+        margin-right: 8px;
+        margin-top: 3px;
+    }
+    .btn-primary.btn-lg.w-100 {
+        font-size: 0.95rem;
+        padding: 14px;
+    }
+}
+
+/* ── Page Banner ── */
+@media (max-width: 768px) {
+    .page-banner {
+        padding: 80px 0 30px;
+    }
+    .page-banner-content h2 {
+        font-size: 1.8rem;
+    }
+}
+
+/* ── Section Titles ── */
+@media (max-width: 768px) {
+    .section-title h2 {
+        font-size: 1.8rem;
+    }
+    .section-title p {
+        font-size: 0.95rem;
+    }
+}
+
+/* ── Upcoming / Past Events headings ── */
+@media (max-width: 768px) {
+    .upcoming-events h3,
+    .past-events h3 {
+        font-size: 1.3rem;
+    }
+}

@@ -83,3 +83,85 @@ body {
         height: auto;
     }
 }
+
+/* ── Participant Card (NSO form) ── */
+@media (max-width: 768px) {
+    .participant-card {
+        border-radius: 10px !important;
+        margin-bottom: 1.2rem !important;
+    }
+    .participant-card-header {
+        font-size: 1rem !important;
+        padding: 12px 16px !important;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+    .participant-card-body {
+        padding: 14px !important;
+    }
+}
+
+/* ── Grand Total Display ── */
+@media (max-width: 768px) {
+    #totalPriceDisplay {
+        font-size: 1.05rem !important;
+        padding: 12px 16px !important;
+        border-radius: 10px;
+    }
+}
+
+/* ── Bank Info Box ── */
+@media (max-width: 480px) {
+    div[style*="background:#f1f5f9"] {
+        font-size: 0.85rem !important;
+        padding: 12px !important;
+        word-break: break-word;
+    }
+}
+
+/* ── Segment Cards ── */
+@media (max-width: 600px) {
+    .segment-groups {
+        flex-direction: column !important;
+    }
+    .segment-card {
+        width: 100% !important;
+        margin-bottom: 10px;
+    }
+    .segment-card-header {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+}
+
+/* ── Action Buttons (top of form) ── */
+@media (max-width: 576px) {
+    .action-buttons-right {
+        flex-direction: column !important;
+        gap: 8px !important;
+        width: 100%;
+    }
+    .action-buttons-right a {
+        width: 100% !important;
+        text-align: center !important;
+    }
+}
+
+/* ── Payment method dropdown ── */
+@media (max-width: 768px) {
+    #paymentMethod,
+    #olympiadPaymentMethod {
+        font-size: 1rem;
+        padding: 12px;
+    }
+}
+
+/* ── Hub Event Cards ── */
+@media (max-width: 600px) {
+    .event-hub-grid {
+        grid-template-columns: 1fr !important;
+    }
+    .event-hub-card {
+        border-radius: 10px !important;
+    }
+}
