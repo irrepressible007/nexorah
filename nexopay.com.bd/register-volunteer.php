@@ -117,10 +117,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
     <title>Volunteer Registration | Nexopay</title>
     <link rel="icon" type="image/png" href="assets/images/public/Nex Pay new logo.png">
     <link rel="shortcut icon" href="assets/images/public/Nex Pay new logo.png">
     <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/dark-mode.css">
     <link rel="stylesheet" href="assets/css/mobile.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
@@ -364,7 +366,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 <div class="terms-box">
                     <label style="font-weight:700; color:#d35400; margin-bottom:10px; display:block;">Terms &amp; Conditions</label>
-                    <p style="font-size:0.9rem; color:#555; margin-bottom:15px;">Do you agree with all of the terms and conditions of Bangladesh Space Research Society (BSRS)? *</p>
+                    <p style="font-size:0.9rem; color:#555; margin-bottom:15px;">Do you agree with all of the terms and conditions of Nexorah? *</p>
                     <div class="radio-options">
                         <label><input type="radio" name="terms" value="Yes" required> Yes</label>
                         <label><input type="radio" name="terms" value="No"> No</label>

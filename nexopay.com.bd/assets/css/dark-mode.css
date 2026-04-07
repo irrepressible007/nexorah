@@ -1,0 +1,794 @@
+/* ================================================================
+   NEXOPAY — Dark Mode + Mobile Optimisation
+   Includes: register.php, register-ca.php, register-volunteer.php
+             hub cards, form sections, segment cards, payment UI
+   Added: April 2026
+   Scope: nexopay.com.bd subdomain
+   ================================================================ */
+
+/* ──────────────────────────────────────────────
+   The NexoPay site already uses a dark background.
+   This file:
+     1. Ensures ALL white-panel text renders correctly
+        in OS dark mode (browser forces light backgrounds
+        transparent → text becomes invisible).
+     2. Adds defensive mobile layout tweaks.
+   ────────────────────────────────────────────── */
+
+@media (prefers-color-scheme: dark) {
+    /* ── Prevent browser from forcing transparency on white surfaces ── */
+    .upcoming-events,
+    .past-events,
+    .mission-section,
+    .vision-section,
+    .highlights-section,
+    .partners-section,
+    .ongoing-events-section,
+    .event-details,
+    .registration-form,
+    .contact-form-section,
+    .contact-info,
+    .social-links,
+    .upcoming-events-sidebar,
+    .highlight-item,
+    .partner-item,
+    .event-desc-content,
+    .content-wrapper {
+        background: #1a2235 !important;
+        color: #e6edf3 !important;
+        border-color: rgba(124, 58, 237, 0.25) !important;
+    }
+
+    /* ── Event sections headings ── */
+    .upcoming-events h2,
+    .past-events h2,
+    .highlights-section h2,
+    .partners-section h2,
+    .ongoing-events-section h2,
+    .content-wrapper h1,
+    .content-wrapper h2,
+    .contact-form-section h1,
+    .contact-info h3,
+    .social-links h3,
+    .upcoming-events-sidebar h3 {
+        background: linear-gradient(45deg, #7c3aed, #06b6d4) !important;
+        -webkit-background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+        background-clip: text !important;
+    }
+
+    /* ── General text inside white panels ── */
+    .upcoming-events p,
+    .past-events p,
+    .mission-section p,
+    .vision-section p,
+    .content-wrapper p,
+    .contact-form-section p,
+    .contact-info p,
+    .upcoming-events-sidebar p,
+    .highlight-item h4,
+    .partner-item h4,
+    .info-item h4,
+    .info-item p,
+    .sidebar-event h4,
+    .sidebar-event p {
+        color: #c9d1d9 !important;
+    }
+
+    /* ── Event info text in white-panel cards ── */
+    .upcoming-events .event-info h3,
+    .past-events .event-info h3 {
+        color: #e6edf3 !important;
+    }
+
+    .upcoming-events .event-info p,
+    .past-events .event-info p,
+    .upcoming-events .event-meta span,
+    .past-events .event-meta span {
+        color: #8b949e !important;
+    }
+
+    /* ── Event cards inside white sections ── */
+    .upcoming-events .event-card,
+    .past-events .event-card {
+        background: #1e2b3d !important;
+        border-color: rgba(124, 58, 237, 0.2) !important;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+    }
+
+    /* ── No-events state ── */
+    .no-events {
+        background: rgba(30, 43, 61, 0.6) !important;
+        border-color: rgba(124, 58, 237, 0.2) !important;
+    }
+
+    .no-events p {
+        color: #c9d1d9 !important;
+    }
+
+    /* ── Event description content override ── */
+    .event-desc-content,
+    .event-desc-content * {
+        color: #c9d1d9 !important;
+        background-color: transparent !important;
+    }
+
+    .event-desc-content h1,
+    .event-desc-content h2,
+    .event-desc-content h3,
+    .event-desc-content h4,
+    .event-desc-content h5 {
+        color: #e6edf3 !important;
+        -webkit-text-fill-color: #e6edf3 !important;
+    }
+
+    .event-desc-content table th {
+        background: #253044 !important;
+        color: #e6edf3 !important;
+    }
+
+    .event-desc-content table th,
+    .event-desc-content table td {
+        border-color: rgba(255,255,255,0.1) !important;
+        color: #c9d1d9 !important;
+    }
+
+    /* ── Event details page ── */
+    .event-details {
+        background: #141d2e !important;
+        border-color: rgba(124, 58, 237, 0.2) !important;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.5) !important;
+    }
+
+    .event-info h1 {
+        background: linear-gradient(45deg, #7c3aed, #06b6d4) !important;
+        -webkit-background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+        background-clip: text !important;
+    }
+
+    .event-date,
+    .event-fee {
+        background: #1e2b3d !important;
+        color: #c9d1d9 !important;
+        border-left-color: #7c3aed !important;
+    }
+
+    .event-description h3 {
+        background: linear-gradient(45deg, #7c3aed, #06b6d4) !important;
+        -webkit-background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+        background-clip: text !important;
+    }
+
+    /* ── Registration form ── */
+    .registration-form {
+        background: linear-gradient(135deg, #141d2e 0%, #1a2440 100%) !important;
+        border-top-color: #7c3aed !important;
+    }
+
+    .registration-form h3 {
+        background: linear-gradient(45deg, #7c3aed, #06b6d4) !important;
+        -webkit-background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+        background-clip: text !important;
+    }
+
+    .form-group label {
+        color: #c9d1d9 !important;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+        background: #1e2b3d !important;
+        border-color: rgba(124, 58, 237, 0.3) !important;
+        color: #e6edf3 !important;
+    }
+
+    .form-group input::placeholder,
+    .form-group textarea::placeholder {
+        color: #8b949e !important;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+        border-color: #7c3aed !important;
+        box-shadow: 0 0 0 3px rgba(124,58,237,0.25) !important;
+    }
+
+    /* ── Highlight items ── */
+    .highlight-item {
+        background: #1a2235 !important;
+        border-color: rgba(124, 58, 237, 0.2) !important;
+    }
+
+    .highlight-item h4 {
+        color: #e6edf3 !important;
+    }
+
+    /* ── Partner items ── */
+    .partner-item {
+        background: #1a2235 !important;
+        border-color: rgba(52, 152, 219, 0.3) !important;
+    }
+
+    .partner-item h4 {
+        color: #e6edf3 !important;
+    }
+
+    /* ── Contact page ── */
+    .contact-form-section,
+    .contact-info,
+    .social-links,
+    .upcoming-events-sidebar {
+        background: #1a2235 !important;
+        border-color: rgba(124, 58, 237, 0.25) !important;
+    }
+
+    .info-item {
+        background: rgba(124, 58, 237, 0.08) !important;
+    }
+
+    .info-item:hover {
+        background: rgba(124, 58, 237, 0.15) !important;
+    }
+
+    /* ── Sidebar event items ── */
+    .sidebar-event {
+        border-bottom-color: rgba(255,255,255,0.08) !important;
+    }
+
+    /* ── Footer ── */
+    footer {
+        background: #080d18 !important;
+        color: #8b949e !important;
+    }
+
+    footer a {
+        color: #8b949e !important;
+    }
+
+    footer a:hover {
+        color: #06b6d4 !important;
+    }
+
+    /* ── Status badge backgrounds (ensure visibility) ── */
+    .status {
+        background: rgba(39, 174, 96, 0.2) !important;
+        color: #5fdc99 !important;
+    }
+
+    .fee {
+        background: rgba(52, 152, 219, 0.2) !important;
+        color: #7ac7f0 !important;
+    }
+
+    .date {
+        background: rgba(155, 89, 182, 0.2) !important;
+        color: #d4aaef !important;
+    }
+
+    /* ── btn-secondary in dark mode ── */
+    .btn-secondary {
+        background: #1e2b3d !important;
+        color: #c9d1d9 !important;
+        border-color: rgba(255,255,255,0.15) !important;
+    }
+}
+
+
+/* ================================================================
+   MOBILE OPTIMISATION — nexopay.com.bd (light + dark)
+   ================================================================ */
+
+/* ── Prevent overflow ── */
+html, body {
+    overflow-x: hidden;
+    max-width: 100%;
+}
+
+/* ── Responsive typography using clamp ── */
+@media (max-width: 768px) {
+    /* Nav */
+    .navbar .container {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .nav-toggle {
+        display: block !important;
+    }
+
+    .nav-menu {
+        display: none !important;
+        width: 100%;
+        flex-direction: column;
+        gap: 0;
+        background: #000;
+        border-top: 1px solid rgba(124, 58, 237, 0.3);
+        padding: 10px 0;
+    }
+
+    .nav-menu.open {
+        display: flex !important;
+    }
+
+    .nav-menu li a {
+        display: block;
+        padding: 12px 20px;
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+        min-height: 44px;
+    }
+
+    /* Hero */
+    .hero {
+        padding: 80px 0 60px !important;
+    }
+
+    .main-heading {
+        font-size: clamp(1.8rem, 7vw, 2.6rem) !important;
+        line-height: 1.2 !important;
+    }
+
+    .subtitle {
+        font-size: clamp(0.85rem, 3.5vw, 1.1rem) !important;
+        letter-spacing: 1px !important;
+    }
+
+    .hero-content p {
+        font-size: clamp(0.9rem, 3vw, 1.05rem) !important;
+    }
+
+    .cta-button {
+        padding: 12px 22px !important;
+        font-size: 1rem !important;
+    }
+
+    /* Event sections */
+    .upcoming-events,
+    .past-events {
+        padding: 40px 16px !important;
+        border-radius: 12px !important;
+        margin: 20px 0 !important;
+    }
+
+    .upcoming-events h2,
+    .past-events h2 {
+        font-size: clamp(1.5rem, 6vw, 2rem) !important;
+        margin-bottom: 1.5rem !important;
+    }
+
+    .events-container {
+        grid-template-columns: 1fr !important;
+        gap: 1rem !important;
+        padding: 0 !important;
+    }
+
+    .events-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1rem !important;
+        padding: 0 !important;
+    }
+
+    .event-card {
+        max-width: 100% !important;
+    }
+
+    .event-info {
+        padding: 0.875rem !important;
+        min-height: unset !important;
+    }
+
+    .event-info h3 {
+        font-size: 1rem !important;
+    }
+
+    /* Highlights / partners */
+    .highlights-section,
+    .partners-section,
+    .ongoing-events-section,
+    .mission-section,
+    .vision-section {
+        padding: 32px 16px !important;
+        border-radius: 12px !important;
+    }
+
+    .highlights-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1rem !important;
+        padding: 0 !important;
+    }
+
+    .partners-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 1rem !important;
+        padding: 0 !important;
+    }
+
+    /* Event details */
+    .event-header {
+        grid-template-columns: 1fr !important;
+        gap: 1.5rem !important;
+        padding: 1.5rem !important;
+    }
+
+    .event-description {
+        padding: 0 1.25rem 1.5rem !important;
+    }
+
+    .event-info h1 {
+        font-size: clamp(1.3rem, 5vw, 1.8rem) !important;
+    }
+
+    /* Registration form */
+    .registration-form {
+        padding: 1.5rem !important;
+    }
+
+    .registration-form h3 {
+        font-size: 1.4rem !important;
+    }
+
+    /* Contact page */
+    .contact-wrapper {
+        grid-template-columns: 1fr !important;
+    }
+
+    .contact-form-section,
+    .contact-info,
+    .social-links,
+    .upcoming-events-sidebar {
+        padding: 1.5rem !important;
+        border-radius: 12px !important;
+    }
+
+    .contact-form-section h1 {
+        font-size: 1.6rem !important;
+    }
+
+    /* Content wrapper (about page) */
+    .content-wrapper h1,
+    .content-wrapper h2 {
+        font-size: clamp(1.4rem, 5.5vw, 1.9rem) !important;
+    }
+
+    .content-wrapper p {
+        font-size: 1rem !important;
+    }
+
+    /* Buttons */
+    .btn-large {
+        padding: 14px 24px !important;
+        font-size: 1rem !important;
+    }
+
+    .cta-button {
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* Page header */
+    .page-header {
+        padding: 80px 0 40px !important;
+        text-align: center;
+    }
+
+    .page-header h1 {
+        font-size: clamp(1.6rem, 6.5vw, 2.2rem) !important;
+    }
+}
+
+/* ================================================================
+   REGISTER PAGE — Dark mode overrides for inline-styled elements
+   ================================================================ */
+@media (prefers-color-scheme: dark) {
+
+    /* Hub: section background */
+    .hub-section {
+        background: #0d1117 !important;
+    }
+
+    .hub-section h2 {
+        color: #e6edf3 !important;
+    }
+
+    .hub-section .section-label {
+        color: #06b6d4 !important;
+    }
+
+    /* Hub event cards */
+    .event-hub-card {
+        background: #161b22 !important;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.5) !important;
+    }
+
+    .event-hub-card-body h3 {
+        color: #e6edf3 !important;
+    }
+
+    .event-hub-card-meta {
+        color: #8b949e !important;
+    }
+
+    .event-hub-card-body p {
+        color: #c9d1d9 !important;
+    }
+
+    /* Form section background */
+    .form-section {
+        background: #0d1117 !important;
+    }
+
+    /* Registration form wrapper */
+    .registration-form {
+        background: #161b22 !important;
+        border-top-color: #7c3aed !important;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.5) !important;
+    }
+
+    .registration-form h3 {
+        background: linear-gradient(45deg, #7c3aed, #06b6d4) !important;
+        -webkit-background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+        background-clip: text !important;
+    }
+
+    .registration-form .form-desc {
+        color: #8b949e !important;
+    }
+
+    /* Registration type toggle buttons */
+    .reg-type-btn {
+        background: #1e2b3d !important;
+        border-color: rgba(124, 58, 237, 0.25) !important;
+        color: #c9d1d9 !important;
+    }
+
+    .reg-type-btn .btn-sub {
+        color: #8b949e !important;
+    }
+
+    .reg-type-btn.active {
+        background: #1e1a3d !important;
+        border-color: #7c3aed !important;
+        color: #a78bfa !important;
+    }
+
+    .reg-type-btn.active .btn-sub {
+        color: #7c3aed !important;
+    }
+
+    /* Form labels and controls */
+    .registration-form label,
+    .form-group label,
+    .option-label {
+        color: #c9d1d9 !important;
+    }
+
+    .segments-main-label {
+        color: #e6edf3 !important;
+    }
+
+    .segments-main-label span {
+        color: #8b949e !important;
+    }
+
+    .registration-form .form-control,
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+        background: #1e2b3d !important;
+        border-color: rgba(124, 58, 237, 0.3) !important;
+        color: #e6edf3 !important;
+    }
+
+    .registration-form .form-control:focus,
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+        border-color: #7c3aed !important;
+        box-shadow: 0 0 0 3px rgba(124,58,237,0.25) !important;
+    }
+
+    /* Participant cards */
+    .participant-card {
+        border-color: rgba(124, 58, 237, 0.25) !important;
+    }
+
+    .participant-card-header {
+        background: linear-gradient(135deg, #1a2b4a, #1e3560) !important;
+        color: #7ab3f0 !important;
+    }
+
+    .participant-card-header.optional {
+        background: linear-gradient(135deg, #1e2530, #252d3a) !important;
+        color: #8b949e !important;
+    }
+
+    .participant-card-body {
+        background: #161b22 !important;
+    }
+
+    /* Segment cards */
+    .segment-card {
+        border-color: rgba(124, 58, 237, 0.2) !important;
+    }
+
+    /* Olympiad segment */
+    .seg-olympiad .segment-card-header {
+        background: linear-gradient(135deg, #1a2b4a, #1e3560) !important;
+        color: #7ab3f0 !important;
+    }
+
+    /* Art segment */
+    .seg-art .segment-card-header {
+        background: linear-gradient(135deg, #2d1a2e, #3d1e40) !important;
+        color: #e096c8 !important;
+    }
+
+    /* Photo segment */
+    .seg-photo .segment-card-header {
+        background: linear-gradient(135deg, #2d2210, #3d2e16) !important;
+        color: #f0c070 !important;
+    }
+
+    /* Group segment */
+    .seg-group .segment-card-header {
+        background: linear-gradient(135deg, #102d1a, #163d22) !important;
+        color: #70d096 !important;
+    }
+
+    .segment-card-body {
+        background: #161b22 !important;
+    }
+
+    .seg-fee-note {
+        color: #8b949e !important;
+    }
+
+    .segment-card-footer {
+        background: #1e2530 !important;
+        border-top-color: rgba(255,255,255,0.08) !important;
+        color: #c9d1d9 !important;
+    }
+
+    /* Group notice */
+    .group-notice {
+        background: #2a1f08 !important;
+        border-color: #5a4010 !important;
+        color: #f0c070 !important;
+    }
+
+    /* Payment section */
+    .payment-section-divider {
+        border-top-color: rgba(255,255,255,0.1) !important;
+    }
+
+    .payment-title {
+        color: #e6edf3 !important;
+    }
+
+    .payment-instructions {
+        background: #1e2530 !important;
+        border-left-color: #7c3aed !important;
+        color: #c9d1d9 !important;
+    }
+
+    /* Bank details box */
+    div[style*="background:#f1f5f9"] {
+        background: #1e2530 !important;
+        color: #c9d1d9 !important;
+    }
+
+    /* Back link */
+    .back-link {
+        color: #7c3aed !important;
+    }
+
+    /* Error box */
+    div[style*="background:#fee2e2"] {
+        background: #2d1010 !important;
+        border-color: #7f2020 !important;
+        color: #fca5a5 !important;
+    }
+
+    /* No events box */
+    .no-events-box {
+        color: #8b949e !important;
+    }
+}
+
+/* ================================================================
+   REGISTER — Mobile overrides (light + dark)
+   ================================================================ */
+@media (max-width: 768px) {
+    .hub-section {
+        padding: 40px 0 60px !important;
+    }
+
+    .event-hub-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1.2rem !important;
+    }
+
+    .event-hub-card-img {
+        height: 160px !important;
+    }
+
+    .registration-form {
+        padding: 1.5rem !important;
+    }
+
+    .reg-type-toggle {
+        flex-direction: column !important;
+    }
+
+    .action-buttons-container {
+        flex-direction: column !important;
+        gap: 1rem !important;
+    }
+
+    .action-buttons-right {
+        flex-direction: column !important;
+    }
+
+    .action-buttons-right a {
+        text-align: center !important;
+    }
+
+    .segment-card-header {
+        flex-wrap: wrap !important;
+        gap: 6px !important;
+    }
+}
+
+/* ================================================================
+   REGISTER-CA / REGISTER-VOLUNTEER dark mode
+   ================================================================ */
+@media (prefers-color-scheme: dark) {
+    /* These pages share the same form structure */
+    .ca-form-section,
+    .volunteer-form-section {
+        background: #0d1117 !important;
+    }
+
+    .ca-hero,
+    .volunteer-hero {
+        /* Already dark via background image overlay — just ensure text */
+        color: #fff !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .partners-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .main-heading {
+        font-size: clamp(1.5rem, 8vw, 2rem) !important;
+    }
+
+    .event-meta {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+    }
+
+    .social-icons {
+        flex-wrap: wrap;
+    }
+
+    /* Touch targets */
+    .btn-primary,
+    .btn-secondary,
+    .cta-button {
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .event-card img {
+        max-height: 160px !important;
+    }
+}
