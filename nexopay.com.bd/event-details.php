@@ -46,6 +46,12 @@ if (!$event) {
     
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <style>
+        .event-desc-content, .event-desc-content * {
+            color: #e2e8f0 !important;
+            background-color: transparent !important;
+        }
+    </style>
 </head>
 <body>
     <!-- Navigation -->
@@ -102,7 +108,57 @@ if (!$event) {
 
             <div class="event-description">
                 <h3>Event Description</h3>
-                <div class="event-desc-content"><?php echo clean_html_description($event['description']); ?></div>
+                <div class="event-desc-content">
+                    <?php if ($event_id == 3): ?>
+                        <p style="margin-bottom: 20px;">Join us for the <strong>National STEAM Olympiad</strong> &mdash; a premier multi-discipline competition designed to inspire young minds across Bangladesh. Compete in STEAM Olympiad, Art, and Photography segments. All registrations are individual (solo).</p>
+                        
+                        <h4 style="margin-top: 30px; margin-bottom: 15px; font-size: 1.2rem; color: #fff;">Segment Details</h4>
+                        <ul style="list-style-type: disc; margin-left: 20px; line-height: 1.8;">
+                            <li>Organized in two rounds: Selection Round and Final Round.</li>
+                            <li>Final Round will be held alongside the National STEAM Carnival.</li>
+                            <li>Selection Round is institution-based.</li>
+                            <li>Using a calculator is prohibited.</li>
+                            <li>Format: Short questions / MCQ.</li>
+                            <li>Participants must bring their own stationery (pen, pencil, board, etc.).</li>
+                            <li>Top 100 of Selection Round receive medals and achievement certificates.</li>
+                            <li>Top 300 of Selection Round advance to the Final Round.</li>
+                            <li>Theme: Astronomy, Space, Technology & Science.</li>
+                        </ul>
+                        
+                        <h4 style="margin-top: 30px; margin-bottom: 15px; font-size: 1.2rem; color: #fff;">Art Exhibition &amp; Competition</h4>
+                        <ul style="list-style-type: disc; margin-left: 20px; line-height: 1.8;">
+                            <li>Digital artworks are not permitted.</li>
+                            <li>Participants may submit sketch and/or colored art.</li>
+                            <li>Canvas/paper sizes: 8&times;8", 10&times;8", 12&times;8", 12&times;12", 20&times;12", 20&times;20" (inches).</li>
+                            <li>Any art materials are permitted.</li>
+                            <li>Participants must sign their artwork.</li>
+                            <li>Stolen or copied artwork will be disqualified.</li>
+                            <li>Captions are mandatory (English or Bangla) &mdash; include Caption, Name, and Institution on the back of the artwork.</li>
+                            <li>Authorities may decline artworks containing nudity, violence, or political content.</li>
+                            <li>No changes allowed after submission.</li>
+                            <li>Artwork must be submitted by the first day of the event. All submitted artworks will be displayed.</li>
+                            <li>Only for Primary (Class 1&ndash;5) and Junior (Class 6&ndash;8) participants.</li>
+                            <li>Participants have 1 hour to complete their artwork.</li>
+                            <li>Bring your own materials: color pencils, board, pencil, eraser, sharpener, etc.</li>
+                            <li>Theme: Open.</li>
+                        </ul>
+
+                        <h4 style="margin-top: 30px; margin-bottom: 15px; font-size: 1.2rem; color: #fff;">Photography</h4>
+                        <ul style="list-style-type: disc; margin-left: 20px; line-height: 1.8;">
+                            <li>Photos must be submitted before the event &mdash; this is a pre-registration exhibition.</li>
+                            <li>All photos will be framed and displayed at the event.</li>
+                            <li>Submit photos in high-resolution via a downloadable drive link.</li>
+                            <li>Each participant may submit one photo.</li>
+                            <li>Stolen or copied photos will be disqualified.</li>
+                            <li>Captions are mandatory (English or Bangla) &mdash; include Caption, Name, and Institution with the photo / in the registration form.</li>
+                            <li>Authorities may decline photos containing nudity, violence, or political content.</li>
+                            <li>No changes allowed after submission.</li>
+                            <li>Participants may take back their framed photos after the event.</li>
+                        </ul>
+                    <?php else: ?>
+                        <?php echo clean_html_description($event['description']); ?>
+                    <?php endif; ?>
+                </div>
             </div>
 
             <?php if ($event['status'] == 'upcoming'): ?>
