@@ -467,19 +467,19 @@ body {
 
 .status-upcoming {
     background: linear-gradient(45deg, #3498db, #5dade2);
-    color: white;
+    color: white !important;
     box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
 }
 
 .status-ongoing {
     background: linear-gradient(45deg, #f39c12, #f5b041);
-    color: white;
+    color: white !important;
     box-shadow: 0 4px 15px rgba(243, 156, 18, 0.3);
 }
 
 .status-past {
     background: linear-gradient(45deg, #95a5a6, #bdc3c7);
-    color: white;
+    color: white !important;
     box-shadow: 0 4px 15px rgba(149, 165, 166, 0.3);
 }
 
@@ -567,6 +567,13 @@ body {
 
 .event-status {
     margin-bottom: 1.5rem;
+    display: inline-block;
+    padding: 0.4rem 1rem;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
 }
 
 .event-date,
