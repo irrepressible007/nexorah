@@ -58,72 +58,155 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $event) {
 
         $reg_type = $_POST['reg_type'] ?? '';
         $full_name = '';
-        $email = ''; // STEAM form doesn't explicitly ask for email
+        $email = '';
         $phone = '';
         $guardian_number = '';
-        $ticket_quantity = 1;
+        $ticket_quantity = 0;
         
+        // ── 1. Determine Registration Type Dynamically for STEAM Carnival ──
+        $solo_qty = $_POST['solo_qty'] ?? [];
+        $grp_toggle = !empty($_POST['grp_toggle']);
+        $is_carnival = (!empty($solo_qty) || $grp_toggle || isset($_POST['grp_segments']));
+
+        $derived_segments = $_POST['segments'] ?? [];
+
+        if ($is_carnival) {
+            $total_solo_tickets = 0;
+            $max_solo_qty = 0;
+            foreach ($solo_qty as $key => $val) {
+                $int_val = max(0, (int)$val);
+                if ($int_val > 0) {
+                    $total_solo_tickets += $int_val;
+                    if ($int_val > $max_solo_qty) $max_solo_qty = $int_val;
+                    $derived_segments[] = $key . " (x" . $int_val . ")";
+                }
+            }
+
+            if (!empty($_POST['grp_segments'])) {
+                foreach ($_POST['grp_segments'] as $gseg) {
+                    $derived_segments[] = $gseg . " [Group]";
+                }
+            }
+
+            if ($max_solo_qty > 0 && $grp_toggle) {
+                $reg_type = 'both';
+            } elseif ($max_solo_qty > 0) {
+                $reg_type = 'solo';
+            } elseif ($grp_toggle) {
+                $reg_type = 'group';
+            } else {
+                throw new Exception("Please select at least one segment.");
+            }
+        }
+
         $extra_data = [
             'reg_type'        => $reg_type,
-            'segments'        => $_POST['segments'] ?? [],
-            'nexorah_event_id'=> $event['id'],  // store original nexorah ID for traceability
+            'segments'        => $derived_segments,
+            'nexorah_event_id'=> $event['id'],
         ];
 
-        if ($reg_type === 'solo') {
-            $full_name = trim($_POST['full_name'] ?? '');
-            $email = trim($_POST['email'] ?? '');
-            $phone = trim($_POST['contact'] ?? '');
+        if ($is_carnival) {
+            $extra_data['solo_qty_raw'] = $solo_qty;
+        }
+
+        // ── 2. Process Participant Details based on Type ──
+        if ($reg_type === 'solo' || $reg_type === 'both' || ($reg_type === 'solo' && !$is_carnival)) {
+            // "Your Details" becomes primary contact
+            $full_name       = trim($_POST['full_name'] ?? '');
+            $email           = trim($_POST['email'] ?? '');
+            $phone           = trim($_POST['contact'] ?? '');
             $guardian_number = trim($_POST['emergency_contact'] ?? '');
-            
-            $extra_data['category'] = $_POST['category'] ?? '';
-            $extra_data['institution'] = trim($_POST['institution'] ?? '');
-            $extra_data['class'] = trim($_POST['class'] ?? '');
-            $extra_data['class_grade'] = trim($_POST['class_grade'] ?? '');
-            $extra_data['guardian_name'] = trim($_POST['guardian_name'] ?? '');
-            $extra_data['ca_reference'] = trim($_POST['ca_reference'] ?? '');
-            $ticket_quantity = 1;
+
+            $extra_data['solo'] = [
+                'category'       => $_POST['category'] ?? $_POST['class_grade'] ?? '',
+                'institution'    => trim($_POST['institution'] ?? ''),
+                'class_grade'    => trim($_POST['class_grade'] ?? ''),
+                'guardian_name'  => trim($_POST['guardian_name'] ?? ''),
+                'ca_reference'   => trim($_POST['ca_reference'] ?? ''),
+            ];
+
+            if ($is_carnival) {
+                $ticket_quantity += $max_solo_qty;
+                // Add dynamically captured extra participants if any
+                if ($max_solo_qty > 1 && !empty($_POST['add_p2_name'])) {
+                    $extra_data['solo']['add_p2'] = [
+                        'name' => trim($_POST['add_p2_name']),
+                        'institution' => trim($_POST['add_p2_institution'] ?? ''),
+                        'class' => trim($_POST['add_p2_class_grade'] ?? ''),
+                        'contact' => trim($_POST['add_p2_contact'] ?? '')
+                    ];
+                }
+                if ($max_solo_qty > 2 && !empty($_POST['add_p3_name'])) {
+                    $extra_data['solo']['add_p3'] = [
+                        'name' => trim($_POST['add_p3_name']),
+                        'institution' => trim($_POST['add_p3_institution'] ?? ''),
+                        'class' => trim($_POST['add_p3_class_grade'] ?? ''),
+                        'contact' => trim($_POST['add_p3_contact'] ?? '')
+                    ];
+                }
+            } else {
+                $ticket_quantity = 1; // Olympiad
+            }
 
             if (empty($full_name) || empty($phone)) {
                 throw new Exception("Full Name and Contact Number are required.");
             }
-        } elseif ($reg_type === 'group') {
-            $full_name = trim($_POST['grp_p1_name'] ?? 'Group Leader');
-            $email = trim($_POST['email'] ?? '');
-            $phone = trim($_POST['grp_p1_contact'] ?? '');
-            $guardian_number = trim($_POST['grp_emergency_contact'] ?? '');
-            
-            $extra_data['group_category'] = $_POST['group_category'] ?? '';
-            $extra_data['p1'] = [
-                'name'        => trim($_POST['grp_p1_name'] ?? ''),
-                'institution' => trim($_POST['grp_p1_institution'] ?? ''),
-                'class'       => trim($_POST['grp_p1_class'] ?? ''),
-                'contact'     => trim($_POST['grp_p1_contact'] ?? '')
+        }
+
+        if ($reg_type === 'group' || $reg_type === 'both') {
+            if ($reg_type === 'group' && !$is_carnival) {
+                // Not possible in current design, but handle fallback
+                $full_name       = trim($_POST['grp_p1_name'] ?? 'Group Leader');
+                $email           = trim($_POST['grp_email'] ?? '');
+                $phone           = trim($_POST['grp_p1_contact'] ?? '');
+                $guardian_number = trim($_POST['grp_emergency_contact'] ?? '');
+            } else if ($reg_type === 'group' && $is_carnival) {
+                // Group only in carnival - "Your Details" is still filled and meant for primary contact
+                $full_name       = trim($_POST['full_name'] ?? trim($_POST['grp_p1_name'] ?? 'Group Leader'));
+                $email           = trim($_POST['email'] ?? trim($_POST['grp_email'] ?? ''));
+                $phone           = trim($_POST['contact'] ?? trim($_POST['grp_p1_contact'] ?? ''));
+                $guardian_number = trim($_POST['emergency_contact'] ?? trim($_POST['grp_emergency_contact'] ?? ''));
+            }
+
+            $extra_data['group'] = [
+                'group_category' => $_POST['group_category'] ?? '',
+                'guardian_name'  => trim($_POST['grp_guardian_name'] ?? trim($_POST['guardian_name']??'')),
+                'ca_reference'   => trim($_POST['grp_ca_reference'] ?? trim($_POST['ca_reference']??'')),
+                'p1' => [
+                    'name'        => trim($_POST['grp_p1_name'] ?? ''),
+                    'institution' => trim($_POST['grp_p1_institution'] ?? ''),
+                    'class'       => trim($_POST['grp_p1_class'] ?? ''),
+                    'contact'     => trim($_POST['grp_p1_contact'] ?? ''),
+                    'email'       => trim($_POST['grp_email'] ?? ''),
+                ],
+                'p2' => [
+                    'name'        => trim($_POST['grp_p2_name'] ?? ''),
+                    'institution' => trim($_POST['grp_p2_institution'] ?? ''),
+                    'class'       => trim($_POST['grp_p2_class'] ?? ''),
+                    'contact'     => trim($_POST['grp_p2_contact'] ?? ''),
+                ],
             ];
-            $extra_data['p2'] = [
-                'name'        => trim($_POST['grp_p2_name'] ?? ''),
-                'institution' => trim($_POST['grp_p2_institution'] ?? ''),
-                'class'       => trim($_POST['grp_p2_class'] ?? ''),
-                'contact'     => trim($_POST['grp_p2_contact'] ?? '')
-            ];
-            $ticket_quantity = 2;
-            
+
+            $grp_size = 2;
             if (!empty($_POST['grp_p3_name'])) {
-                $extra_data['p3'] = [
+                $extra_data['group']['p3'] = [
                     'name'        => trim($_POST['grp_p3_name'] ?? ''),
                     'institution' => trim($_POST['grp_p3_institution'] ?? ''),
                     'class'       => trim($_POST['grp_p3_class'] ?? ''),
-                    'contact'     => trim($_POST['grp_p3_contact'] ?? '')
+                    'contact'     => trim($_POST['grp_p3_contact'] ?? ''),
                 ];
-                $ticket_quantity = 3;
+                $grp_size = 3;
             }
-            $extra_data['guardian_name'] = trim($_POST['grp_guardian_name'] ?? '');
-            $extra_data['ca_reference'] = trim($_POST['grp_ca_reference'] ?? '');
 
             if (empty($_POST['grp_p1_name']) || empty($_POST['grp_p2_name'])) {
-                throw new Exception("Group requires at least 2 participant names.");
+                throw new Exception("Group registration requires at least 2 participant names.");
             }
-        } else {
-            throw new Exception("Invalid registration type selected.");
+
+            $ticket_quantity += $grp_size;
+        }
+
+        if ($reg_type !== 'solo' && $reg_type !== 'group' && $reg_type !== 'both') {
+            throw new Exception("Invalid registration type selected or no segments chosen.");
         }
 
         $total_amount = floatval($_POST['total_amount'] ?? 0);
@@ -282,19 +365,91 @@ if (!$show_form) {
             transform: translateY(-1px);
         }
 
-        /* Reg-type toggle */
-        .reg-type-toggle { display: flex; gap: 1rem; margin-bottom: 2rem; }
-        .reg-type-btn {
-            flex: 1; padding: 16px 12px; border: 2px solid #e9ecef;
-            border-radius: 12px; background: #f9fafb; cursor: pointer;
-            text-align: center; transition: all .2s; font-family: inherit;
-            font-size: 1rem; font-weight: 600; color: #374151;
+
+        /* ── Qty Stepper ─────────────────────────────────────────── */
+        .qty-stepper {
+            display: inline-flex; align-items: center; gap: 0;
+            border: 2px solid #e9ecef; border-radius: 10px; overflow: hidden;
+            transition: border-color .2s;
         }
-        .reg-type-btn .btn-icon { font-size: 1.6rem; display: block; margin-bottom: 4px; }
-        .reg-type-btn .btn-sub  { font-size: 0.78rem; font-weight: 400; color: #6b7280; margin-top: 2px; display: block; }
-        .reg-type-btn.active    { border-color: #3498db; background: #eff6ff; color: #1d4ed8; }
-        .reg-type-btn.active .btn-sub { color: #3b82f6; }
-        @media(max-width:480px){ .reg-type-toggle { flex-direction: column; } }
+        .qty-stepper.active { border-color: #3498db; }
+        .qty-btn {
+            width: 36px; height: 36px; border: none; background: #f3f4f6;
+            font-size: 1.2rem; font-weight: 700; color: #374151; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: background .15s; font-family: inherit; flex-shrink: 0;
+            touch-action: manipulation;
+        }
+        .qty-btn:hover { background: #e5e7eb; }
+        .qty-btn:active { background: #d1d5db; }
+        .qty-val {
+            width: 38px; text-align: center; font-weight: 700; font-size: 1rem;
+            color: #1a2a4a; background: #fff; border-left: 1px solid #e9ecef;
+            border-right: 1px solid #e9ecef; padding: 0 4px; line-height: 36px;
+        }
+
+        /* ── Segment rows (solo) ─────────────────────────────────── */
+        .seg-row {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 10px 12px; border-radius: 8px; margin-bottom: 6px;
+            background: #f9fafb; border: 1.5px solid transparent;
+            transition: all .2s; gap: 10px;
+        }
+        .seg-row:last-child { margin-bottom: 0; }
+        .seg-row-active { background: #eff6ff; border-color: #93c5fd; }
+        .seg-row-info { flex: 1; min-width: 0; }
+        .seg-row-name { font-weight: 600; font-size: .95rem; color: #1a2a4a; }
+        .seg-row-sub  { font-size: .8rem; color: #6b7280; margin-top: 1px; }
+        .seg-row-price { font-size: .82rem; font-weight: 600; color: #6b7280; white-space: nowrap; margin-right: 10px; }
+        .seg-row-price.free { color: #16a34a; }
+        .seg-row-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+        .seg-row-fee   { font-size: .82rem; font-weight: 700; color: #3498db; min-width: 60px; text-align: right; }
+
+        /* ── Group panel toggle ──────────────────────────────────── */
+        .group-panel-wrapper {
+            border: 2px solid #e9ecef; border-radius: 14px; overflow: hidden;
+            margin-top: 1.5rem; transition: border-color .2s;
+        }
+        .group-panel-wrapper.is-active { border-color: #166534; }
+        .group-toggle-bar {
+            display: flex; align-items: center; gap: 14px;
+            padding: 16px 18px; background: #f0fdf4; cursor: pointer;
+            border-bottom: 2px solid transparent; transition: background .2s, border-color .2s;
+        }
+        .group-panel-wrapper.is-active .group-toggle-bar {
+            background: linear-gradient(135deg,#f0fdf4,#dcfce7);
+            border-bottom-color: #bbf7d0;
+        }
+        .group-toggle-bar input[type="checkbox"] {
+            width: 20px; height: 20px; flex-shrink: 0; cursor: pointer;
+            accent-color: #166534;
+        }
+        .group-toggle-label {
+            flex: 1; font-weight: 700; font-size: 1rem; color: #166534;
+            cursor: pointer; user-select: none;
+        }
+        .group-toggle-hint {
+            font-size: .82rem; color: #6b7280; font-style: italic; white-space: nowrap;
+        }
+        .group-panel-body {
+            padding: 20px 20px 10px; background: #fff;
+            transition: opacity .25s;
+        }
+        .group-panel-body.disabled {
+            opacity: .4; pointer-events: none; user-select: none;
+        }
+
+        /* ── Additional participants (solo overflow) ─────────────── */
+        .add-participants-section {
+            border: 2px dashed #93c5fd; border-radius: 12px; padding: 16px;
+            margin-top: 1rem; background: #f0f9ff;
+        }
+        .add-participants-section-label {
+            font-size: .82rem; font-weight: 700; color: #0369a1;
+            letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px;
+            display: flex; align-items: center; gap: 8px;
+        }
+
 
         /* Participant cards */
         .participant-card { border: 2px solid #e9ecef; border-radius: 12px; margin-bottom: 1.25rem; overflow: hidden; }
@@ -395,6 +550,21 @@ if (!$show_form) {
             .action-buttons-container { flex-direction: column; align-items: stretch; gap: 1.5rem; }
             .action-buttons-right { flex-direction: column; align-items: stretch; }
             .action-buttons-right a { text-align: center; }
+
+            /* New STEAM Carnival components mobile optimization */
+            .seg-row { flex-wrap: wrap; gap: 8px; align-items: flex-start; flex-direction: column; }
+            .seg-row-info { width: 100%; }
+            .seg-row-right { width: 100%; justify-content: space-between; }
+            .seg-row-fee { min-width: auto; flex: 1; text-align: left; }
+            .qty-stepper { transform: scale(0.95); transform-origin: right center; }
+
+            .group-toggle-bar { flex-wrap: wrap; gap: 6px; padding: 14px; }
+            .group-toggle-label { width: 100%; font-size: 0.95rem; display: flex; align-items: flex-start; gap: 8px; }
+            .group-toggle-hint { width: 100%; margin-left: 28px; font-size: 0.8rem; }
+            .group-panel-body { padding: 16px 12px 10px; }
+            
+            .add-participants-section-label { flex-wrap: wrap; }
+            .add-participants-section { padding: 12px; }
         }
     </style>
 </head>
@@ -454,244 +624,344 @@ if (!$show_form) {
                     <i class="fas fa-exclamation-circle" style="margin-right:8px;"></i> <?= htmlspecialchars($error_message) ?>
                 </div>
                 <?php endif; ?>
-                <p class="form-desc">The event will span 3 days of exciting science, technology, and art competitions, with the Final Round being held at BUET.</p>
+                <p class="form-desc">The event will span 3 days of exciting science, technology, and art competitions, with the Final Round being held at BUET. Select the segments you'd like to participate in — you can register for individual events, group display events, or both simultaneously.</p>
 
-                <!-- ── STEP 1: Registration Type ──────────────────────── -->
-                <div class="form-group mb-3">
-                    <label class="segments-main-label">Registration Type *</label>
-                    <div class="reg-type-toggle">
-                        <button type="button" class="reg-type-btn" id="btnSolo" onclick="setRegType('solo')">
-                            <span class="btn-icon">🧑</span>
-                            Solo
-                            <span class="btn-sub">Individual participant</span>
-                        </button>
-                        <button type="button" class="reg-type-btn" id="btnGroup" onclick="setRegType('group')">
-                            <span class="btn-icon">👥</span>
-                            Group
-                            <span class="btn-sub">2–3 participants</span>
-                        </button>
+                <!-- ── SECTION 1: Your Details ─────────────────────────── -->
+                <div class="participant-card" style="margin-bottom:1.5rem;">
+                    <div class="participant-card-header">
+                        <i class="fas fa-user"></i> Your Details
+                        <span class="participant-badge">Required</span>
                     </div>
-                    <input type="hidden" name="reg_type" id="regTypeInput" value="">
+                    <div class="participant-card-body">
+                        <div class="form-group mb-3">
+                            <label>Full Name *</label>
+                            <input type="text" name="full_name" id="primaryName" class="form-control" required autocomplete="name">
+                        </div>
+                        <div class="form-group mb-3">
+                            <label>Email Address *</label>
+                            <input type="email" name="email" class="form-control" required autocomplete="email">
+                        </div>
+                        <div class="form-group mb-3">
+                            <label>Institution Name *</label>
+                            <input type="text" name="institution" id="primaryInstitution" class="form-control" required autocomplete="organization">
+                        </div>
+                        <div class="form-group mb-3">
+                            <label>Class / Grade *</label>
+                            <input type="text" name="class_grade" id="primaryClass" class="form-control" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label>Contact Number *</label>
+                            <input type="tel" name="contact" id="primaryContact" class="form-control" required autocomplete="tel" inputmode="tel">
+                        </div>
+                        <div class="form-group mb-3">
+                            <label>Category *</label>
+                            <select name="category" class="form-control" required>
+                                <option value="">-- Select your category --</option>
+                                <option value="Pre-Primary">Pre-Primary (Play – Class 1)</option>
+                                <option value="Primary">Primary (Class 2 – Class 5)</option>
+                                <option value="Junior">Junior (Class 6 – Class 8)</option>
+                                <option value="Secondary">Secondary (Class 9 – Class 10)</option>
+                                <option value="Senior">Senior (Class 11 – Class 12 + Undergraduate)</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- ── SOLO FORM ───────────────────────────────────────── -->
-                <div id="soloForm" style="display:none;">
+                <div class="form-group mb-3">
+                    <label>Emergency Contact Number *</label>
+                    <input type="tel" name="emergency_contact" class="form-control" required inputmode="tel">
+                </div>
+                <div class="form-group mb-3">
+                    <label>Guardian Name *</label>
+                    <input type="text" name="guardian_name" class="form-control" required autocomplete="name">
+                </div>
+                <div class="form-group mb-3">
+                    <label>CA Reference <span style="font-weight:normal;">(If any)</span></label>
+                    <input type="text" name="ca_reference" class="form-control">
+                </div>
 
-                    <!-- Segments (solo) -->
-                    <div class="form-group mb-3">
-                        <label class="segments-main-label">Segments * <span>(Can choose multiple across sections)</span></label>
-                        <div class="segment-groups">
+                <!-- ── SECTION 2: Individual Segments ─────────────────── -->
+                <div class="form-group mb-3" style="margin-top:1.8rem;">
+                    <label class="segments-main-label">Individual Segments <span>(Select any — use + to add tickets for teammates)</span></label>
 
-                            <div class="segment-card seg-olympiad">
-                                <div class="segment-card-header">
-                                    <span>🔬 Olympiad &amp; STEM</span>
-                                    <span class="seg-rate-badge">200 BDT per segment</span>
+                    <div class="segment-groups">
+
+                        <!-- Olympiad & STEM -->
+                        <div class="segment-card seg-olympiad">
+                            <div class="segment-card-header">
+                                <span>🔬 Olympiad &amp; STEM</span>
+                                <span class="seg-rate-badge">200 BDT / ticket</span>
+                            </div>
+                            <div class="segment-card-body">
+                                <p class="seg-fee-note">Each ticket = 200 BDT. Use + to buy tickets for teammates (max 3).</p>
+                                <?php
+                                $solo_segs_olympiad = [
+                                    ['key'=>'Olympiads',           'label'=>'Olympiads', 'sub'=>'Physics, Chemistry, Bio, Math, etc.'],
+                                    ['key'=>'Instant Story Writing','label'=>'Instant Story Writing', 'sub'=>''],
+                                    ['key'=>'Craftwork',           'label'=>'Craftwork', 'sub'=>''],
+                                    ['key'=>'Web Design',          'label'=>'Web Design &amp; Development', 'sub'=>''],
+                                ];
+                                foreach ($solo_segs_olympiad as $ss): ?>
+                                <div class="seg-row" id="row-<?= htmlspecialchars($ss['key']) ?>" data-section="olympiad" data-fee="200" data-key="<?= htmlspecialchars($ss['key']) ?>">
+                                    <div class="seg-row-info">
+                                        <div class="seg-row-name"><?= $ss['label'] ?></div>
+                                        <?php if ($ss['sub']): ?><div class="seg-row-sub"><?= $ss['sub'] ?></div><?php endif; ?>
+                                    </div>
+                                    <div class="seg-row-right">
+                                        <span class="seg-row-fee" id="fee-<?= htmlspecialchars($ss['key']) ?>">—</span>
+                                        <div class="qty-stepper" id="stepper-<?= htmlspecialchars($ss['key']) ?>">
+                                            <button type="button" class="qty-btn qty-minus" onclick="stepQty('<?= $ss['key'] ?>', -1)" aria-label="Decrease">−</button>
+                                            <span class="qty-val" id="qty-<?= htmlspecialchars($ss['key']) ?>">0</span>
+                                            <button type="button" class="qty-btn qty-plus" onclick="stepQty('<?= $ss['key'] ?>', 1)" aria-label="Increase">+</button>
+                                            <input type="hidden" name="solo_qty[<?= $ss['key'] ?>]" id="qtyInput-<?= htmlspecialchars($ss['key']) ?>" value="0">
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="segment-card-body">
-                                    <p class="seg-fee-note">Select any segment(s) — each costs 200 BDT.</p>
-                                    <label class="option-label"><input type="checkbox" name="segments[]" value="Olympiads"           data-section="olympiad" onchange="calculateTotal()"> Olympiads (Physics, Chemistry, Bio, Math, etc.)</label>
-                                    <label class="option-label"><input type="checkbox" name="segments[]" value="Instant Story Writing" data-section="olympiad" onchange="calculateTotal()"> Instant Story Writing</label>
-                                    <label class="option-label"><input type="checkbox" name="segments[]" value="Craftwork"           data-section="olympiad" onchange="calculateTotal()"> Craftwork</label>
-                                    <label class="option-label"><input type="checkbox" name="segments[]" value="Web Design"          data-section="olympiad" onchange="calculateTotal()"> Web Design &amp; Development</label>
+                                <?php endforeach; ?>
+                            </div>
+                            <div class="segment-card-footer">Section Fee: <span class="segment-subtotal" id="subtotal-olympiad">—</span></div>
+                        </div>
+
+                        <!-- Art -->
+                        <div class="segment-card seg-art">
+                            <div class="segment-card-header">
+                                <span>🎨 Art Exhibition &amp; Competition</span>
+                                <span class="seg-rate-badge">200 BDT / ticket</span>
+                            </div>
+                            <div class="segment-card-body">
+                                <p class="seg-fee-note">Each ticket = 200 BDT. Use + to buy tickets for teammates (max 3).</p>
+                                <?php
+                                $solo_segs_art = [
+                                    ['key'=>'Art Competition','label'=>'Art Competition','sub'=>''],
+                                    ['key'=>'Art Exhibition', 'label'=>'Art Exhibition', 'sub'=>''],
+                                ];
+                                foreach ($solo_segs_art as $ss): ?>
+                                <div class="seg-row" id="row-<?= htmlspecialchars($ss['key']) ?>" data-section="art" data-fee="200" data-key="<?= htmlspecialchars($ss['key']) ?>">
+                                    <div class="seg-row-info">
+                                        <div class="seg-row-name"><?= $ss['label'] ?></div>
+                                    </div>
+                                    <div class="seg-row-right">
+                                        <span class="seg-row-fee" id="fee-<?= htmlspecialchars($ss['key']) ?>">—</span>
+                                        <div class="qty-stepper" id="stepper-<?= htmlspecialchars($ss['key']) ?>">
+                                            <button type="button" class="qty-btn qty-minus" onclick="stepQty('<?= $ss['key'] ?>', -1)" aria-label="Decrease">−</button>
+                                            <span class="qty-val" id="qty-<?= htmlspecialchars($ss['key']) ?>">0</span>
+                                            <button type="button" class="qty-btn qty-plus" onclick="stepQty('<?= $ss['key'] ?>', 1)" aria-label="Increase">+</button>
+                                            <input type="hidden" name="solo_qty[<?= $ss['key'] ?>]" id="qtyInput-<?= htmlspecialchars($ss['key']) ?>" value="0">
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="segment-card-footer">Section Fee: <span class="segment-subtotal" id="subtotal-olympiad">—</span></div>
+                                <?php endforeach; ?>
                             </div>
+                            <div class="segment-card-footer">Section Fee: <span class="segment-subtotal" id="subtotal-art">—</span></div>
+                        </div>
 
-                            <div class="segment-card seg-art">
-                                <div class="segment-card-header">
-                                    <span>🎨 Art Exhibition &amp; Competition</span>
-                                    <span class="seg-rate-badge">200 BDT per segment</span>
+                        <!-- Photography -->
+                        <div class="segment-card seg-photo">
+                            <div class="segment-card-header">
+                                <span>📸 Photography</span>
+                                <span class="seg-rate-badge">300 BDT / ticket</span>
+                            </div>
+                            <div class="segment-card-body">
+                                <p class="seg-fee-note">Each ticket = 300 BDT. Use + to buy tickets for teammates (max 3).</p>
+                                <?php
+                                $solo_segs_photo = [
+                                    ['key'=>'Mobile Photography','label'=>'Mobile Photography','sub'=>''],
+                                    ['key'=>'DSLR Photography',  'label'=>'DSLR Photography',  'sub'=>''],
+                                ];
+                                foreach ($solo_segs_photo as $ss): ?>
+                                <div class="seg-row" id="row-<?= htmlspecialchars($ss['key']) ?>" data-section="photo" data-fee="300" data-key="<?= htmlspecialchars($ss['key']) ?>">
+                                    <div class="seg-row-info">
+                                        <div class="seg-row-name"><?= $ss['label'] ?></div>
+                                    </div>
+                                    <div class="seg-row-right">
+                                        <span class="seg-row-fee" id="fee-<?= htmlspecialchars($ss['key']) ?>">—</span>
+                                        <div class="qty-stepper" id="stepper-<?= htmlspecialchars($ss['key']) ?>">
+                                            <button type="button" class="qty-btn qty-minus" onclick="stepQty('<?= $ss['key'] ?>', -1)" aria-label="Decrease">−</button>
+                                            <span class="qty-val" id="qty-<?= htmlspecialchars($ss['key']) ?>">0</span>
+                                            <button type="button" class="qty-btn qty-plus" onclick="stepQty('<?= $ss['key'] ?>', 1)" aria-label="Increase">+</button>
+                                            <input type="hidden" name="solo_qty[<?= $ss['key'] ?>]" id="qtyInput-<?= htmlspecialchars($ss['key']) ?>" value="0">
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="segment-card-body">
-                                    <p class="seg-fee-note">Select any segment(s) — each costs 200 BDT.</p>
-                                    <label class="option-label"><input type="checkbox" name="segments[]" value="Art Competition" data-section="art" onchange="calculateTotal()"> Art Competition</label>
-                                    <label class="option-label"><input type="checkbox" name="segments[]" value="Art Exhibition"  data-section="art" onchange="calculateTotal()"> Art Exhibition</label>
+                                <?php endforeach; ?>
+                                <hr style="border:none;border-top:1px dashed #e5e7eb;margin:8px 0;">
+                                <!-- Workshop — free, treated as a special qty row -->
+                                <div class="seg-row" id="row-Workshop" data-section="workshop" data-fee="0" data-key="Workshop">
+                                    <div class="seg-row-info">
+                                        <div class="seg-row-name">Workshop <strong style="color:#16a34a;">— Free</strong></div>
+                                    </div>
+                                    <div class="seg-row-right">
+                                        <div class="qty-stepper" id="stepper-Workshop">
+                                            <button type="button" class="qty-btn qty-minus" onclick="stepQty('Workshop', -1)" aria-label="Decrease">−</button>
+                                            <span class="qty-val" id="qty-Workshop">0</span>
+                                            <button type="button" class="qty-btn qty-plus" onclick="stepQty('Workshop', 1)" aria-label="Increase">+</button>
+                                            <input type="hidden" name="solo_qty[Workshop]" id="qtyInput-Workshop" value="0">
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="segment-card-footer">Section Fee: <span class="segment-subtotal" id="subtotal-art">—</span></div>
                             </div>
+                            <div class="segment-card-footer">Photography Fee: <span class="segment-subtotal" id="subtotal-photo">—</span></div>
+                        </div>
 
-                            <div class="segment-card seg-photo">
-                                <div class="segment-card-header">
-                                    <span>📸 Photography</span>
-                                    <span class="seg-rate-badge">300 BDT per segment</span>
+                    </div><!-- /.segment-groups -->
+                </div>
+
+                <!-- ── SECTION 3: Additional Participants (solo qty > 1) ─ -->
+                <div id="additionalParticipants" style="display:none;" class="add-participants-section">
+                    <div class="add-participants-section-label">
+                        <i class="fas fa-users"></i> Additional Participants
+                        <span style="font-size:.8rem;font-weight:400;color:#0369a1;margin-left:4px;">(for extra tickets purchased above)</span>
+                    </div>
+
+                    <!-- Participant 2 -->
+                    <div id="addP2Section" style="display:none;">
+                        <div class="participant-card" style="margin-bottom:1rem;">
+                            <div class="participant-card-header">
+                                <i class="fas fa-user"></i> Participant 2
+                                <span class="participant-badge">Required</span>
+                            </div>
+                            <div class="participant-card-body">
+                                <div class="form-group mb-3"><label>Full Name *</label><input type="text" name="add_p2_name" class="form-control" autocomplete="name"></div>
+                                <div class="form-group mb-3"><label>Institution Name *</label><input type="text" name="add_p2_institution" class="form-control" autocomplete="organization"></div>
+                                <div class="form-group mb-3"><label>Class / Grade *</label><input type="text" name="add_p2_class_grade" class="form-control"></div>
+                                <div class="form-group mb-3"><label>Contact Number *</label><input type="tel" name="add_p2_contact" class="form-control" inputmode="tel"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Participant 3 -->
+                    <div id="addP3Section" style="display:none;">
+                        <div class="participant-card">
+                            <div class="participant-card-header optional">
+                                <i class="fas fa-user-plus"></i> Participant 3
+                                <span class="participant-badge optional">Required</span>
+                            </div>
+                            <div class="participant-card-body">
+                                <div class="form-group mb-3"><label>Full Name *</label><input type="text" name="add_p3_name" class="form-control" autocomplete="name"></div>
+                                <div class="form-group mb-3"><label>Institution Name *</label><input type="text" name="add_p3_institution" class="form-control" autocomplete="organization"></div>
+                                <div class="form-group mb-3"><label>Class / Grade *</label><input type="text" name="add_p3_class_grade" class="form-control"></div>
+                                <div class="form-group mb-3"><label>Contact Number *</label><input type="tel" name="add_p3_contact" class="form-control" inputmode="tel"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- /#additionalParticipants -->
+
+                <!-- ── SECTION 4: Group Events Toggle ─────────────────── -->
+                <div class="group-panel-wrapper" id="groupPanelWrapper">
+                    <label class="group-toggle-bar" for="groupToggle">
+                        <input type="checkbox" id="groupToggle" name="grp_toggle" value="1" onchange="toggleGroupPanel()">
+                        <span class="group-toggle-label">👥 Also register for Group Display Events</span>
+                        <span class="group-toggle-hint">300 BDT / segment (covers whole group)</span>
+                    </label>
+                    <div class="group-panel-body disabled" id="groupPanel">
+
+                        <!-- Group segments -->
+                        <div class="form-group mb-3">
+                            <div class="group-notice">
+                                <i class="fas fa-info-circle"></i>
+                                <span>Select the collaborative display events your group will participate in. Each segment fee covers all group members.</span>
+                            </div>
+                            <div class="segment-groups">
+                                <div class="segment-card seg-group">
+                                    <div class="segment-card-header">
+                                        <span>👥 Group Display Events</span>
+                                        <span class="seg-rate-badge">300 BDT per segment</span>
+                                    </div>
+                                    <div class="segment-card-body">
+                                        <p class="seg-fee-note">Select any segment(s) — each costs 300 BDT for the whole group.</p>
+                                        <label class="option-label"><input type="checkbox" name="grp_segments[]" value="Project Display"   data-section="group" onchange="calculateTotal()"> Project Display</label>
+                                        <label class="option-label"><input type="checkbox" name="grp_segments[]" value="Wall Magazine"     data-section="group" onchange="calculateTotal()"> Wall Magazine</label>
+                                        <label class="option-label"><input type="checkbox" name="grp_segments[]" value="Scrapbook Display" data-section="group" onchange="calculateTotal()"> Scrapbook Display</label>
+                                    </div>
+                                    <div class="segment-card-footer">Section Fee: <span class="segment-subtotal" id="subtotal-group">—</span></div>
                                 </div>
-                                <div class="segment-card-body">
-                                    <p class="seg-fee-note">Select any photography type — each costs 300 BDT.</p>
-                                    <label class="option-label"><input type="checkbox" name="segments[]" value="Mobile Photography" data-section="photo" onchange="calculateTotal()"> Mobile Photography</label>
-                                    <label class="option-label"><input type="checkbox" name="segments[]" value="DSLR Photography"   data-section="photo" onchange="calculateTotal()"> DSLR Photography</label>
-                                    <hr style="border:none;border-top:1px dashed #e5e7eb;margin:8px 0;">
-                                    <label class="option-label"><input type="checkbox" name="segments[]" value="Workshop" data-section="workshop" onchange="calculateTotal()"> Workshop — <strong style="color:#16a34a;">Free</strong></label>
-                                </div>
-                                <div class="segment-card-footer">Photography Fee: <span class="segment-subtotal" id="subtotal-photo">—</span></div>
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <!-- Category — all 5 -->
-                    <div class="form-group mb-3 radio-group" style="display:flex;flex-direction:column;gap:6px;">
-                        <label>Choose Category *</label>
-                        <label class="option-label"><input type="radio" name="category" value="Pre-Primary" required> Pre-Primary (Play – Class 1)</label>
-                        <label class="option-label"><input type="radio" name="category" value="Primary"> Primary (Class 2 – Class 5)</label>
-                        <label class="option-label"><input type="radio" name="category" value="Junior"> Junior (Class 6 – Class 8)</label>
-                        <label class="option-label"><input type="radio" name="category" value="Secondary"> Secondary (Class 9 – Class 10)</label>
-                        <label class="option-label"><input type="radio" name="category" value="Senior"> Senior (Class 11 – Class 12 + Undergraduate)</label>
-                    </div>
-
-                    <div class="participant-card">
-                        <div class="participant-card-header">
-                            <i class="fas fa-user"></i> Your Details
-                            <span class="participant-badge">Required</span>
-                        </div>
-                        <div class="participant-card-body">
-                            <div class="form-group mb-3">
-                                <label>Full Name *</label>
-                                <input type="text" name="full_name" class="form-control" required autocomplete="name">
-                            </div>
-                            <div class="form-group mb-3">
-                                <label>Email Address *</label>
-                                <input type="email" name="email" class="form-control" required autocomplete="email">
-                            </div>
-                            <div class="form-group mb-3">
-                                <label>Institution Name *</label>
-                                <input type="text" name="institution" class="form-control" required autocomplete="organization">
-                            </div>
-                            <div class="form-group mb-3">
-                                <label>Class / Grade *</label>
-                                <input type="text" name="class_grade" class="form-control" required>
-                            </div>
-                            <div class="form-group mb-3">
-                                <label>Contact Number *</label>
-                                <input type="tel" name="contact" class="form-control" required autocomplete="tel" inputmode="tel">
                             </div>
                         </div>
-                    </div>
 
-                    <div class="form-group mb-3">
-                        <label>Emergency Contact Number *</label>
-                        <input type="tel" name="emergency_contact" class="form-control" required inputmode="tel">
-                    </div>
-                    <div class="form-group mb-3">
-                        <label>Guardian Name *</label>
-                        <input type="text" name="guardian_name" class="form-control" required autocomplete="name">
-                    </div>
-
-                    <div class="form-group mb-3">
-                        <label>CA Reference <span style="font-weight:normal;">(If any)</span></label>
-                        <input type="text" name="ca_reference" class="form-control">
-                    </div>
-                </div><!-- /#soloForm -->
-
-                <!-- ── GROUP FORM ──────────────────────────────────────── -->
-                <div id="groupForm" style="display:none;">
-
-                    <!-- 1. Segments -->
-                    <div class="form-group mb-3">
-                        <label class="segments-main-label">Segments * <span>(Can choose multiple)</span></label>
-                        <div class="group-notice">
-                            <i class="fas fa-info-circle"></i>
-                            <span>Select the collaborative display events your group will participate in — the fee is charged per segment, covering the entire group.</span>
+                        <!-- Group Category -->
+                        <div class="form-group mb-3 radio-group" style="display:flex;flex-direction:column;gap:6px;">
+                            <label>Group Category *</label>
+                            <label class="option-label"><input type="radio" name="group_category" value="Junior">    Junior (Class 6 – Class 8)</label>
+                            <label class="option-label"><input type="radio" name="group_category" value="Secondary"> Secondary (Class 9 – Class 10)</label>
+                            <label class="option-label"><input type="radio" name="group_category" value="Senior">    Senior (Class 11 – Class 12 + Undergraduate)</label>
                         </div>
-                        <div class="segment-groups">
-                            <div class="segment-card seg-group">
-                                <div class="segment-card-header">
-                                    <span>👥 Group Display Events</span>
-                                    <span class="seg-rate-badge">300 BDT per segment</span>
-                                </div>
-                                <div class="segment-card-body">
-                                    <p class="seg-fee-note">Select any segment(s) — each costs 300 BDT for the whole group.</p>
-                                    <label class="option-label"><input type="checkbox" name="segments[]" value="Project Display"   data-section="group" onchange="calculateTotal()"> Project Display</label>
-                                    <label class="option-label"><input type="checkbox" name="segments[]" value="Wall Magazine"     data-section="group" onchange="calculateTotal()"> Wall Magazine</label>
-                                    <label class="option-label"><input type="checkbox" name="segments[]" value="Scrapbook Display" data-section="group" onchange="calculateTotal()"> Scrapbook Display</label>
-                                </div>
-                                <div class="segment-card-footer">Section Fee: <span class="segment-subtotal" id="subtotal-group">—</span></div>
+
+                        <!-- Group Participant 1 (auto-filled) -->
+                        <div class="participant-card">
+                            <div class="participant-card-header">
+                                <i class="fas fa-user"></i> Group Leader (Participant 1)
+                                <span class="participant-badge">Auto-filled from Your Details</span>
+                            </div>
+                            <div class="participant-card-body">
+                                <div class="form-group mb-3"><label>Full Name *</label><input type="text" name="grp_p1_name" id="grpP1Name" class="form-control" autocomplete="name"></div>
+                                <div class="form-group mb-3"><label>Email Address</label><input type="email" name="grp_email" class="form-control" autocomplete="email"></div>
+                                <div class="form-group mb-3"><label>Institution Name *</label><input type="text" name="grp_p1_institution" class="form-control" autocomplete="organization"></div>
+                                <div class="form-group mb-3"><label>Class / Grade *</label><input type="text" name="grp_p1_class" class="form-control"></div>
+                                <div class="form-group mb-3"><label>Contact Number *</label><input type="tel" name="grp_p1_contact" class="form-control" inputmode="tel"></div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- 2. Category — Junior / Secondary / Senior only -->
-                    <div class="form-group mb-3 radio-group" style="display:flex;flex-direction:column;gap:6px;">
-                        <label>Choose Category *</label>
-                        <label class="option-label"><input type="radio" name="group_category" value="Junior">    Junior (Class 6 – Class 8)</label>
-                        <label class="option-label"><input type="radio" name="group_category" value="Secondary"> Secondary (Class 9 – Class 10)</label>
-                        <label class="option-label"><input type="radio" name="group_category" value="Senior">    Senior (Class 11 – Class 12 + Undergraduate)</label>
-                    </div>
-
-                    <!-- 3. Participants -->
-                    <div class="participant-card">
-                        <div class="participant-card-header">
-                            <i class="fas fa-user"></i> Participant 1
-                            <span class="participant-badge">Required</span>
+                        <!-- Group Participant 2 -->
+                        <div class="participant-card">
+                            <div class="participant-card-header">
+                                <i class="fas fa-user"></i> Participant 2
+                                <span class="participant-badge">Required</span>
+                            </div>
+                            <div class="participant-card-body">
+                                <div class="form-group mb-3"><label>Full Name *</label><input type="text" name="grp_p2_name" id="grpP2Name" class="form-control" autocomplete="name"></div>
+                                <div class="form-group mb-3"><label>Institution Name *</label><input type="text" name="grp_p2_institution" class="form-control" autocomplete="organization"></div>
+                                <div class="form-group mb-3"><label>Class / Grade *</label><input type="text" name="grp_p2_class" class="form-control"></div>
+                                <div class="form-group mb-3"><label>Contact Number *</label><input type="tel" name="grp_p2_contact" class="form-control" inputmode="tel"></div>
+                            </div>
                         </div>
-                        <div class="participant-card-body">
-                            <div class="form-group mb-3"><label>Full Name *</label><input type="text" name="grp_p1_name" id="grpP1Name" class="form-control" autocomplete="name"></div>
-                            <div class="form-group mb-3"><label>Email Address *</label><input type="email" name="email" class="form-control" autocomplete="email"></div>
-                            <div class="form-group mb-3"><label>Institution Name *</label><input type="text" name="grp_p1_institution" class="form-control" autocomplete="organization"></div>
-                            <div class="form-group mb-3"><label>Class / Grade *</label><input type="text" name="grp_p1_class" class="form-control"></div>
-                            <div class="form-group mb-3"><label>Contact Number *</label><input type="tel" name="grp_p1_contact" class="form-control" inputmode="tel"></div>
+
+                        <!-- Group Participant 3 (optional) -->
+                        <div class="participant-card">
+                            <div class="participant-card-header optional">
+                                <i class="fas fa-user-plus"></i> Participant 3
+                                <span class="participant-badge optional">Optional</span>
+                            </div>
+                            <div class="participant-card-body">
+                                <div class="form-group mb-3"><label>Full Name</label><input type="text" name="grp_p3_name" class="form-control" autocomplete="name" placeholder="Leave blank if only 2 participants"></div>
+                                <div class="form-group mb-3"><label>Institution Name</label><input type="text" name="grp_p3_institution" class="form-control" autocomplete="organization"></div>
+                                <div class="form-group mb-3"><label>Class / Grade</label><input type="text" name="grp_p3_class" class="form-control"></div>
+                                <div class="form-group mb-3"><label>Contact Number</label><input type="tel" name="grp_p3_contact" class="form-control" inputmode="tel"></div>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="participant-card">
-                        <div class="participant-card-header">
-                            <i class="fas fa-user"></i> Participant 2
-                            <span class="participant-badge">Required</span>
+                        <div class="form-group mb-3">
+                            <label>Emergency Contact Number *</label>
+                            <input type="tel" name="grp_emergency_contact" class="form-control" inputmode="tel">
                         </div>
-                        <div class="participant-card-body">
-                            <div class="form-group mb-3"><label>Full Name *</label><input type="text" name="grp_p2_name" id="grpP2Name" class="form-control" autocomplete="name"></div>
-                            <div class="form-group mb-3"><label>Institution Name *</label><input type="text" name="grp_p2_institution" class="form-control" autocomplete="organization"></div>
-                            <div class="form-group mb-3"><label>Class / Grade *</label><input type="text" name="grp_p2_class" class="form-control"></div>
-                            <div class="form-group mb-3"><label>Contact Number *</label><input type="tel" name="grp_p2_contact" class="form-control" inputmode="tel"></div>
+                        <div class="form-group mb-3">
+                            <label>Guardian Name *</label>
+                            <input type="text" name="grp_guardian_name" class="form-control" autocomplete="name">
                         </div>
-                    </div>
-
-                    <div class="participant-card">
-                        <div class="participant-card-header optional">
-                            <i class="fas fa-user-plus"></i> Participant 3
-                            <span class="participant-badge optional">Optional</span>
+                        <div class="form-group mb-3">
+                            <label>CA Reference <span style="font-weight:normal;">(If any)</span></label>
+                            <input type="text" name="grp_ca_reference" class="form-control">
                         </div>
-                        <div class="participant-card-body">
-                            <div class="form-group mb-3"><label>Full Name</label><input type="text" name="grp_p3_name" class="form-control" autocomplete="name" placeholder="Leave blank if only 2 participants"></div>
-                            <div class="form-group mb-3"><label>Institution Name</label><input type="text" name="grp_p3_institution" class="form-control" autocomplete="organization"></div>
-                            <div class="form-group mb-3"><label>Class / Grade</label><input type="text" name="grp_p3_class" class="form-control"></div>
-                            <div class="form-group mb-3"><label>Contact Number</label><input type="tel" name="grp_p3_contact" class="form-control" inputmode="tel"></div>
-                        </div>
-                    </div>
 
-                    <div class="form-group mb-3">
-                        <label>Emergency Contact Number *</label>
-                        <input type="tel" name="grp_emergency_contact" class="form-control" inputmode="tel">
-                    </div>
-                    <div class="form-group mb-3">
-                        <label>Guardian Name *</label>
-                        <input type="text" name="grp_guardian_name" class="form-control" autocomplete="name">
-                    </div>
+                    </div><!-- /#groupPanel -->
+                </div><!-- /.group-panel-wrapper -->
 
-                    <!-- 4. CA Reference -->
-                    <div class="form-group mb-3">
-                        <label>CA Reference <span style="font-weight:normal;">(If any)</span></label>
-                        <input type="text" name="grp_ca_reference" class="form-control">
+                <!-- ── SECTION 5: Grand Total + Payment ───────────────── -->
+                <div id="totalPriceDisplay" style="margin-top:2rem; margin-bottom: 2rem;">
+                    Grand Total: <span id="grandTotalAmt">0</span> BDT
+                    <div class="grand-total-breakdown" id="grandTotalBreakdown" style="display:none;">
+                        <span id="breakOlympiad" style="display:none;">🔬 Olympiad &amp; STEM: <span id="brkOlympiadAmt">0</span> BDT</span>
+                        <span id="breakArt"      style="display:none;">🎨 Art: <span id="brkArtAmt">0</span> BDT</span>
+                        <span id="breakPhoto"    style="display:none;">📸 Photography: <span id="brkPhotoAmt">0</span> BDT</span>
+                        <span id="breakGroup"    style="display:none;">👥 Group Display: <span id="brkGroupAmt">0</span> BDT</span>
                     </div>
+                </div>
+                <input type="hidden" name="total_amount" id="totalAmountInput" value="0">
 
-                </div><!-- /#groupForm -->
-
-                <!-- ── SHARED: Grand Total + Payment ─────────────────── -->
-                <div id="sharedPayment" style="display:none;">
-
-                    <div id="totalPriceDisplay">
-                        Grand Total: <span id="grandTotalAmt">0</span> BDT
-                        <div class="grand-total-breakdown" id="grandTotalBreakdown" style="display:none;">
-                            <span id="breakOlympiad" style="display:none;">🔬 Olympiad &amp; STEM: <span id="brkOlympiadAmt">0</span> BDT</span>
-                            <span id="breakArt"      style="display:none;">🎨 Art: <span id="brkArtAmt">0</span> BDT</span>
-                            <span id="breakPhoto"    style="display:none;">📸 Photography: <span id="brkPhotoAmt">0</span> BDT</span>
-                            <span id="breakGroup"    style="display:none;">👥 Group Display: <span id="brkGroupAmt">0</span> BDT</span>
-                        </div>
-                    </div>
-                    <input type="hidden" name="total_amount" id="totalAmountInput" value="0">
+                <div id="grandTotalSection" style="display:none;">
 
                     <div class="form-group mb-3">
                         <label>Choose your Payment Method *</label>
-                        <select name="payment_method" id="paymentMethod" class="form-control" required onchange="showPaymentSection()">
+                        <select name="payment_method" id="paymentMethod" class="form-control" onchange="showPaymentSection()">
                             <option value="">-- Select Payment Method --</option>
                             <option value="Bkash">bKash</option>
                             <option value="Bank">Bank Deposit</option>
@@ -736,18 +1006,253 @@ if (!$show_form) {
                             <label><span id="methodTxnLabel"></span> Transaction ID *</label>
                             <input type="text" name="transaction_id" id="transactionId" class="form-control" autocomplete="off">
                         </div>
-                        <div class="form-group mt-4">
-                            <button type="submit" class="btn-submit">Complete Registration</button>
-                        </div>
                     </div>
+                </div><!-- /#grandTotalSection -->
 
-                </div><!-- /#sharedPayment -->
+                <div class="form-group mt-4" style="text-align: center;">
+                    <button type="submit" class="btn-submit" style="width: 100%; max-width: 400px; margin: 0 auto; display: block;">Complete Registration</button>
+                </div>
 
             </form>
         </div>
     </section>
 
+
+    <script>
+        const SECTION_FEES = { olympiad: 200, art: 200, photo: 300, workshop: 0, group: 300 };
+
+        /* ── Autofill Group Leader ───────────────────────────────── */
+        const p1Inputs = ['Name', 'Institution', 'Class', 'Contact'];
+        p1Inputs.forEach(f => {
+            const src = document.getElementById('primary' + f);
+            const dst = document.getElementById('grpP1' + (f === 'Contact' ? 'contact' : f.toLowerCase()));
+            if (src && dst) {
+                src.addEventListener('input', () => {
+                    if(document.getElementById('groupToggle').checked) dst.value = src.value;
+                });
+            }
+        });
+
+        /* ── Qty Stepper Logic ───────────────────────────────────── */
+        function stepQty(segKey, delta) {
+            const qtySpan  = document.getElementById('qty-' + segKey);
+            const qtyInput = document.getElementById('qtyInput-' + segKey);
+            let current = parseInt(qtyInput.value) || 0;
+            current += delta;
+            if (current < 0) current = 0;
+            if (current > 3) current = 3;
+
+            qtySpan.innerText = current;
+            qtyInput.value    = current;
+
+            // UI updates
+            const row = document.getElementById('row-' + segKey);
+            const feeSpan = document.getElementById('fee-' + segKey);
+            const stepper = document.getElementById('stepper-' + segKey);
+            const feeRate = parseInt(row.getAttribute('data-fee'));
+
+            if (current > 0) {
+                row.classList.add('seg-row-active');
+                stepper.classList.add('active');
+                feeSpan.innerText = (current * feeRate) + ' BDT';
+                if (feeRate === 0) feeSpan.innerText = 'Free';
+            } else {
+                row.classList.remove('seg-row-active');
+                stepper.classList.remove('active');
+                feeSpan.innerText = '—';
+            }
+
+            calculateTotal();
+        }
+
+        /* ── Group Toggle Logic ──────────────────────────────────── */
+        function toggleGroupPanel() {
+            const isChecked = document.getElementById('groupToggle').checked;
+            const panel = document.getElementById('groupPanel');
+            const wrapper = document.getElementById('groupPanelWrapper');
+
+            if (isChecked) {
+                panel.classList.remove('disabled');
+                wrapper.classList.add('is-active');
+
+                // Autofill Group P1
+                document.getElementById('grpP1Name').value = document.getElementById('primaryName').value;
+                document.getElementById('grpP1institution').value = document.getElementById('primaryInstitution').value;
+                document.getElementById('grpP1class').value = document.getElementById('primaryClass').value;
+                document.getElementById('grpP1contact').value = document.getElementById('primaryContact').value;
+
+                // Sync required attributes
+                document.querySelector('[name="group_category"]').setAttribute('required', 'required');
+                document.getElementById('grpP2Name').setAttribute('required', 'required');
+            } else {
+                panel.classList.add('disabled');
+                wrapper.classList.remove('is-active');
+
+                document.querySelector('[name="group_category"]').removeAttribute('required');
+                document.getElementById('grpP2Name').removeAttribute('required');
+
+                // Clear group checkmarks
+                document.querySelectorAll('input[name="grp_segments[]"]').forEach(cb => cb.checked = false);
+            }
+            calculateTotal();
+        }
+
+        /* ── Calculate Total & Dynamic Participants ──────────────── */
+        function calculateTotal() {
+            let grandTotal = 0;
+            let maxSoloQty = 0;
+            const bd = { olympiad: 0, art: 0, photo: 0, group: 0 };
+
+            // 1. Calc Solo
+            document.querySelectorAll('input[name^="solo_qty"]').forEach(input => {
+                const qty = parseInt(input.value) || 0;
+                if (qty > 0) {
+                    if (qty > maxSoloQty) maxSoloQty = qty;
+                    const key = input.id.replace('qtyInput-', '');
+                    const row = document.getElementById('row-' + key);
+                    const sec = row.getAttribute('data-section');
+                    const fee = parseInt(row.getAttribute('data-fee')) || 0;
+                    bd[sec] += (qty * fee);
+                }
+            });
+
+            // Toggle dynamic participant fields based on maxSoloQty
+            const addParts = document.getElementById('additionalParticipants');
+            const p2Sec = document.getElementById('addP2Section');
+            const p3Sec = document.getElementById('addP3Section');
+            
+            if (maxSoloQty > 1) {
+                addParts.style.display = 'block';
+                p2Sec.style.display = 'block';
+                document.querySelector('[name="add_p2_name"]').setAttribute('required','required');
+                
+                if (maxSoloQty > 2) {
+                    p3Sec.style.display = 'block';
+                    document.querySelector('[name="add_p3_name"]').setAttribute('required','required');
+                } else {
+                    p3Sec.style.display = 'none';
+                    document.querySelector('[name="add_p3_name"]').removeAttribute('required');
+                }
+            } else {
+                addParts.style.display = 'none';
+                p2Sec.style.display = 'none';
+                p3Sec.style.display = 'none';
+                document.querySelector('[name="add_p2_name"]').removeAttribute('required');
+                document.querySelector('[name="add_p3_name"]').removeAttribute('required');
+            }
+
+            // 2. Calc Group (if active)
+            if (document.getElementById('groupToggle').checked) {
+                const grpChecked = document.querySelectorAll('input[name="grp_segments[]"]:checked').length;
+                bd.group = grpChecked * SECTION_FEES.group;
+            }
+
+            // Subtotals
+            document.getElementById('subtotal-olympiad').innerText = bd.olympiad > 0 ? bd.olympiad + ' BDT' : '—';
+            document.getElementById('subtotal-art').innerText      = bd.art > 0 ? bd.art + ' BDT' : '—';
+            document.getElementById('subtotal-photo').innerText    = bd.photo > 0 ? bd.photo + ' BDT' : '—';
+            document.getElementById('subtotal-group').innerText    = bd.group > 0 ? bd.group + ' BDT' : '—';
+
+            grandTotal = bd.olympiad + bd.art + bd.photo + bd.group;
+
+            // Grand Total Display
+            document.getElementById('grandTotalAmt').innerText = grandTotal;
+            document.getElementById('totalAmountInput').value  = grandTotal;
+
+            if (document.getElementById('instructionAmount')) {
+                document.getElementById('instructionAmount').innerText = grandTotal + ' BDT';
+                document.getElementById('bankInstructionAmount').innerText = grandTotal + ' BDT';
+            }
+
+            // Breakdown
+            const breakdown = document.getElementById('grandTotalBreakdown');
+            breakdown.style.display = grandTotal > 0 ? 'flex' : 'none';
+            
+            const sh = (id, amtId, val) => {
+                document.getElementById(id).style.display = val > 0 ? 'inline' : 'none';
+                document.getElementById(amtId).innerText  = val;
+            };
+            sh('breakOlympiad', 'brkOlympiadAmt', bd.olympiad);
+            sh('breakArt',      'brkArtAmt',      bd.art);
+            sh('breakPhoto',    'brkPhotoAmt',    bd.photo);
+            sh('breakGroup',    'brkGroupAmt',    bd.group);
+
+            // Payment section toggle
+            const pmentSec = document.getElementById('grandTotalSection');
+            const pMethod = document.getElementById('paymentMethod');
+            if (grandTotal > 0 || maxSoloQty > 0 || (document.getElementById('groupToggle').checked && bd.group > 0) || document.getElementById('qtyInput-Workshop').value > 0 ) {
+                pmentSec.style.display = 'block';
+                if (grandTotal > 0) {
+                    pMethod.setAttribute('required', 'required');
+                } else {
+                    pMethod.removeAttribute('required');
+                }
+            } else {
+                pmentSec.style.display = 'none';
+                pMethod.removeAttribute('required');
+            }
+        }
+
+        /* ── Payment Section Dropdown ────────────────────────────── */
+        function showPaymentSection() {
+            const method    = document.getElementById('paymentMethod').value;
+            const section   = document.getElementById('paymentSection');
+            const sender    = document.getElementById('senderNumber');
+            const txn       = document.getElementById('transactionId');
+            const mobilePay = document.getElementById('mobilePayInstructions');
+            const bankPay   = document.getElementById('bankPayInstructions');
+
+            if (!method) {
+                section.style.display = 'none';
+                sender.removeAttribute('required'); txn.removeAttribute('required');
+            } else {
+                section.style.display = 'block';
+                document.getElementById('paymentTitle').innerText = method + ' Payment Details';
+
+                if (method === 'Bank') {
+                    if (mobilePay) mobilePay.style.display = 'none';
+                    if (bankPay) bankPay.style.display = 'block';
+                    document.getElementById('methodNameLabel').innerText = "Bank Account Name /";
+                    document.getElementById('methodTxnLabel').innerText  = "Bank Reference / Receipt";
+                } else {
+                    if (mobilePay) mobilePay.style.display = 'block';
+                    if (bankPay)   bankPay.style.display   = 'none';
+                    document.getElementById('methodNameLabel').innerText = method;
+                    document.getElementById('methodTxnLabel').innerText  = method;
+                }
+
+                sender.setAttribute('required','required');
+                txn.setAttribute('required','required');
+            }
+        }
+
+        /* ── Form Submit Validation ──────────────────────────────── */
+        document.getElementById('steamRegistrationForm').addEventListener('submit', function(e) {
+            let total = parseInt(document.getElementById('totalAmountInput').value) || 0;
+            let maxSoloQty = 0;
+            document.querySelectorAll('input[name^="solo_qty"]').forEach(input => {
+                const qty = parseInt(input.value) || 0;
+                if (qty > maxSoloQty) maxSoloQty = qty;
+            });
+
+            const groupToggle = document.getElementById('groupToggle').checked;
+            const grpChecked = document.querySelectorAll('input[name="grp_segments[]"]:checked').length;
+
+            if (maxSoloQty === 0 && (!groupToggle || grpChecked === 0)) {
+                e.preventDefault();
+                alert('Please select at least one individual segment or group display event.');
+                return;
+            }
+
+            if (total > 0 && !document.getElementById('paymentMethod').value) {
+                e.preventDefault();
+                alert('Please select a payment method and provide transaction details.');
+                return;
+            }
+        });
+    </script>
     <?php elseif ($show_form === 'steam_olympiad' && $event): ?>
+
     <!-- ── STEAM OLYMPIAD FORM ────────────────────────────────────────── -->
     <section class="form-section">
         <div class="container">
@@ -975,19 +1480,40 @@ if (!$show_form) {
 
         /* ── Registration Type Toggle ─────────────────────────────── */
         function setRegType(type) {
-            document.getElementById('btnSolo').classList.toggle('active',  type === 'solo');
-            document.getElementById('btnGroup').classList.toggle('active', type === 'group');
+            // Reset all button states
+            ['btnSolo','btnBoth','btnGroup'].forEach(id => {
+                const btn = document.getElementById(id);
+                if (btn) btn.classList.remove('active', 'active-both');
+            });
+
+            // Apply appropriate active class
+            if (type === 'both') {
+                document.getElementById('btnBoth').classList.add('active-both');
+            } else if (type === 'solo') {
+                document.getElementById('btnSolo').classList.add('active');
+            } else {
+                document.getElementById('btnGroup').classList.add('active');
+            }
+
             document.getElementById('regTypeInput').value = type;
 
-            const isSolo  = (type === 'solo');
-            const isGroup = (type === 'group');
+            const isSolo  = (type === 'solo'  || type === 'both');
+            const isGroup = (type === 'group' || type === 'both');
+            const isBoth  = (type === 'both');
 
-            document.getElementById('soloForm').style.display    = isSolo  ? 'block' : 'none';
-            document.getElementById('groupForm').style.display   = isGroup ? 'block' : 'none';
-            document.getElementById('sharedPayment').style.display = 'block';
+            document.getElementById('soloForm').style.display      = isSolo  ? 'block' : 'none';
+            document.getElementById('groupForm').style.display      = isGroup ? 'block' : 'none';
+            document.getElementById('sharedPayment').style.display  = 'block';
 
+            // Show / hide "Both" section divider inside the group form
+            const divider = document.getElementById('bothDivider');
+            const sLabel  = document.getElementById('bothSectionLabel');
+            if (divider) divider.style.display = isBoth ? 'block' : 'none';
+            if (sLabel)  sLabel.style.display  = isBoth ? 'flex'  : 'none';
+
+            // Manage required attributes
             const soloRequired  = ['[name="full_name"]','[name="email"]','[name="institution"]','[name="class_grade"]','[name="contact"]','[name="emergency_contact"]','[name="guardian_name"]'];
-            const groupRequired = ['[name="grp_p1_name"]','[name="email"]','[name="grp_p1_institution"]','[name="grp_p1_class"]','[name="grp_p1_contact"]',
+            const groupRequired = ['[name="grp_p1_name"]','[name="grp_email"]','[name="grp_p1_institution"]','[name="grp_p1_class"]','[name="grp_p1_contact"]',
                                    '[name="grp_p2_name"]','[name="grp_p2_institution"]','[name="grp_p2_class"]','[name="grp_p2_contact"]',
                                    '[name="grp_emergency_contact"]','[name="grp_guardian_name"]'];
 
@@ -1000,8 +1526,9 @@ if (!$show_form) {
                 if (el) isGroup ? el.setAttribute('required','required') : el.removeAttribute('required');
             });
 
-            if (isSolo)  document.querySelectorAll('input[data-section="group"]').forEach(cb => cb.checked = false);
-            if (isGroup) document.querySelectorAll('input[data-section="olympiad"],input[data-section="art"],input[data-section="photo"]').forEach(cb => cb.checked = false);
+            // Only clear segments not applicable to current type
+            if (!isGroup) document.querySelectorAll('input[data-section="group"]').forEach(cb => cb.checked = false);
+            if (!isSolo)  document.querySelectorAll('input[data-section="olympiad"],input[data-section="art"],input[data-section="photo"]').forEach(cb => cb.checked = false);
 
             calculateTotal();
         }
@@ -1009,6 +1536,8 @@ if (!$show_form) {
         /* ── Calculate Total ──────────────────────────────────────── */
         function calculateTotal() {
             const regType = document.getElementById('regTypeInput').value;
+            const isSolo  = (regType === 'solo'  || regType === 'both');
+            const isGroup = (regType === 'group' || regType === 'both');
             const counts  = { olympiad: 0, art: 0, photo: 0, group: 0 };
 
             document.querySelectorAll('input[name="segments[]"]:checked').forEach(cb => {
@@ -1018,8 +1547,11 @@ if (!$show_form) {
 
             const totals = {};
             Object.keys(counts).forEach(sec => {
-                const relevant = regType === 'group' ? sec === 'group' : sec !== 'group';
-                totals[sec] = relevant ? (counts[sec] * SECTION_FEES[sec]) : 0;
+                if (sec === 'group') {
+                    totals[sec] = isGroup ? counts[sec] * SECTION_FEES[sec] : 0;
+                } else {
+                    totals[sec] = isSolo  ? counts[sec] * SECTION_FEES[sec] : 0;
+                }
             });
 
             ['olympiad','art','photo','group'].forEach(sec => {
@@ -1039,19 +1571,18 @@ if (!$show_form) {
                 document.getElementById(id).style.display = count > 0 ? 'inline' : 'none';
                 document.getElementById(amtId).innerText  = val;
             };
-            sh('breakOlympiad','brkOlympiadAmt', totals.olympiad, regType === 'solo'  ? counts.olympiad : 0);
-            sh('breakArt',     'brkArtAmt',      totals.art,      regType === 'solo'  ? counts.art      : 0);
-            sh('breakPhoto',   'brkPhotoAmt',    totals.photo,    regType === 'solo'  ? counts.photo    : 0);
-            sh('breakGroup',   'brkGroupAmt',    totals.group,    regType === 'group' ? counts.group    : 0);
+            sh('breakOlympiad','brkOlympiadAmt', totals.olympiad, isSolo  ? counts.olympiad : 0);
+            sh('breakArt',     'brkArtAmt',      totals.art,      isSolo  ? counts.art      : 0);
+            sh('breakPhoto',   'brkPhotoAmt',    totals.photo,    isSolo  ? counts.photo    : 0);
+            sh('breakGroup',   'brkGroupAmt',    totals.group,    isGroup ? counts.group    : 0);
         }
 
         /* ── Payment Section Toggle ───────────────────────────────── */
         function showPaymentSection() {
-            const method  = document.getElementById('paymentMethod').value;
-            const section = document.getElementById('paymentSection');
-            const sender  = document.getElementById('senderNumber');
-            const txn     = document.getElementById('transactionId');
-            
+            const method    = document.getElementById('paymentMethod').value;
+            const section   = document.getElementById('paymentSection');
+            const sender    = document.getElementById('senderNumber');
+            const txn       = document.getElementById('transactionId');
             const mobilePay = document.getElementById('mobilePayInstructions');
             const bankPay   = document.getElementById('bankPayInstructions');
 
@@ -1061,22 +1592,22 @@ if (!$show_form) {
             } else {
                 section.style.display = 'block';
                 document.getElementById('paymentTitle').innerText = method + ' Payment Details';
-                
+
                 if (method === 'Bank') {
-                    if(mobilePay) mobilePay.style.display = 'none';
-                    if(bankPay) { 
+                    if (mobilePay) mobilePay.style.display = 'none';
+                    if (bankPay) {
                         bankPay.style.display = 'block';
                         document.getElementById('bankInstructionAmount').innerText = document.getElementById('instructionAmount').innerText;
                     }
                     document.getElementById('methodNameLabel').innerText = "Bank Account Name /";
                     document.getElementById('methodTxnLabel').innerText  = "Bank Reference / Receipt";
                 } else {
-                    if(mobilePay) mobilePay.style.display = 'block';
-                    if(bankPay) bankPay.style.display = 'none';
+                    if (mobilePay) mobilePay.style.display = 'block';
+                    if (bankPay)   bankPay.style.display   = 'none';
                     document.getElementById('methodNameLabel').innerText = method;
                     document.getElementById('methodTxnLabel').innerText  = method;
                 }
-                
+
                 sender.setAttribute('required','required');
                 txn.setAttribute('required','required');
             }
@@ -1088,16 +1619,27 @@ if (!$show_form) {
 
             if (!regType) {
                 e.preventDefault();
-                alert('Please select a registration type (Solo or Group) before continuing.');
+                alert('Please select a registration type (Solo, Group, or Both) before continuing.');
                 return;
             }
 
-            if (regType === 'group') {
+            if (regType === 'group' || regType === 'both') {
                 const p2 = document.querySelector('[name="grp_p2_name"]');
                 if (p2 && !p2.value.trim()) {
                     e.preventDefault();
                     alert('Group registration requires at least 2 participants. Please fill in Participant 2 details.');
                     p2.focus();
+                    return;
+                }
+            }
+
+            if (regType === 'both') {
+                const soloSegs  = document.querySelectorAll('#soloForm input[data-section]:checked').length;
+                const groupSegs = document.querySelectorAll('#groupForm input[data-section="group"]:checked').length;
+                if (soloSegs === 0 && groupSegs === 0) {
+                    e.preventDefault();
+                    alert('Please select at least one segment for the Solo or Group registration.');
+                    return;
                 }
             }
         });
