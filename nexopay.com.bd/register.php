@@ -503,7 +503,7 @@ if (!$show_form) {
         .seg-group .segment-subtotal       { color: #166534; }
 
         .segment-card-body   { padding: 10px 16px 4px; background: #fafafa; }
-        .segment-card-footer { padding: 8px 16px; background: #f3f4f6; font-size: .9rem; font-weight: 600; text-align: right; border-top: 1px solid #e9ecef; }
+        .segment-card-footer { padding: 8px 16px; background: #f3f4f6; font-size: .9rem; font-weight: 600; text-align: right; border-top: 1px solid #e9ecef; color: #374151; }
 
         /* Grand total */
         #totalPriceDisplay {
